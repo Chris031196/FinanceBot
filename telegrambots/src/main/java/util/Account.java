@@ -19,6 +19,7 @@ public class Account {
 	private int pop;
 	private HashMap<String, Integer> stocks; //name der Firma, Menge der Aktien
 	private ArrayList<Item> items;
+	private ArrayList<String> certs;
 
 	private Menu curMenu;
 	public ArrayList<Integer> lastSentMsgs = new ArrayList<Integer>();
@@ -36,6 +37,7 @@ public class Account {
 	public Account(int iD){
 		stocks = new HashMap<String, Integer>();
 		items = new ArrayList<Item>();
+		certs = new ArrayList<String>();
 		this.load(iD);
 		curMenu = new NoMenu();
 	}
@@ -58,6 +60,12 @@ public class Account {
 			itemsString += item.toString() + "_";
 		}
 		save.put("items", itemsString);
+		
+		String certsString = "";
+		for(String cert: certs){
+			certsString += cert + "_";
+		}
+		save.put("certs", certsString);
 
 		try {
 			save.store(new FileOutputStream(getSaveFile()), null);
@@ -95,6 +103,14 @@ public class Account {
 				items.add(item);
 			}
 		}
+		
+		temp = save.getProperty("certs");
+		if(temp.length() > 1){
+			String[] certsString = temp.split("_");
+			for(int i=0;i<certsString.length;i++){
+				certs.add(certsString[i]);
+			}
+		}
 	}
 
 	public String getSaveFile(){
@@ -111,6 +127,10 @@ public class Account {
 
 	public void addPop(int pop){
 		this.pop += pop;
+	}
+	
+	public void addCertificate(String certificate){
+		certs.add(certificate);
 	}
 
 	public void addMoney(double money){
@@ -135,6 +155,10 @@ public class Account {
 			string += "_" +entry.getKey() +"_" +entry.getValue();
 		}
 		return string;
+	}
+
+	public ArrayList<String> getCerts() {
+		return certs;
 	}
 
 	public ArrayList<Item> getItems() {

@@ -22,7 +22,7 @@ public class Plane extends Item {
 	public void use(String msg, Integer userID) {
 		int hour = LocalDateTime.now().getHour();
 		//TODO richtige Zeit
-		if(hour <= 15 && hour >= 7){
+		if(hour <= 20 && hour >= 7){
 			FlyMenu menu = new FlyMenu(this);
 			FinanceController.getInstance().getAccount(userID).setCurMenu(menu);
 			menu.show(userID);

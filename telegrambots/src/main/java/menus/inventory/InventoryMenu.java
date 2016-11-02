@@ -12,7 +12,7 @@ public class InventoryMenu extends Menu {
 
 	@Override
 	public void show(Integer userID) {
-		IOController.sendMessage("Kategorien:", new String[]{"Konto", "account", "Aktien","stocks","Flugzeuge","planes","Upgrades","upgrades","🔙","cancel"}, userID.toString(), false);
+		IOController.sendMessage("Kategorien:", new String[]{"Konto", "account", "Aktien","stocks","Flugzeuge","planes","Upgrades","upgrades","Urkunden","certs","🔙","cancel"}, userID.toString(), false);
 	}
 
 	@Override
@@ -38,6 +38,11 @@ public class InventoryMenu extends Menu {
 			break;
 		case "upgrades":
 			next = new UpgradeMenu();
+			acc.setCurMenu(next);
+			next.show(userID);
+			break;
+		case "certs":
+			next = new CertificateMenu();
 			acc.setCurMenu(next);
 			next.show(userID);
 			break;
