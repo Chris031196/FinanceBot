@@ -51,9 +51,8 @@ public class Flight {
 			public void run() {
 				
 				try {
-					//TODO richtige Zeit einsetzen
-					//Thread.sleep(2700000);
-					Thread.sleep(10000);
+					Thread.sleep(2700000);
+					//Thread.sleep(10000);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}

@@ -14,14 +14,18 @@ public class FinanceSystemBot extends TelegramLongPollingBot{
 
 	@Override
 	public void onUpdateReceived(Update update) {
-		if(update.hasCallbackQuery() && update.getCallbackQuery() != null){
-			IOController.callbackReceived(update.getCallbackQuery());
-		}
-		else if(update.hasMessage() && update.getMessage() != null){
-			if(update.getMessage().getText() != null && update.getMessage().getText().startsWith("/all") && update.getMessage().getFrom().getId().equals(205364667)){
-				FinanceController.getInstance().messageToAllUsers(update.getMessage().getText().replace("/all", ""));
+		try{
+			if(update.hasCallbackQuery() && update.getCallbackQuery() != null){
+				IOController.callbackReceived(update.getCallbackQuery());
 			}
-			IOController.messageReceived(update.getMessage());
+			else if(update.hasMessage() && update.getMessage() != null){
+				if(update.getMessage().getText() != null && update.getMessage().getText().startsWith("/all") && update.getMessage().getFrom().getId().equals(205364667)){
+					FinanceController.getInstance().messageToAllUsers(update.getMessage().getText().replace("/all", ""));
+				}
+				IOController.messageReceived(update.getMessage());
+			}
+		} catch (Exception e){
+			IOController.sendMessage(e.getStackTrace().toString(), null, (new Integer(205364667)).toString(), true);
 		}
 	}
 
@@ -42,8 +46,8 @@ public class FinanceSystemBot extends TelegramLongPollingBot{
 
 	@Override
 	public String getBotToken() {
-		return "274593850:AAG3Wc3vKK6X_dtC9nI1PRhwkJabPgeypnw"; // DEBUG
-//		return "264511117:AAE1MlMYUe0UliHd_O0R_D8UbRtpm_5VMw8"; // REAL
+		//return "274593850:AAG3Wc3vKK6X_dtC9nI1PRhwkJabPgeypnw"; // DEBUG
+		return "264511117:AAE1MlMYUe0UliHd_O0R_D8UbRtpm_5VMw8"; // REAL
 	}
 
 	public void initialize() {
