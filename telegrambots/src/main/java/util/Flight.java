@@ -78,6 +78,7 @@ public class Flight {
 				}
 				else {
 					flyNextPart();
+					crashedLast = false;
 				}
 			}
 		});
