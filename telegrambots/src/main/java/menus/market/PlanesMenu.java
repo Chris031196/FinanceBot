@@ -22,7 +22,7 @@ public class PlanesMenu extends Menu{
 			if(item.getType() == TYPE.Plane){
 				buttons.add(item.getName() +":\n" +item.getValue() +"$");
 				buttons.add("" + (index > 1 ? index/2 : 0));
-				items += item.getName() + ":\nWert: "+c.round(item.getValue()) +"$\nChancensummand: " +item.getChance() +"%\n" +item.getDescription() + "\n\n";
+				items += item.getName() + ":\nWert: "+c.round(item.getValue()) +"$\nÜberlandchance: " +item.getChance() +"%\n" +item.getDescription() + "\n\n";
 			}
 		}
 		buttons.add("🔙");

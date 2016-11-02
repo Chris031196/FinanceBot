@@ -21,7 +21,8 @@ public class Plane extends Item {
 	@Override
 	public void use(String msg, Integer userID) {
 		int hour = LocalDateTime.now().getHour();
-		if(hour <= 11 && hour >= 7){
+		//TODO richtige Zeit
+		if(hour <= 15 && hour >= 7){
 			FlyMenu menu = new FlyMenu(this);
 			FinanceController.getInstance().getAccount(userID).setCurMenu(menu);
 			menu.show(userID);
@@ -56,8 +57,7 @@ public class Plane extends Item {
 
 		@Override
 		public void show(Integer userID) {
-			IOController.sendMessage("Wie viele Kilometer möchten Sie ausschreiben? (Wahrscheinlichkeiten werden mit dem Chancesummanden des Flugzeuges addiert)", new String[]{"100km FAI (90%)","100","300km FAI (70%)","300","500km FAI (50%)","500","700km FAI (30%)","700","1000km FAI (0%)","1000","🔙","cancel"}, userID.toString(), false);
-
+			IOController.sendMessage("Wie viele Kilometer möchten Sie ausschreiben?", new String[]{"100km FAI","100","300km FAI","300","500km FAI","500","700km FAI","700","1000km FAI","1000","🔙","cancel"}, userID.toString(), false);
 		}
 
 		@Override
@@ -69,51 +69,9 @@ public class Plane extends Item {
 			}
 			try{
 				Account acc = FinanceController.getInstance().getAccount(userID);
-				int distance = Integer.parseInt(msg);
-				plane.setValue(plane.getValue() * 3/4);
-				double chance = 100;
-				chance -= (distance / 10);
-				chance += plane.getChance();
-
-				double random = Math.random() * 100;
-				IOController.sendMessage("Flug gestartet! Der Flug dauert 6 Stunden.", new String[]{"🔙","cancel"}, userID.toString(), false);
-				acc.getItems().remove(plane);
-				if(random <= chance){
-					Thread fly = new Thread(new Runnable() {
-
-						@Override
-						public void run() {
-							try {
-								Thread.sleep(21600000);
-								//								Thread.sleep(20000);
-							} catch (InterruptedException e) {
-								e.printStackTrace();
-							}
-							IOController.sendMessage("Sie sind rumgekommen! Sie bekommen " +distance/100 +"+ auf Ihr Punktekonto!", null, userID.toString(), true);
-							acc.addPop(distance/100);
-							acc.save();
-							acc.addItem(plane);
-						}
-					});
-					fly.start();
-				}
-				else {
-					Thread fly = new Thread(new Runnable() {
-
-						@Override
-						public void run() {
-							try {
-								Thread.sleep(21600000);
-								//								Thread.sleep(20000);
-							} catch (InterruptedException e) {
-								e.printStackTrace();
-							}
-							IOController.sendMessage("Leider sind Sie nicht rumgekommen!", null, userID.toString(), true);
-							acc.addItem(plane);
-						}
-					});
-					fly.start();
-				}
+				plane.setValue(plane.getValue() * 7/8);
+				Flight flight = new Flight(acc, plane, Integer.parseInt(msg));
+				flight.start();
 			}
 			catch(NumberFormatException e){}
 		}

@@ -1,14 +1,14 @@
 #Mon Sep 26 15:09:29 CEST 2016
-SG38=SG38;Plane;200000;0;Der Schulgleiter der Flieger-HJ!
-Ka8=Ka8;Plane;2000;5;Die Ka8 ist ein strammer einsitziger Holzbomber.
-Mucha100=Mucha100;Plane;10000;5;Fuer die Polen unter euch.
-LS4=LS4;Plane;40000;20;Gutes einsitziges Leistungsflugzeug.
-ASH25=ASH25;Plane;500000;50;Krasser Rich-Guy Doppelsitzer.
-ETA=ETA;Plane;1000000;60;Hat mehr Tragflaeche als alles andere.
+SG38=SG38;Plane;200000;10;Der Schulgleiter der Flieger-HJ!
+Ka8=Ka8;Plane;2000;50;Die Ka8 ist ein strammer einsitziger Holzbomber.
+Mucha100=Mucha100;Plane;10000;50;Fuer die Polen unter euch.
+LS4=LS4;Plane;40000;70;Gutes einsitziges Leistungsflugzeug.
+ASH25=ASH25;Plane;500000;80;Krasser Rich-Guy Doppelsitzer.
+ETA=ETA;Plane;1000000;90;Hat mehr Tragflaeche als alles andere.
 Winglets=Winglets;Upgrade;2000;4;Upgrade fuer dein Flugzeug.
 Kotztüten=Kotztueten;Upgrade;5;1;Falls dir uebel wird!
 Wasserballastsaecke=Wasserballastsaecke;Upgrade;5000;10;Lol er hat "Saecke" gesagt.
-Mueckenputzer=Mueckenputzer;Upgrade;1000;1;Sauberer Flieger = Guter Flieger
+Mueckenputzer=Mueckenputzer;Upgrade;1000;2;Sauberer Flieger = Guter Flieger
 Kabriohaube=Kabriohaube;Upgrade;1000;-5;EINFACH EPIC!
 Goldlack=Goldlack;Upgrade;1000000;0;Bringt dir garnichts. Sieht nur geil aus.
 Flammenlackierung=Flammenlackierung;Upgrade;10000;0;Assis stehen drauf.

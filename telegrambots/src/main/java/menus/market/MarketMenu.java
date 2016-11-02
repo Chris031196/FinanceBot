@@ -9,7 +9,7 @@ import util.Menu;
 public class MarketMenu extends Menu {
 	@Override
 	public void show(Integer userID) {
-		IOController.sendMessage("Kategorien:", new String[]{"Aktienmarkt","stocks","Flugzeughändler","planes","Upgrades","upgrades","🔙","cancel"}, userID.toString(), false);
+		IOController.sendMessage("Kategorien:", new String[]{"Aktienkatalog","stocks","Flugzeugkatalog","planes","Upgradekatalog","upgrades","🔙","cancel"}, userID.toString(), false);
 	}
 
 	@Override

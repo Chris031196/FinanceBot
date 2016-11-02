@@ -18,7 +18,7 @@ public class UpgradeMenu extends Menu{
 		Account acc = c.getAccount(userID);
 		for(Item item: acc.getItems()){
 			if(item.getType() == TYPE.Upgrade)
-				inventory += item.getName() + ":\nWert: "+c.round(item.getValue()) +"$\nChancensummand: " +item.getChance() +"%\n" +item.getDescription() + "\n\n";
+				inventory += item.getName() + ":\nWert: "+c.round(item.getValue()) +"$\nÜberlandchance: " +item.getChance() +"%\n" +item.getDescription() + "\n\n";
 		}
 
 		IOController.sendMessage(inventory, new String[]{"Gegenstand verkaufen","sell","Upgrade anbringen","use","🔙","cancel"}, userID.toString(), false);
