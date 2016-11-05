@@ -10,6 +10,8 @@ import util.Item.TYPE;
 import util.Menu;
 
 public class PlanesMenu extends Menu{
+	
+	private ArrayList<Item> planes = new ArrayList<Item>();
 
 	@Override
 	public void show(Integer userID) {
@@ -20,9 +22,11 @@ public class PlanesMenu extends Menu{
 		int index = 0;
 		for(Item item: c.getMarket()){
 			if(item.getType() == TYPE.Plane){
+				planes.add(item);
 				buttons.add(item.getName() +":\n" +item.getValue() +"$");
-				buttons.add("" + (index > 1 ? index/2 : 0));
+				buttons.add("" + index);
 				items += item.getName() + ":\nWert: "+c.round(item.getValue()) +"$\nÜberlandchance: " +item.getChance() +"%\n" +item.getDescription() + "\n\n";
+				index++;
 			}
 		}
 		buttons.add("🔙");
@@ -42,11 +46,11 @@ public class PlanesMenu extends Menu{
 		Account acc = c.getAccount(userID);
 		try {
 			int index = Integer.parseInt(msg);
-			Item schedule = c.getMarket().get(index);
+			Item schedule = planes.get(index);
 			if(acc.getMoney() >= schedule.getValue()){
 				Item item = Item.getNewItem(schedule.getName(), schedule.getType(), schedule.getValue(), schedule.getChance(), schedule.getDescription());
 				acc.addMoney(-item.getValue());
-				if(item.getType() == TYPE.Plane) item.setDescription("");
+				item.setDescription("");
 				item.setValue(item.getValue()*(3.0/4.0));
 				acc.addItem(item);
 				acc.save();
