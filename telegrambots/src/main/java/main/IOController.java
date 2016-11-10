@@ -13,6 +13,7 @@ import org.telegram.telegrambots.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
 
+import htmlTest.Test;
 import menus.NoMenu;
 import util.Account;
 import util.Menu;
@@ -33,6 +34,10 @@ public class IOController {
 		if(msg != null && user != null){
 			if(msg != null && msg.equals("/logout")){
 				logout(user.getId());
+				return;
+			}
+			if(msg != null && msg.equals("/html")){
+				sendMessage(Test.getHTML(), null, user.getId().toString(), false);
 				return;
 			}
 			FinanceController controller = FinanceController.getInstance();
