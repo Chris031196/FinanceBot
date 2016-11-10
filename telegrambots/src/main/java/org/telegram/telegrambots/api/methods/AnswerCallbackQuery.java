@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.jsontype.TypeSerializer;
 
 import org.json.JSONObject;
 import org.telegram.telegrambots.Constants;
+import org.telegram.telegrambots.exceptions.TelegramApiValidationException;
 
 import java.io.IOException;
 
@@ -16,6 +17,10 @@ import java.io.IOException;
  * @brief Use this method to send answers to callback queries sent from inline keyboards. The answer
  * will be displayed to the user as a notification at the top of the chat screen or as an alert. On
  * success, True is returned.
+ *
+ * @note Alternatively, the user can be redirected to the specified URL. For this option to work,
+ * you must enable /setcustomurls for your bot via BotFather and accept the terms.
+ *
  * @date 10 of April of 2016
  */
 public class AnswerCallbackQuery extends BotApiMethod<Boolean> {
@@ -24,14 +29,22 @@ public class AnswerCallbackQuery extends BotApiMethod<Boolean> {
     private static final String CALLBACKQUERYID_FIELD = "callback_query_id";
     private static final String TEXT_FIELD = "text";
     private static final String SHOWALERT_FIELD = "show_alert";
+    private static final String URL_FIELD = "url";
 
     @JsonProperty(CALLBACKQUERYID_FIELD)
     private String callbackQueryId; ///< Unique identifier for the query to be answered
     @JsonProperty(TEXT_FIELD)
-    private String text; ///< Text of the notification. If not specified, nothing will be shown to the user
+    private String text; ///< Optional	Text of the notification. If not specified, nothing will be shown to the user, 0-200 characters
     @JsonProperty(SHOWALERT_FIELD)
     private Boolean showAlert; ///< Optional. If true, an alert will be shown by the client instead of a notificaiton at the top of the chat screen. Defaults to false.
-
+    @JsonProperty(URL_FIELD)
+    /**
+     * Optional. URL that will be opened by the user's client.
+     * If you have created a Game and accepted the conditions via @Botfather,
+     * specify the URL that opens your game. Otherwise you may use links
+     * InlineQueryResultGamelike telegram.me/your_bot?start=XXXX that open your bot with a parameter.
+     */
+    private String url;
 
     public AnswerCallbackQuery() {
         super();
@@ -49,16 +62,27 @@ public class AnswerCallbackQuery extends BotApiMethod<Boolean> {
         return this.text;
     }
 
-    public void setText(String text) {
+    public AnswerCallbackQuery setText(String text) {
         this.text = text;
+        return this;
     }
 
     public Boolean getShowAlert() {
         return this.showAlert;
     }
 
-    public void setShowAlert(Boolean showAlert) {
+    public AnswerCallbackQuery setShowAlert(Boolean showAlert) {
         this.showAlert = showAlert;
+        return this;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public AnswerCallbackQuery setUrl(String url) {
+        this.url = url;
+        return this;
     }
 
     @Override
@@ -70,6 +94,9 @@ public class AnswerCallbackQuery extends BotApiMethod<Boolean> {
         }
         if (showAlert != null) {
             jsonObject.put(SHOWALERT_FIELD, showAlert);
+        }
+        if (url != null) {
+            jsonObject.put(URL_FIELD, url);
         }
         return jsonObject;
     }
@@ -88,6 +115,13 @@ public class AnswerCallbackQuery extends BotApiMethod<Boolean> {
     }
 
     @Override
+    public void validate() throws TelegramApiValidationException {
+        if (callbackQueryId == null) {
+            throw new TelegramApiValidationException("CallbackQueryId can't be null", this);
+        }
+    }
+
+    @Override
     public void serialize(JsonGenerator gen, SerializerProvider serializers) throws IOException {
         gen.writeStartObject();
         gen.writeStringField(METHOD_FIELD, PATH);
@@ -97,6 +131,9 @@ public class AnswerCallbackQuery extends BotApiMethod<Boolean> {
         }
         if (showAlert != null) {
             gen.writeBooleanField(SHOWALERT_FIELD, showAlert);
+        }
+        if (url != null) {
+            gen.writeStringField(URL_FIELD, url);
         }
         gen.writeEndObject();
         gen.flush();
@@ -109,10 +146,11 @@ public class AnswerCallbackQuery extends BotApiMethod<Boolean> {
 
     @Override
     public String toString() {
-        return "AnswerInlineQuery{" +
+        return "AnswerCallbackQuery{" +
                 "callbackQueryId='" + callbackQueryId + '\'' +
-                ", text=" + text +
-                ", showAlert=" + showAlert + '\'' +
+                ", text='" + text + '\'' +
+                ", showAlert=" + showAlert +
+                ", url='" + url + '\'' +
                 '}';
     }
 }

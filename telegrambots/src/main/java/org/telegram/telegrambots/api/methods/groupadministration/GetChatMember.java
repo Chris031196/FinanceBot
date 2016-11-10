@@ -8,6 +8,7 @@ import org.json.JSONObject;
 import org.telegram.telegrambots.Constants;
 import org.telegram.telegrambots.api.methods.BotApiMethod;
 import org.telegram.telegrambots.api.objects.ChatMember;
+import org.telegram.telegrambots.exceptions.TelegramApiValidationException;
 
 import java.io.IOException;
 
@@ -19,7 +20,7 @@ import java.io.IOException;
  * @date 20 of May of 2016
  */
 public class GetChatMember extends BotApiMethod<ChatMember> {
-    public static final String PATH = "getChatAdministrators";
+    public static final String PATH = "getChatMember";
 
     private static final String CHATID_FIELD = "chat_id";
     private static final String USERID_FIELD = "user_id";
@@ -67,6 +68,16 @@ public class GetChatMember extends BotApiMethod<ChatMember> {
             return new ChatMember(answer.getJSONObject(Constants.RESPONSEFIELDRESULT));
         }
         return null;
+    }
+
+    @Override
+    public void validate() throws TelegramApiValidationException {
+        if (chatId == null) {
+            throw new TelegramApiValidationException("ChatId can't be null", this);
+        }
+        if (userId == null) {
+            throw new TelegramApiValidationException("UserId can't be null", this);
+        }
     }
 
     @Override

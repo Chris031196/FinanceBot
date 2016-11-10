@@ -36,7 +36,7 @@ public class Flight {
 	public void flyNextPart(){
 		if(leftParts <= 0){
 			IOController.sendMessage("Sie sind rumgekommen! Sie bekommen " +distance/10 +"+ auf Ihr Punktekonto!", null, account.getID().toString(), true);
-			account.addPop(distance/100);
+			account.addPop(distance/10);
 			account.addCertificate(CertificateBuilder.getCertificate(this));
 			account.save();
 			account.addItem(plane);

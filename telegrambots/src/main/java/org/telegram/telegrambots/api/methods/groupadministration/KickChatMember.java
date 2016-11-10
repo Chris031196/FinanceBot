@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.jsontype.TypeSerializer;
 import org.json.JSONObject;
 import org.telegram.telegrambots.Constants;
 import org.telegram.telegrambots.api.methods.BotApiMethod;
+import org.telegram.telegrambots.exceptions.TelegramApiValidationException;
 
 import java.io.IOException;
 
@@ -74,6 +75,16 @@ public class KickChatMember extends BotApiMethod<Boolean> {
     }
 
     @Override
+    public void validate() throws TelegramApiValidationException {
+        if (chatId == null) {
+            throw new TelegramApiValidationException("ChatId can't be null", this);
+        }
+        if (userId == null) {
+            throw new TelegramApiValidationException("UserId can't be null", this);
+        }
+    }
+
+    @Override
     public void serialize(JsonGenerator gen, SerializerProvider serializers) throws IOException {
         gen.writeStartObject();
         gen.writeStringField(METHOD_FIELD, PATH);
@@ -90,7 +101,7 @@ public class KickChatMember extends BotApiMethod<Boolean> {
 
     @Override
     public String toString() {
-        return "SendMessage{" +
+        return "KickChatMember{" +
                 "chatId='" + chatId + '\'' +
                 ", userId='" + userId +
                 '}';

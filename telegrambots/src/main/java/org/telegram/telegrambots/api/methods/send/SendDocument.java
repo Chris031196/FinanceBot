@@ -4,6 +4,7 @@ import org.telegram.telegrambots.api.objects.replykeyboard.ReplyKeyboard;
 
 import java.io.File;
 import java.io.InputStream;
+import java.util.Objects;
 
 /**
  * @author Ruben Bermudez
@@ -21,7 +22,7 @@ public class SendDocument {
     public static final String REPLYTOMESSAGEID_FIELD = "reply_to_message_id";
     public static final String REPLYMARKUP_FIELD = "reply_markup";
     private String chatId; ///< Unique identifier for the chat to send the message to or Username for the channel to send the message to
-    private String document; ///< File file to send. file_id as String to resend a file that is already on the Telegram servers
+    private String document; ///< File file to send. file_id as String to resend a file that is already on the Telegram servers or Url to upload it
     private String caption; ///< Optional. Document caption (may also be used when resending documents by file_id), 0-200 characters
     /**
      * Optional. Sends the message silently. iOS users will not receive a notification, Android
@@ -68,22 +69,6 @@ public class SendDocument {
     /**
      * Use this method to set the document to a new file
      *
-     * @param document     Path to the new file in your server
-     * @param documentName Name of the file itself
-     *
-     * @deprecated use {@link #setNewDocument(File)} or {@link #setNewDocument(InputStream)} instead.
-     */
-    @Deprecated
-    public SendDocument setNewDocument(String document, String documentName) {
-        this.document = document;
-        this.isNewDocument = true;
-        this.documentName = documentName;
-        return this;
-    }
-
-    /**
-     * Use this method to set the document to a new file
-     *
      * @param file New document file
      */
     public SendDocument setNewDocument(File file) {
@@ -93,12 +78,10 @@ public class SendDocument {
         return this;
     }
 
-    /**
-     * Use this method to set the document to a new file
-     *
-     * @param inputStream New document file
-     */
-    public SendDocument setNewDocument(InputStream inputStream) {
+    public SendDocument setNewDocument(String documentName, InputStream inputStream) {
+    	Objects.requireNonNull(documentName, "documentName cannot be null!");
+    	Objects.requireNonNull(inputStream, "inputStream cannot be null!");
+    	this.documentName = documentName;
         this.isNewDocument = true;
         this.newDocumentStream = inputStream;
         return this;
@@ -127,22 +110,6 @@ public class SendDocument {
     public SendDocument setReplyToMessageId(Integer replyToMessageId) {
         this.replyToMessageId = replyToMessageId;
         return this;
-    }
-
-    /**
-     * @deprecated Use {@link #getReplyToMessageId()} instead.
-     */
-    @Deprecated
-    public Integer getReplayToMessageId() {
-        return getReplyToMessageId();
-    }
-
-    /**
-     * @deprecated Use {@link #setReplyToMessageId(Integer)} instead.
-     */
-    @Deprecated
-    public SendDocument setReplayToMessageId(Integer replyToMessageId) {
-        return setReplyToMessageId(replyToMessageId);
     }
 
     public Boolean getDisableNotification() {
@@ -175,22 +142,6 @@ public class SendDocument {
     public SendDocument setReplyMarkup(ReplyKeyboard replyMarkup) {
         this.replyMarkup = replyMarkup;
         return this;
-    }
-
-    /**
-     * @deprecated Use {@link #getReplyMarkup()} instead.
-     */
-    @Deprecated
-    public ReplyKeyboard getReplayMarkup() {
-        return getReplyMarkup();
-    }
-
-    /**
-     * @deprecated Use {@link #setReplyMarkup(ReplyKeyboard)} instead.
-     */
-    @Deprecated
-    public SendDocument setReplayMarkup(ReplyKeyboard replyMarkup) {
-        return setReplyMarkup(replyMarkup);
     }
 
     @Override

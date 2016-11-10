@@ -20,25 +20,63 @@ public abstract class TelegramLongPollingCommandBot extends TelegramLongPollingB
     private final CommandRegistry commandRegistry;
 
     /**
-     * construct creates CommandRegistry for this bot.
+     * Creates a TelegramLongPollingCommandBot using default options
      * Use ICommandRegistry's methods on this bot to register commands
      */
     public TelegramLongPollingCommandBot() {
-        super();
-        this.commandRegistry = new CommandRegistry();
+        this(new BotOptions());
+    }
+
+    /**
+     * Creates a TelegramLongPollingCommandBot with custom options and allowing commands with
+     * usernames
+     * Use ICommandRegistry's methods on this bot to register commands
+     * @param options Bot options
+     */
+    public TelegramLongPollingCommandBot(BotOptions options) {
+        this(options, true);
+    }
+
+    /**
+     * Creates a TelegramLongPollingCommandBot
+     * Use ICommandRegistry's methods on this bot to register commands
+     * @param options Bot options
+     * @param allowCommandsWithUsername true to allow commands with parameters (default),
+     *                                  false otherwise
+     */
+    public TelegramLongPollingCommandBot(BotOptions options, boolean allowCommandsWithUsername) {
+        super(options);
+        this.commandRegistry = new CommandRegistry(allowCommandsWithUsername, getBotUsername());
     }
 
     @Override
     public final void onUpdateReceived(Update update) {
         if (update.hasMessage()) {
             Message message = update.getMessage();
-            if (message.isCommand()) {
+            if (message.isCommand() && !filter(message)) {
                 if (commandRegistry.executeCommand(this, message)) {
                     return;
                 }
             }
         }
         processNonCommandUpdate(update);
+    }
+
+    /**
+     * Override this function in your bot implementation to filter messages with commands
+     *
+     * For example, if you want to prevent commands execution incoming from group chat:
+     *   #
+     *   # return !message.getChat().isGroupChat();
+     *   #
+     *
+     * @note Default implementation doesn't filter anything
+     * @param message Received message
+     * @return true if the message must be ignored by the command bot and treated as a non command message,
+     * false otherwise
+     */
+    protected boolean filter(Message message) {
+        return false;
     }
 
     @Override
@@ -69,6 +107,11 @@ public abstract class TelegramLongPollingCommandBot extends TelegramLongPollingB
     @Override
     public void registerDefaultAction(BiConsumer<AbsSender, Message> defaultConsumer) {
         commandRegistry.registerDefaultAction(defaultConsumer);
+    }
+
+    @Override
+    public final BotCommand getRegisteredCommand(String commandIdentifier) {
+        return commandRegistry.getRegisteredCommand(commandIdentifier);
     }
 
     /**

@@ -4,6 +4,7 @@ import org.telegram.telegrambots.api.objects.replykeyboard.ReplyKeyboard;
 
 import java.io.File;
 import java.io.InputStream;
+import java.util.Objects;
 
 /**
  * @author Ruben Bermudez
@@ -20,7 +21,7 @@ public class SendSticker {
     public static final String REPLYTOMESSAGEID_FIELD = "reply_to_message_id";
     public static final String REPLYMARKUP_FIELD = "reply_markup";
     private String chatId; ///< Unique identifier for the chat to send the message to (Or username for channels)
-    private String sticker; ///< Sticker file to send. file_id as String to resend a sticker that is already on the Telegram servers
+    private String sticker; ///< Sticker file to send. file_id as String to resend a sticker that is already on the Telegram servers or URL to upload it
     /**
      * Optional. Sends the message silently. iOS users will not receive a notification, Android
      * users will receive a notification with no sound. Other apps coming soon
@@ -75,54 +76,6 @@ public class SendSticker {
         return this;
     }
 
-    /**
-     * @deprecated Use {@link #getReplyToMessageId()} instead.
-     */
-    @Deprecated
-    public Integer getReplayToMessageId() {
-        return getReplyToMessageId();
-    }
-
-    /**
-     * @deprecated Use {@link #setReplyToMessageId(Integer)} instead.
-     */
-    @Deprecated
-    public SendSticker setReplayToMessageId(Integer replyToMessageId) {
-        return setReplyToMessageId(replyToMessageId);
-    }
-
-    /**
-     * @deprecated Use {@link #getReplyMarkup()} instead.
-     */
-    @Deprecated
-    public ReplyKeyboard getReplayMarkup() {
-        return getReplyMarkup();
-    }
-
-    /**
-     * @deprecated Use {@link #setReplyMarkup(ReplyKeyboard)} instead.
-     */
-    @Deprecated
-    public SendSticker setReplayMarkup(ReplyKeyboard replyMarkup) {
-        return setReplyMarkup(replyMarkup);
-    }
-
-    /**
-     * Use this method to set the sticker to a new file
-     *
-     * @param sticker     Path to the new file in your server
-     * @param stickerName Name of the file itself
-     *
-     * @deprecated use {@link #setNewSticker(File)} or {@link #setNewSticker(InputStream)} instead.
-     */
-    @Deprecated
-    public SendSticker setSticker(String sticker, String stickerName) {
-        this.sticker = sticker;
-        this.isNewSticker = true;
-        this.stickerName = stickerName;
-        return this;
-    }
-
     public SendSticker setNewSticker(File file) {
         this.sticker = file.getName();
         this.isNewSticker = true;
@@ -130,7 +83,10 @@ public class SendSticker {
         return this;
     }
 
-    public SendSticker setNewSticker(InputStream inputStream) {
+    public SendSticker setNewSticker(String stickerName, InputStream inputStream) {
+    	Objects.requireNonNull(stickerName, "stickerName cannot be null!");
+    	Objects.requireNonNull(inputStream, "inputStream cannot be null!");
+    	this.stickerName = stickerName;
         this.isNewSticker = true;
         this.newStickerStream = inputStream;
         return this;

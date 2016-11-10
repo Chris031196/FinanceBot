@@ -1,10 +1,10 @@
 package main;
 
-import org.telegram.telegrambots.TelegramApiException;
 import org.telegram.telegrambots.api.methods.AnswerCallbackQuery;
 import org.telegram.telegrambots.api.objects.CallbackQuery;
 import org.telegram.telegrambots.api.objects.Update;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+import org.telegram.telegrambots.exceptions.TelegramApiException;
 
 public class FinanceSystemBot extends TelegramLongPollingBot{
 
@@ -25,7 +25,8 @@ public class FinanceSystemBot extends TelegramLongPollingBot{
 				IOController.messageReceived(update.getMessage());
 			}
 		} catch (Exception e){
-			IOController.sendMessage(e.getStackTrace().toString(), null, (new Integer(205364667)).toString(), true);
+			e.printStackTrace();
+//			IOController.sendMessage(e.getMessage(), null, (new Integer(205364667)).toString(), true);
 		}
 	}
 

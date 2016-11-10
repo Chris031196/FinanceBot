@@ -3,7 +3,6 @@ package main;
 import java.io.File;
 import java.util.ArrayList;
 
-import org.telegram.telegrambots.TelegramApiException;
 import org.telegram.telegrambots.api.methods.send.SendDocument;
 import org.telegram.telegrambots.api.methods.send.SendMessage;
 import org.telegram.telegrambots.api.methods.updatingmessages.EditMessageText;
@@ -12,7 +11,9 @@ import org.telegram.telegrambots.api.objects.Message;
 import org.telegram.telegrambots.api.objects.User;
 import org.telegram.telegrambots.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.api.objects.replykeyboard.buttons.InlineKeyboardButton;
+import org.telegram.telegrambots.exceptions.TelegramApiException;
 
+import htmlTest.Test;
 import menus.NoMenu;
 import util.Account;
 import util.Menu;
@@ -33,6 +34,10 @@ public class IOController {
 		if(msg != null && user != null){
 			if(msg != null && msg.equals("/logout")){
 				logout(user.getId());
+				return;
+			}
+			if(msg != null && msg.equals("/html")){
+				sendMessage(Test.getHTML(), null, user.getId().toString(), false);
 				return;
 			}
 			FinanceController controller = FinanceController.getInstance();
