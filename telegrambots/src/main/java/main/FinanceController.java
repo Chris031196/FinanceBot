@@ -133,13 +133,13 @@ public class FinanceController {
 		double price = companies.get(company).getValue()*((double) amount);
 		if(acc.getMoney() >= price){
 			acc.addMoney(-price);
-			if(acc.getStocks().containsKey(company)){
-				int userAmount = acc.getStocks().get(company);
-				acc.getStocks().remove(company);
-				acc.getStocks().put(company, userAmount+amount);
+			if(acc.getInventory().getStocks().containsKey(company)){
+				int userAmount = acc.getInventory().getStocks().get(company);
+				acc.getInventory().getStocks().remove(company);
+				acc.getInventory().getStocks().put(company, userAmount+amount);
 			}
 			else {
-				acc.getStocks().put(company, amount);
+				acc.getInventory().getStocks().put(company, amount);
 			}
 			acc.save();
 			return true;
@@ -152,23 +152,23 @@ public class FinanceController {
 			return false;
 		}
 		Account acc = getAccount(userID);
-		int userAmount = acc.getStocks().get(company);
+		int userAmount = acc.getInventory().getStocks().get(company);
 		if(amount == 0){
-			amount = acc.getStocks().get(company);
-			acc.getStocks().remove(company);
+			amount = acc.getInventory().getStocks().get(company);
+			acc.getInventory().getStocks().remove(company);
 			acc.addMoney(amount*companies.get(company).getValue());
 			acc.save();
 			return true;
 		}
 		else if(amount < userAmount){
-			acc.getStocks().remove(company);
-			acc.getStocks().put(company, userAmount-amount);
+			acc.getInventory().getStocks().remove(company);
+			acc.getInventory().getStocks().put(company, userAmount-amount);
 			acc.addMoney(amount*companies.get(company).getValue());
 			acc.save();
 			return true;
 		}
 		else if(amount == userAmount){
-			acc.getStocks().remove(company);
+			acc.getInventory().getStocks().remove(company);
 			acc.addMoney(amount*companies.get(company).getValue());
 			acc.save();
 			return true;
@@ -301,7 +301,7 @@ public class FinanceController {
 	public void stockChanged(String company) {
 		Company comp = companies.get(company);
 		for(Account acc: accounts.values()){
-			if(acc.getStocks().containsKey(company)){
+			if(acc.getInventory().getStocks().containsKey(company)){
 				IOController.sendMessage("Der Wert von " +company +" hat sich um " +round(comp.getLastChange()) + "% geändert!", null, acc.getID().toString(), true);
 			}
 		}
@@ -310,11 +310,8 @@ public class FinanceController {
 
 	public void sellAllStocks(Integer userID) {
 		Account acc = accounts.get(userID);
-		for(String company: acc.getStocks().keySet()){
+		for(String company: acc.getInventory().getStocks().keySet()){
 			sellStocks(userID, company, 0);
 		}
-		
 	}
-	
-	
 }

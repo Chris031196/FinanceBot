@@ -112,6 +112,7 @@ public class IOController {
 			SendMessage msg = new SendMessage();
 			msg.setChatId(chatID);
 			msg.enableMarkdown(true);
+			msg.enableHtml(true); // TODO funzt das bei jeder message?
 			if(message != null){
 				msg.setText(message);
 			}

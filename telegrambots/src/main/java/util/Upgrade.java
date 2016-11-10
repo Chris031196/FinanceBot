@@ -22,7 +22,7 @@ public class Upgrade extends Item{
 			FinanceController c = FinanceController.getInstance();
 			//			ArrayList<Item> planes = new ArrayList<Item>();
 			ArrayList<String> buttons = new ArrayList<String>();
-			for(Item item: c.getAccount(userID).getItems()){
+			for(Item item: c.getAccount(userID).getInventory().getItems()){
 				if(item.getType() == TYPE.Plane){
 					//					planes.add(item);
 					buttons.add(item.getName());
@@ -36,11 +36,11 @@ public class Upgrade extends Item{
 		catch(NumberFormatException e){
 			FinanceController c = FinanceController.getInstance();
 			ArrayList<Item> items = new ArrayList<Item>();
-			items.addAll(c.getAccount(userID).getItems());
+			items.addAll(c.getAccount(userID).getInventory().getItems());
 			for(Item item: items){
 				if(msg.equals(item.getName()+item.getValue()) && !item.getDescription().contains(this.name)){
 					((Plane) item).addItem(this);
-					c.getAccount(userID).getItems().remove(this);
+					c.getAccount(userID).getInventory().getItems().remove(this);
 					if(item.getDescription().contains(this.name)){
 						IOController.sendMessage("Erfolgreich angewendet!", new String[]{"🔙","cancel"}, userID.toString(), false);
 					}

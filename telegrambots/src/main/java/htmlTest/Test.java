@@ -9,7 +9,7 @@ public class Test {
 	public static String getHTML() {
 		StringBuilder contentBuilder = new StringBuilder();
 		try {
-		    BufferedReader in = new BufferedReader(new FileReader("test.html"));
+		    BufferedReader in = new BufferedReader(new FileReader("gravity.html"));
 		    String str;
 		    while ((str = in.readLine()) != null) {
 		        contentBuilder.append(str);

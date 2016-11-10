@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="ISO-8859-1">
+	<title>Gravity</title>
+	<script type="text/javascript">
+		var WIDTH = Math.floor(window.innerWidth);
+		var HEIGHT = Math.floor(window.innerHeight);
+		var VIEWER_MOVE_SPEED = 32;
+		var DISTANCE_TRANSLATION = 128;
+		var MASS_RADIUS_RATIO = 128;
+		var TIME_LAPSE = 128;
+		var FPS = 30;
+		var VIEWER;
+		
+		var movingUp = false;
+		var movingDown = false;
+		var movingLeft = false;
+		var movingRight = false;
+		var player;
+		var ctx;
+
+
+		function HashedObject() {
+			this.hash = randomString(32);
+		}
+		
+		function DrawableObject(posX, posY) {
+			this.__proto__ = new HashedObject();
+			this.posX = posX;
+			this.posY = posY;
+			this.draw = function(ctx) { throw "can't call an abstract method"; };
+		}
+
+		function MoveableObject(posX, posY) {
+			this.__proto__ = new DrawableObject(posX * DISTANCE_TRANSLATION, posY * DISTANCE_TRANSLATION);
+			this.update = function() { throw "can't call an abstract method"; };
+		}
+		
+		function KillableObject(posX, posY) {
+			this.__proto__ = new MoveableObject(posX, posY);
+			this.life = 1;
+
+			this.update = function() {
+				if(!this.life) {
+					DrawRegistry.remove({"object":this});
+					UpdateRegistry.remove({"object":this});
+				}
+			}
+		}
+
+		function Viewer(posX, posY) {
+			this.__proto__ = new MoveableObject(posX, posY);
+
+			UpdateRegistry.add(this);
+			
+			this.draw = function(ctx) {
+			};
+			this.update = function() {
+				var meterPerSecondX = 0;
+				var meterPerSecondY = 0;
+				
+				meterPerSecondX -= movingLeft ? VIEWER_MOVE_SPEED : 0;
+				meterPerSecondX += movingRight ? VIEWER_MOVE_SPEED : 0;
+				meterPerSecondY -= movingUp ? VIEWER_MOVE_SPEED : 0;
+				meterPerSecondY += movingDown ? VIEWER_MOVE_SPEED : 0;
+
+				this.posX += meterPerSecondX / FPS * DISTANCE_TRANSLATION;
+				this.posY += meterPerSecondY / FPS * DISTANCE_TRANSLATION;
+			};
+		}
+
+		function Center(posX, posY) {
+			this.__proto__ = new DrawableObject(posX, posY);
+			this.txt = "CENTER";
+
+			DrawRegistry.add(this);
+			
+			this.draw = function(ctx) {
+				ctx.fillStyle = "#aaaaaa";
+				
+				ctx.font = "30px Verdana";
+				measure = ctx.measureText(this.txt);
+				ctx.fillText(this.txt, ((this.posX + VIEWER.posX) / DISTANCE_TRANSLATION) - measure.width/2, ((this.posY + VIEWER.posY) / DISTANCE_TRANSLATION) + 30/2);
+			};
+		}
+
+		
+		function GravityObject(posX, posY, mass) {
+			this.__proto__ = new MoveableObject(posX, posY);
+			this.mass = mass;
+			this.red = Math.floor(rndm(0, 255));
+			this.green = Math.floor(rndm(0, 255));
+			this.blue = Math.floor(rndm(0, 255));
+			this.color = "rgb(" + this.red + ", " + this.green + ", " + this.blue + ")";
+			this.vector = [rndm(2, -2), rndm(2, -2)];
+			
+			DrawRegistry.add(this);
+			UpdateRegistry.add(this);
+			GravityRegistry.add(this);
+			
+			this.draw = function(ctx) {
+				ctx.fillStyle = this.color;
+				ctx.strokeStyle = "#888888";
+				ctx.beginPath();
+				ctx.arc(Math.floor((this.posX + VIEWER.posX)/DISTANCE_TRANSLATION),
+						Math.floor((this.posY + VIEWER.posY)/DISTANCE_TRANSLATION),
+						Math.sqrt(this.mass / (2*Math.PI))/DISTANCE_TRANSLATION*MASS_RADIUS_RATIO,
+						2*Math.PI, false);
+				ctx.stroke();
+				ctx.fill();
+				ctx.closePath();
+
+				/*
+				ctx.strokeStyle = "#aaaaaa";
+				ctx.fillStyle = "#aaaaaa";
+				ctx.font = "16px Verdana";
+				var list = GravityRegistry.getAll();
+				for(var i = 0; i < list.length; i++) {
+					var o = list[i];
+					if(this.hash !== o.hash) {
+						var dist = getDistance(this.posX, this.posY, o.posX, o.posY);
+						
+						var screenX1 = Math.floor((this.posX + VIEWER.posX)/DISTANCE_TRANSLATION);
+						var screenY1 = Math.floor((this.posY + VIEWER.posY)/DISTANCE_TRANSLATION);
+						var screenX2 = Math.floor((o.posX + VIEWER.posX)/DISTANCE_TRANSLATION);
+						var screenY2 = Math.floor((o.posY + VIEWER.posY)/DISTANCE_TRANSLATION);
+						ctx.beginPath();
+						ctx.moveTo(screenX1, screenY1);
+						ctx.lineTo(screenX2, screenY2);
+						ctx.stroke();
+						ctx.closePath();
+						ctx.fillText(dist + "", Math.floor((screenX1 + screenX2)/2), Math.floor((screenY1 + screenY2)/2));
+						//console.debug("making line from ["+screenX1+";"+screenY1+"] to ["+screenX2+";"+screenY2+"]");
+					}
+				}
+				*/
+			};
+			this.update = function() {
+				var list = GravityRegistry.getAll();
+				for(var i = 0; i < list.length; i++) {
+					var o = list[i];
+					if(this.hash !== o.hash) {
+						var dist = getDistance(this.posX, this.posY, o.posX, o.posY);
+						
+						var force = (this.mass + o.mass) / (dist*dist);
+						this.vector[0] += (o.posX - this.posX) * force;
+						this.vector[1] += (o.posY - this.posY) * force;
+						
+
+						var radius1 = Math.sqrt(this.mass / (2*Math.PI)) * MASS_RADIUS_RATIO;
+						var radius2 = Math.sqrt(o.mass / (2*Math.PI)) * MASS_RADIUS_RATIO;
+						if(dist < (radius1 + radius2)) {
+							if(this.mass >= o.mass) {
+								var newMass = this.mass + o.mass;
+								this.vector[0] = (this.vector[0] * this.mass + o.vector[0] * o.mass) / (newMass);
+								this.vector[1] = (this.vector[1] * this.mass + o.vector[1] * o.mass) / (newMass);
+								
+								this.red = Math.floor((this.red * this.mass + o.red * o.mass) / (newMass));
+								this.green = Math.floor((this.green * this.mass + o.green * o.mass) / (newMass));
+								this.blue = Math.floor((this.blue * this.mass + o.blue * o.mass) / (newMass));
+								
+								this.mass = newMass;
+								this.color = "rgb(" + this.red + ", " + this.green + ", " + this.blue + ")";
+								DrawRegistry.remove({"object":o});
+								UpdateRegistry.remove({"object":o});
+								GravityRegistry.remove({"object":o});
+							}
+						}
+					}
+				}
+
+				var meterPerSecondX = this.vector[0] * TIME_LAPSE;
+				var meterPerSecondY = this.vector[1] * TIME_LAPSE;
+
+				this.posX += meterPerSecondX / FPS;
+				this.posY += meterPerSecondY / FPS;
+			};
+		}
+
+
+		/*
+		
+		UTILITY FUNCTIONS
+		
+		*/	
+		function executeAsync(func, delay) {
+		    setTimeout(func, delay);
+		}
+
+		var DrawRegistry = new Registry("DrawableObject")
+		var UpdateRegistry = new Registry("MoveableObject");
+		var GravityRegistry = new Registry("GravityObject");
+
+		function Registry(filter) {
+			this.filter = filter;
+			this.registryList = new Array();
+			
+			this.add = function(o) {
+				this.registryList.push(o);
+			};
+			
+			this.remove = function(arg) {
+				var index = arg['index'];
+				var o;
+				if(!index) {
+					index = -1;
+					if(arg['object']) {
+						for(var i = 0; i < this.registryList.length; i++) {
+							var tmp = this.registryList[i];
+							if(tmp.hash === arg['object'].hash) {
+								index = i;
+								break;
+							}
+						}
+					}
+				}
+
+				var o = this.registryList[index];
+				console.debug("removing item["+index+"]: " + o);
+				this.registryList.splice(index, 1);
+				return o;
+			};
+			
+			this.get = function(arg) {
+				var index = arg['index'];
+				
+				if(!index) {
+					index = -1;
+					if(arg['object']) {
+						for(var i = 0; i < this.registryList.length; i++) {
+							var tmp = this.registryList[i];
+							if(tmp.hash === arg['object'].hash) {
+								index = i;
+								break;
+							}
+						}
+					}
+				}
+				
+				return this.registryList[index];
+			};
+			
+			this.getAll = function() {
+				return this.registryList;
+			};
+
+			this.clear = function() {
+				this.registryList = new Array();
+			};
+		};
+		
+		function drawWorker() {
+			ctx.clearRect(0, 0, WIDTH, HEIGHT);
+			ctx.fillStyle = "#040508";
+			ctx.fillRect(0, 0, WIDTH, HEIGHT)
+
+			var list = DrawRegistry.getAll();
+			for(var i = 0; i < list.length; i++) {
+				list[i].draw(ctx);
+			}
+			
+		    setTimeout(drawWorker, 1 / FPS);
+		}
+	
+		function updateWorker() {
+			var list = UpdateRegistry.getAll();
+			for(var i = 0; i < list.length; i++) {
+				list[i].update();
+			}
+			
+		    setTimeout(updateWorker, 1 / FPS);
+		}
+	
+		function keyboardHandle(event, isKeyPressed) {
+			var key = event.which || event.keyCode;
+			
+			switch(key) {
+			case "W".charCodeAt(0):
+			case "w".charCodeAt(0):
+				movingDown = isKeyPressed;
+				break;
+			case "S".charCodeAt(0):
+			case "s".charCodeAt(0):
+				movingUp = isKeyPressed;
+				break;
+			case "A".charCodeAt(0):
+			case "a".charCodeAt(0):
+				movingRight = isKeyPressed;
+				break;
+			case "D".charCodeAt(0):
+			case "d".charCodeAt(0):
+				movingLeft = isKeyPressed;
+				break;
+			}
+		}
+		
+		function randomString(len) {
+		    charSet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+		    var randomString = "";
+		    for (var i = 0; i < len; i++) {
+		    	var randomPoz = Math.floor(Math.random() * charSet.length);
+		    	randomString += charSet.substring(randomPoz,randomPoz+1);
+		    }
+		    return randomString;
+		}
+	
+		function getDistance(x1, y1, x2, y2) {
+			return Math.sqrt((x2-x1)*(x2-x1) + (y2-y1)*(y2-y1));
+		}
+
+		function rndm(minBound, maxBound) {
+			return parseFloat(Math.random() * (maxBound - minBound) + minBound);
+		}
+	
+		function initCanvas() {
+			DrawRegistry.clear();
+			UpdateRegistry.clear();
+			GravityRegistry.clear();
+			
+
+			if(document.getElementById("radioGenerated").checked == true) {
+				var gravityWellCount = document.getElementById("objectCountInput").value;
+				var massMin = parseFloat(document.getElementById("objectMassMinInput").value);
+				var massMax = parseFloat(document.getElementById("objectMassMaxInput").value);
+				console.debug("creating "+gravityWellCount+" gravity wells");
+				for(var i = 0; i < gravityWellCount; i++) {
+					var rndmX = rndm(-WIDTH/2, WIDTH/2);
+					var rndmY = rndm(-HEIGHT/2, HEIGHT/2);
+					var rndmMass = rndm(massMin, massMax);
+					new GravityObject(rndmX, rndmY, rndmMass);
+				}
+			} else {
+				var input = document.getElementById("customInput").value;
+				var lines = (input + "").split(";");
+				
+				for(var i=0; i < lines.length; i++) {
+					var strPos = 0;
+					
+					var posX = null;
+					var posY = null;
+					var mass = null;
+					var vectX = null;
+					var vectY = null;
+					var color = null;
+					
+
+					var tmp = lines[i] + "";
+					var input = tmp.substring(strPos, tmp.indexOf(",", strPos));
+					if(isInputRandom(input))
+						posX = rndm(-WIDTH/2, WIDTH/2);
+					else
+						posX = parseFloat(input);
+					strPos = tmp.indexOf(",", strPos) + 1;
+
+					input = tmp.substring(strPos, tmp.indexOf(",", strPos));
+					if(isInputRandom(input))
+						posY = rndm(-HEIGHT/2, HEIGHT/2);
+					else
+						posY = parseFloat(input);
+					strPos = tmp.indexOf(",", strPos) + 1;
+				
+					input = tmp.substring(strPos, tmp.indexOf(",", strPos));
+					if(isInputRandom(input)) {
+						var massMin = parseFloat(document.getElementById("objectMassMinInput").value);
+						var massMax = parseFloat(document.getElementById("objectMassMaxInput").value);
+						mass = rndm(massMin, massMax);
+					} else
+						mass = parseFloat(input);
+					strPos = tmp.indexOf(",", strPos)+ 1;
+
+					input = tmp.substring(strPos, tmp.indexOf(",", strPos));
+					if(!isInputRandom(input))
+						vectX = Math.floor(parseFloat(input));
+					strPos = tmp.indexOf(",", strPos) + 1;
+
+					input = tmp.substring(strPos, tmp.indexOf(",", strPos));
+					if(!isInputRandom(input))
+						vectY = Math.floor(parseFloat(input));
+					strPos = tmp.indexOf(",", strPos) + 1;
+
+					input = tmp.substring(strPos, tmp.indexOf(",", strPos));
+					if(!isInputRandom(input))
+						color = input;
+					
+					var o = new GravityObject(posX, posY, mass);
+					if(vectX || vectY)
+						o.vector = [vectX || 0, vectY || 0];
+					if(color)
+						o.color = color;
+				}
+			}
+			VIEWER = new Viewer(WIDTH/2, HEIGHT/2)
+			new Center(WIDTH / 2, HEIGHT / 2);
+		}
+
+		function isInputRandom(str) {
+			return ((str.toLowerCase() === "rndm") || (str.toLowerCase() === "random"));
+		}
+
+		function init() {
+			var canvas = document.getElementById("simpleCanvas1");
+			canvas.width = WIDTH;
+			canvas.height = HEIGHT;
+			ctx = canvas.getContext("2d");
+			
+		    setTimeout(drawWorker, 1 / FPS);
+		    setTimeout(updateWorker, 1 / FPS);
+		}
+
+		function setViewerMoveSpeed(newValue) {
+			document.getElementById("viewerMoveSpeedDisplay").value = newValue;
+			
+			VIEWER_MOVE_SPEED = newValue;
+		}
+
+		function setDistanceTranslation(newValue) {
+			document.getElementById("distanceTranslationDisplay").value = newValue;
+			
+			VIEWER.posX = VIEWER.posX*newValue/DISTANCE_TRANSLATION;
+			VIEWER.posY = VIEWER.posY*newValue/DISTANCE_TRANSLATION;
+			
+			DISTANCE_TRANSLATION = newValue;
+		}
+
+		function setMassRadiusRatio(newValue) {
+			document.getElementById("massRadiusRatioDisplay").value = newValue;
+			
+			MASS_RADIUS_RATIO = newValue;
+		}
+
+		function setTimeLapse(newValue) {
+			document.getElementById("timeLapseDisplay").value = newValue;
+			
+			TIME_LAPSE = newValue;
+		}
+	</script>
+	<style>
+	html, body {
+		margin: 0;
+		padding: 0;
+	}
+	span, td, th {
+		font-family: 'Verdana';
+		font-size: 12px;
+
+		color: #aaa;
+	}
+	canvas#simpleCanvas1 {
+		float: left;
+
+		width: 100%;
+		height: 100%;
+	}
+	table {
+		text-align: right;
+		width: 100%;
+	}
+	#inputContainer {
+		position: absolute;
+		right: 0;
+		bottom: 0;
+
+		width: 430px;
+
+		text-align: right;
+		word-wrap: break-word;
+
+		border: 1px solid #0a0d15;
+		background: rgba(7,9,14,0.7);
+	}
+	input[type="text"] {
+		background: #0D1019;
+		border: 1px solid #111623;
+		
+		padding: 5px;
+		margin-bottom: 5px;
+		
+		color: #aaaaaa;
+	}
+	</style>
+</head>
+<body onload="init();" onkeydown="keyboardHandle(event, true);" onkeyup="keyboardHandle(event, false);">
+	<canvas id="simpleCanvas1"></canvas><br/>
+	<div id="inputContainer">
+		<table>
+			<tr><td>MoveSpeed: </td><td><input type="range" min="1" max="128" value="32" oninput="setViewerMoveSpeed(this.value);"><input type="text" disabled id="viewerMoveSpeedDisplay" value="32"></td></tr>
+			<tr><td>Distance: </td><td><input type="range" min="4" max="8192" value="128" oninput="setDistanceTranslation(this.value);"><input type="text" disabled id="distanceTranslationDisplay" value="128"></td></tr>
+			<tr><td>MassRadiusRatio: </td><td><input type="range" min="4" max="8192" value="128" oninput="setMassRadiusRatio(this.value);"><input type="text" disabled id="massRadiusRatioDisplay" value="128"></td></tr>
+			<tr><td>TimeLapse: </td><td><input type="range" min="1" max="2048" value="128" oninput="setTimeLapse(this.value);"><input type="text" disabled id="timeLapseDisplay" value="128"></td></tr>
+		</table>
+		<br />
+		<span>Generated: </span> <input type="radio" name="generatedOrCustom" id="radioGenerated" checked onClick="document.getElementById('generatedContainer').style.display = ''; document.getElementById('customContainer').style.display = 'none';">
+		<span>Custom: </span> <input type="radio" name="generatedOrCustom" id="radioCustom" onClick="document.getElementById('generatedContainer').style.display = 'none'; document.getElementById('customContainer').style.display = '';">
+		<div id="generatedContainer">
+			<br />
+			<table>
+				<tr><td>Objects: </td><td><input type="text" id="objectCountInput" value="5"></td></tr>
+				<tr><td>MassMin: </td><td><input type="text" id="objectMassMinInput" value="8"></td></tr>
+				<tr><td>MassMax: </td><td><input type="text" id="objectMassMaxInput" value="512"></td></tr>
+			</table>
+			</div>
+		<div id="customContainer" style="display: none;">
+			<textarea id="customInput" rows="5"></textarea><br/>
+			<span>
+				("posX,posY,mass,vectX,vectY,valid RGB-Color")...<br/>
+				example: "100,100,4200,1,1,#FF0000"..<br/>
+				seperate with semicolon(";")
+			</span>
+		</div>
+		<input type="button" onclick="initCanvas();" value="Start">
+	</div>
+</body>
+</html>

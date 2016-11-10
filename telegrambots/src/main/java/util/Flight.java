@@ -25,21 +25,21 @@ public class Flight {
 		int minutes =(int) (60.0* (timeInHours-hours));
 		
 		IOController.sendMessage("Flug gestartet! Der Flug dauert mind. " +hours +"h und " +minutes +"min.", new String[]{"🔙","cancel"}, account.getID().toString(), true);
-		account.getItems().remove(plane);
+		account.getInventory().getItems().remove(plane);
 		flyNextPart();
 	}
 
 	public void abort() {
-		account.addItem(plane);
+		account.getInventory().addItem(plane);
 	}
 
 	public void flyNextPart(){
 		if(leftParts <= 0){
 			IOController.sendMessage("Sie sind rumgekommen! Sie bekommen " +distance/10 +"+ auf Ihr Punktekonto!", null, account.getID().toString(), true);
 			account.addPop(distance/10);
-			account.addCertificate(CertificateBuilder.getCertificate(this));
+			account.getInventory().addCertificate(CertificateBuilder.getCertificate(this));
 			account.save();
-			account.addItem(plane);
+			account.getInventory().addItem(plane);
 			return;
 		}
 		leftParts--;
@@ -72,7 +72,7 @@ public class Flight {
 					}
 					else {
 						plane.setValue(plane.getValue()/2);
-						account.addItem(plane);
+						account.getInventory().addItem(plane);
 						IOController.sendMessage("Ihre " +plane.getName() +" ist außengelandet! Sie verliert die Hälfte ihres Wertes!", null, account.getID().toString(), true);
 					}
 				}

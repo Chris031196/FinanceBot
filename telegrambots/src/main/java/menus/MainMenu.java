@@ -11,7 +11,7 @@ public class MainMenu extends Menu{
 	@Override
 	public void show(Integer userID) {
 		IOController.deleteLastMessages(userID.toString());
-		IOController.sendMessage("Wilkommen! Was möchten Sie tun?", new String[]{"Inventar","inventory","Markt","market","Ausloggen","logout"}, userID.toString(), true);
+		IOController.sendMessage("Wilkommen! Was möchten Sie tun?", new String[]{"Inventar","inventory","Markt","market","Ausloggen (Speichern)","logout"}, userID.toString(), true);
 	}
 
 	@Override

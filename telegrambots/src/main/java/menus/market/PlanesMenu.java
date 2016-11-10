@@ -52,7 +52,7 @@ public class PlanesMenu extends Menu{
 				acc.addMoney(-item.getValue());
 				item.setDescription("");
 				item.setValue(item.getValue()*(3.0/4.0));
-				acc.addItem(item);
+				acc.getInventory().addItem(item);
 				acc.save();
 				IOController.sendMessage("Kauf erfolgreich!", null, userID.toString(), true);
 			}

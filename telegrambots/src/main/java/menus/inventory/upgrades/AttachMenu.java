@@ -1,36 +1,41 @@
-package menus.inventory;
+package menus.inventory.upgrades;
 
 import java.util.ArrayList;
 
 import main.FinanceController;
 import main.IOController;
+import menus.inventory.InventoryMenu;
 import util.Account;
 import util.Item;
 import util.Menu;
+import util.Upgrade;
+import util.Item.TYPE;
 
-public class SellMenu extends Menu {
-	
-	public SellMenu(ArrayList<Item> items, String message){
-		
-	}
+public class AttachMenu extends Menu {
+
+	private Item selected;
+	private ArrayList<Item> upgrades = new ArrayList<Item>();
 
 	@Override
 	public void show(Integer userID) {
 		FinanceController c = FinanceController.getInstance();
 		Account acc = c.getAccount(userID);
 
-		String[] buttons = new String[acc.getInventory().getItems().size()*2+2];
+		ArrayList<String> buttons = new ArrayList<String>();
 		int index = 0;
 		for(Item item: acc.getInventory().getItems()){
-			buttons[index] = item.getName() + ": " +c.round(item.getValue()) +"$";
-			index++;
-			buttons[index] = "" + (index > 1 ? index/2 : 0);
-			index++;
+			if(item.getType().equals(TYPE.Upgrade)){
+				buttons.add(item.getName());
+				index++;
+				buttons.add("" + (index > 1 ? index/2 : 0));
+				index++;
+				upgrades.add(item);
+			}
 		}
-		buttons[index] = "🔙";
-		buttons[index+1] = "cancel";
+		buttons.add("🔙");
+		buttons.add("cancel");
 
-		IOController.sendMessage("Welchen Gegenstand wollen Sie verkaufen?", buttons, userID.toString(), true);
+		IOController.sendMessage("Welchen Gegenstand wollen Sie anbringen?", buttons.toArray(new String[]{}), userID.toString(), true);
 	}
 
 	@Override
@@ -44,13 +49,14 @@ public class SellMenu extends Menu {
 		Account acc = c.getAccount(userID);
 		try {
 			int index = Integer.parseInt(msg);
-			acc.addMoney(acc.getInventory().getItems().get(index).getValue());
-			acc.getInventory().getItems().remove(index);
+			selected = upgrades.get(index);
+			selected.use(msg, userID);
 			acc.save();
-			IOController.sendMessage("Verkauf erfolgreich!", new String[]{"🔙","cancel"}, userID.toString(), true);
 		}
 		catch(NumberFormatException e){
-
+			if(selected != null){
+				((Upgrade)selected).use(msg, userID);
+			}
 		}
 	}
 

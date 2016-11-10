@@ -17,9 +17,7 @@ public class Account {
 	private Integer iD;
 	private double money;
 	private int pop;
-	private HashMap<String, Integer> stocks; //name der Firma, Menge der Aktien
-	private ArrayList<Item> items;
-	private ArrayList<String> certs;
+	private Inventory inventory;
 
 	private Menu curMenu;
 	public ArrayList<Integer> lastSentMsgs = new ArrayList<Integer>();
@@ -29,15 +27,11 @@ public class Account {
 		this.name = name;
 		this.money = money;
 		this.pop = pop;
-		this.stocks = stocks;
-		items = new ArrayList<Item>();
+		this.inventory = new Inventory();
 		curMenu = new NoMenu();
 	}
 
 	public Account(int iD){
-		stocks = new HashMap<String, Integer>();
-		items = new ArrayList<Item>();
-		certs = new ArrayList<String>();
 		this.load(iD);
 		curMenu = new NoMenu();
 	}
@@ -49,26 +43,9 @@ public class Account {
 		save.put("name",""+name);
 		save.put("pop",""+pop);
 
-		String stocksString = "";
-		for(Entry<String, Integer> stock: stocks.entrySet()){
-			stocksString += stock.getKey() +"_" +stock.getValue() +"_";
-		}
-		save.put("stocks", stocksString);
-
-		String itemsString = "";
-		for(Item item: items){
-			itemsString += item.toString() + "_";
-		}
-		save.put("items", itemsString);
-		
-		String certsString = "";
-		for(String cert: certs){
-			certsString += cert + "_";
-		}
-		save.put("certs", certsString);
-
 		try {
 			save.store(new FileOutputStream(getSaveFile()), null);
+			inventory.save(iD);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -91,7 +68,7 @@ public class Account {
 		String[] stocksString = save.getProperty("stocks").split("_");
 		for(int i=0;i<stocksString.length-1;i+=2){
 			System.out.println("loading " +name +"_" +stocksString[i] +"_");
-			stocks.put(stocksString[i], Integer.parseInt(stocksString[i+1]));
+			inventory.getStocks().put(stocksString[i], Integer.parseInt(stocksString[i+1]));
 		}
 
 		String temp = save.getProperty("items");
@@ -100,7 +77,7 @@ public class Account {
 			for(int i=0;i<itemsString.length;i++){
 				String itemDesc = itemsString[i];
 				Item item = Item.getNewItem(itemDesc);
-				items.add(item);
+				inventory.getItems().add(item);
 			}
 		}
 		
@@ -108,7 +85,7 @@ public class Account {
 		if(temp.length() > 1){
 			String[] certsString = temp.split("_");
 			for(int i=0;i<certsString.length;i++){
-				certs.add(certsString[i]);
+				inventory.getCerts().add(certsString[i]);
 			}
 		}
 	}
@@ -125,12 +102,12 @@ public class Account {
 		return pop;
 	}
 
+	public Inventory getInventory() {
+		return inventory;
+	}
+
 	public void addPop(int pop){
 		this.pop += pop;
-	}
-	
-	public void addCertificate(String certificate){
-		certs.add(certificate);
 	}
 
 	public void addMoney(double money){
@@ -145,28 +122,12 @@ public class Account {
 		return iD;
 	}
 
-	public HashMap<String, Integer> getStocks() {
-		return stocks;
-	}
-
 	public String toString(){
 		String string =  iD +"_" +name +"_" +money +"_" +pop;
-		for(Entry<String, Integer> entry: stocks.entrySet()){
+		for(Entry<String, Integer> entry: inventory.getStocks().entrySet()){
 			string += "_" +entry.getKey() +"_" +entry.getValue();
 		}
 		return string;
-	}
-
-	public ArrayList<String> getCerts() {
-		return certs;
-	}
-
-	public ArrayList<Item> getItems() {
-		return items;
-	}
-
-	public void addItem(Item item){
-		items.add(item);
 	}
 
 	public Menu getCurMenu() {

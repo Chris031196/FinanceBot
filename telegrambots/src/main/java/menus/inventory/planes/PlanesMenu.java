@@ -1,12 +1,13 @@
-package menus.inventory;
+package menus.inventory.planes;
 
 import main.FinanceController;
 import main.IOController;
-import menus.MainMenu;
+import menus.inventory.InventoryMenu;
+import menus.inventory.SellMenu;
 import util.Account;
 import util.Item;
-import util.Menu;
 import util.Item.TYPE;
+import util.Menu;
 
 public class PlanesMenu extends Menu {
 
@@ -15,12 +16,12 @@ public class PlanesMenu extends Menu {
 		FinanceController c = FinanceController.getInstance();
 		String inventory = "Flugzeuge:\n\n";
 		Account acc = c.getAccount(userID);
-		for(Item item: acc.getItems()){
+		for(Item item: acc.getInventory().getItems()){
 			if(item.getType() == TYPE.Plane)
 				inventory += item.getName() + ":\nWert: "+c.round(item.getValue()) +"$\nÜberlandchance: " +item.getChance() +"%\n" +item.getDescription() + "\n\n";
 		}
 
-		IOController.sendMessage(inventory, new String[]{"Gegenstand verkaufen","sell","Überland gehen","use","🔙","cancel"}, userID.toString(), false);
+		IOController.sendMessage(inventory, new String[]{"Flugzeug verkaufen","sell","Überland gehen","use","🔙","cancel"}, userID.toString(), false);
 	}
 
 	@Override
@@ -36,7 +37,7 @@ public class PlanesMenu extends Menu {
 			menu.show(userID);
 		}
 		else if(msg.equals("use")){
-			UseMenu menu = new UseMenu();
+			FlyMenu menu = new FlyMenu();
 			FinanceController.getInstance().getAccount(userID).setCurMenu(menu);
 			menu.show(userID);
 		}

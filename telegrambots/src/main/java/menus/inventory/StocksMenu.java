@@ -18,7 +18,7 @@ public class StocksMenu extends Menu {
 		FinanceController c = FinanceController.getInstance();
 		String msg;
 		String[] buttons = new String[]{};
-		HashMap<String, Integer> stocks = c.getAccount(userID).getStocks();
+		HashMap<String, Integer> stocks = c.getAccount(userID).getInventory().getStocks();
 
 		if(stocks.isEmpty()){
 			msg = "Du besitzt keine Aktien!";
@@ -53,7 +53,7 @@ public class StocksMenu extends Menu {
 			cancel(userID);
 			break;
 		default:
-			HashMap<String, Integer> stocks = c.getAccount(userID).getStocks();
+			HashMap<String, Integer> stocks = c.getAccount(userID).getInventory().getStocks();
 			if(stocks.containsKey(msg)){
 				stock = msg;
 				IOController.sendMessage("Wieviele Ihrer Aktien möchten Sie verkaufen? (Bitte Anzahl senden)", new String[]{"🔙","cancel"}, userID.toString(), true);

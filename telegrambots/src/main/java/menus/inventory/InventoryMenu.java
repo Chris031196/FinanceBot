@@ -1,12 +1,12 @@
-package menus.inventory;
+	package menus.inventory;
 
 import main.FinanceController;
 import main.IOController;
 import menus.MainMenu;
+import menus.inventory.planes.PlanesMenu;
+import menus.inventory.upgrades.UpgradeMenu;
 import util.Account;
-import util.Item;
 import util.Menu;
-import util.Item.TYPE;
 
 public class InventoryMenu extends Menu {
 

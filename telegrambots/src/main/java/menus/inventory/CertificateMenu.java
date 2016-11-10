@@ -11,7 +11,7 @@ public class CertificateMenu extends Menu {
 	public void show(Integer userID) {
 		Account acc = FinanceController.getInstance().getAccount(userID);
 		IOController.sendMessage("Sie besitzen folgende Urkunden: ", null, userID.toString(), true);
-		for(String cert: acc.getCerts()){
+		for(String cert: acc.getInventory().getCerts()){
 			IOController.sendMessage(cert, null, userID.toString(), true);
 		}
 		IOController.sendMessage("Herzlichen Glückwunsch!", new String[]{"🔙","cancel"}, userID.toString(), true);
@@ -25,5 +25,4 @@ public class CertificateMenu extends Menu {
 			menu.show(userID);
 		}
 	}
-
 }

@@ -1,27 +1,27 @@
-package menus.inventory;
+package menus.inventory.upgrades;
 
 import main.FinanceController;
 import main.IOController;
-import menus.MainMenu;
+import menus.inventory.InventoryMenu;
+import menus.inventory.SellMenu;
 import util.Account;
 import util.Item;
-import util.Menu;
 import util.Item.TYPE;
+import util.Menu;
 
 public class UpgradeMenu extends Menu{
-
-
+	
 	@Override
 	public void show(Integer userID) {
 		FinanceController c = FinanceController.getInstance();
 		String inventory = "Upgrades:\n\n";
 		Account acc = c.getAccount(userID);
-		for(Item item: acc.getItems()){
+		for(Item item: acc.getInventory().getItems()){
 			if(item.getType() == TYPE.Upgrade)
 				inventory += item.getName() + ":\nWert: "+c.round(item.getValue()) +"$\nÜberlandchance: " +item.getChance() +"%\n" +item.getDescription() + "\n\n";
 		}
 
-		IOController.sendMessage(inventory, new String[]{"Gegenstand verkaufen","sell","Upgrade anbringen","use","🔙","cancel"}, userID.toString(), false);
+		IOController.sendMessage(inventory, new String[]{"Upgrade verkaufen","sell","Upgrade anbringen","use","🔙","cancel"}, userID.toString(), false);
 	}
 
 	@Override
@@ -37,7 +37,7 @@ public class UpgradeMenu extends Menu{
 			menu.show(userID);
 		}
 		else if(msg.equals("use")){
-			UseMenu menu = new UseMenu();
+			AttachMenu menu = new AttachMenu();
 			FinanceController.getInstance().getAccount(userID).setCurMenu(menu);
 			menu.show(userID);
 		}
