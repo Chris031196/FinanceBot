@@ -23,6 +23,7 @@ public class Chat implements IBotApiObject {
     private static final String FIRSTNAME_FIELD = "first_name";
     private static final String LASTNAME_FIELD = "last_name";
     private static final String USERNAME_FIELD = "username";
+    private static final String ALL_MEMBERS_ARE_ADMINISTRATORS_FIELD = "all_members_are_administrators";
     private static final String USERCHATTYPE = "private";
     private static final String GROUPCHATTYPE = "group";
     private static final String CHANNELCHATTYPE = "channel";
@@ -45,6 +46,11 @@ public class Chat implements IBotApiObject {
     private String lastName; ///< Optional. Interlocutor's first name for private chats
     @JsonProperty(USERNAME_FIELD)
     private String userName; ///< Optional. Interlocutor's last name for private chats
+    @JsonProperty(ALL_MEMBERS_ARE_ADMINISTRATORS_FIELD)
+    /**
+     * Optional. True if the group or supergroup has ‘All Members Are Admins’ enabled.
+     */
+    private Boolean allMembersAreAdministrators;
 
     public Chat() {
         super();
@@ -65,6 +71,9 @@ public class Chat implements IBotApiObject {
         }
         if (jsonObject.has(USERNAME_FIELD)) {
             this.userName = jsonObject.getString(USERNAME_FIELD);
+        }
+        if (jsonObject.has(ALL_MEMBERS_ARE_ADMINISTRATORS_FIELD)) {
+            allMembersAreAdministrators = jsonObject.getBoolean(ALL_MEMBERS_ARE_ADMINISTRATORS_FIELD);
         }
     }
 
@@ -104,6 +113,10 @@ public class Chat implements IBotApiObject {
         return userName;
     }
 
+    public Boolean getAllMembersAreAdministrators() {
+        return allMembersAreAdministrators;
+    }
+
     @Override
     public void serialize(JsonGenerator gen, SerializerProvider serializers) throws IOException {
         gen.writeStartObject();
@@ -124,6 +137,9 @@ public class Chat implements IBotApiObject {
         if (!isGroupChat() && userName != null) {
             gen.writeStringField(USERNAME_FIELD, userName);
         }
+        if (allMembersAreAdministrators != null) {
+            gen.writeBooleanField(ALL_MEMBERS_ARE_ADMINISTRATORS_FIELD, allMembersAreAdministrators);
+        }
         gen.writeEndObject();
         gen.flush();
     }
@@ -142,6 +158,7 @@ public class Chat implements IBotApiObject {
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", userName='" + userName + '\'' +
+                ", allMembersAreAdministrators=" + allMembersAreAdministrators +
                 '}';
     }
 }

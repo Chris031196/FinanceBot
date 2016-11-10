@@ -8,6 +8,9 @@ import com.fasterxml.jackson.databind.jsontype.TypeSerializer;
 import org.json.JSONObject;
 import org.telegram.telegrambots.api.interfaces.IBotApiObject;
 import org.telegram.telegrambots.api.interfaces.IToJson;
+import org.telegram.telegrambots.api.interfaces.Validable;
+import org.telegram.telegrambots.api.objects.games.CallbackGame;
+import org.telegram.telegrambots.exceptions.TelegramApiValidationException;
 
 import java.io.IOException;
 
@@ -20,30 +23,46 @@ import java.io.IOException;
  * display unsupported message.
  * @date 10 of April of 2016
  */
-public class InlineKeyboardButton implements IBotApiObject, IToJson {
+public class InlineKeyboardButton implements IBotApiObject, IToJson, Validable {
 
     private static final String TEXT_FIELD = "text";
     private static final String URL_FIELD = "url";
     private static final String CALLBACK_DATA_FIELD = "callback_data";
+    private static final String CALLBACK_GAME_FIELD = "callback_game";
     private static final String SWITCH_INLINE_QUERY_FIELD = "switch_inline_query";
+    private static final String SWITCH_INLINE_QUERY_CURRENT_CHAT_FIELD = "switch_inline_query_current_chat";
     @JsonProperty(TEXT_FIELD)
     private String text; ///< Label text on the button
     @JsonProperty(URL_FIELD)
     private String url; ///< Optional. HTTP url to be opened when button is pressed
     @JsonProperty(CALLBACK_DATA_FIELD)
     private String callbackData; ///< Optional. Data to be sent in a callback query to the bot when button is pressed
+    @JsonProperty(CALLBACK_GAME_FIELD)
+    /**
+     * Optional. Description of the game that will be launched when the user presses the button.
+     *
+     * @note This type of button must always be the first button in the first row.
+     */
+    private CallbackGame callbackGame;
     @JsonProperty(SWITCH_INLINE_QUERY_FIELD)
     /**
      * Optional.
      * If set, pressing the button will prompt the user to select one of their chats,
      * open that chat and insert the bot‘s username and the specified inline query in the input field.
      * Can be empty, in which case just the bot’s username will be inserted.
-     * @Note: This offers an easy way for users to start using your bot in inline mode when
+     * @note: This offers an easy way for users to start using your bot in inline mode when
      * they are currently in a private chat with it.
      * Especially useful when combined with switch_pm… actions – in this case the user will
      * be automatically returned to the chat they switched from, skipping the chat selection screen.
      */
     private String switchInlineQuery;
+    @JsonProperty(SWITCH_INLINE_QUERY_CURRENT_CHAT_FIELD)
+    /**
+     * Optional. If set, pressing the button will insert the bot‘s username and the specified
+     * inline query in the current chat's input field. Can be empty,
+     * in which case only the bot’s username will be inserted.
+     */
+    private String switchInlineQueryCurrentChat;
 
     public InlineKeyboardButton() {
         super();
@@ -58,8 +77,14 @@ public class InlineKeyboardButton implements IBotApiObject, IToJson {
         if (jsonObject.has(CALLBACK_DATA_FIELD)) {
             callbackData = jsonObject.getString(CALLBACK_DATA_FIELD);
         }
+        if (jsonObject.has(CALLBACK_GAME_FIELD)) {
+            callbackGame = new CallbackGame(jsonObject.getJSONObject(CALLBACK_GAME_FIELD));
+        }
         if (jsonObject.has(SWITCH_INLINE_QUERY_FIELD)) {
             switchInlineQuery = jsonObject.getString(SWITCH_INLINE_QUERY_FIELD);
+        }
+        if (jsonObject.has(SWITCH_INLINE_QUERY_CURRENT_CHAT_FIELD)) {
+            switchInlineQueryCurrentChat = jsonObject.getString(SWITCH_INLINE_QUERY_CURRENT_CHAT_FIELD);
         }
     }
 
@@ -99,6 +124,31 @@ public class InlineKeyboardButton implements IBotApiObject, IToJson {
         return this;
     }
 
+    public CallbackGame getCallbackGame() {
+        return callbackGame;
+    }
+
+    public InlineKeyboardButton setCallbackGame(CallbackGame callbackGame) {
+        this.callbackGame = callbackGame;
+        return this;
+    }
+
+    public String getSwitchInlineQueryCurrentChat() {
+        return switchInlineQueryCurrentChat;
+    }
+
+    public InlineKeyboardButton setSwitchInlineQueryCurrentChat(String switchInlineQueryCurrentChat) {
+        this.switchInlineQueryCurrentChat = switchInlineQueryCurrentChat;
+        return this;
+    }
+
+    @Override
+    public void validate() throws TelegramApiValidationException {
+        if (text == null || text.isEmpty()) {
+            throw new TelegramApiValidationException("Text parameter can't be empty", this);
+        }
+    }
+
     @Override
     public JSONObject toJson() {
         JSONObject jsonObject = new JSONObject();
@@ -111,6 +161,12 @@ public class InlineKeyboardButton implements IBotApiObject, IToJson {
         }
         if (switchInlineQuery != null) {
             jsonObject.put(SWITCH_INLINE_QUERY_FIELD, switchInlineQuery);
+        }
+        if (switchInlineQueryCurrentChat != null) {
+            jsonObject.put(SWITCH_INLINE_QUERY_CURRENT_CHAT_FIELD, switchInlineQueryCurrentChat);
+        }
+        if (callbackGame != null) {
+            jsonObject.put(CALLBACK_GAME_FIELD, callbackGame);
         }
 
         return jsonObject;
@@ -129,6 +185,12 @@ public class InlineKeyboardButton implements IBotApiObject, IToJson {
         if (switchInlineQuery != null) {
             gen.writeStringField(SWITCH_INLINE_QUERY_FIELD, switchInlineQuery);
         }
+        if (switchInlineQueryCurrentChat != null) {
+            gen.writeStringField(SWITCH_INLINE_QUERY_CURRENT_CHAT_FIELD, switchInlineQueryCurrentChat);
+        }
+        if (callbackGame != null) {
+            gen.writeObjectField(CALLBACK_GAME_FIELD, callbackGame);
+        }
         gen.writeEndObject();
         gen.flush();
     }
@@ -141,10 +203,12 @@ public class InlineKeyboardButton implements IBotApiObject, IToJson {
     @Override
     public String toString() {
         return "InlineKeyboardButton{" +
-                "text=" + text +
-                ", url=" + url +
-                ", callbackData=" + callbackData +
-                ", switchInlineQuery=" + switchInlineQuery +
+                "text='" + text + '\'' +
+                ", url='" + url + '\'' +
+                ", callbackData='" + callbackData + '\'' +
+                ", callbackGame=" + callbackGame +
+                ", switchInlineQuery='" + switchInlineQuery + '\'' +
+                ", switchInlineQueryCurrentChat='" + switchInlineQueryCurrentChat + '\'' +
                 '}';
     }
 }

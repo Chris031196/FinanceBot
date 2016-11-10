@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.jsontype.TypeSerializer;
 import org.json.JSONObject;
 import org.telegram.telegrambots.Constants;
 import org.telegram.telegrambots.api.methods.BotApiMethod;
+import org.telegram.telegrambots.exceptions.TelegramApiValidationException;
 
 import java.io.IOException;
 
@@ -17,7 +18,7 @@ import java.io.IOException;
  * @date 20 of May of 2016
  */
 public class GetChatMemberCount extends BotApiMethod<Integer> {
-    public static final String PATH = "getChatAdministrators";
+    public static final String PATH = "getChatMembersCount";
 
     private static final String CHATID_FIELD = "chat_id";
     private String chatId; ///< Unique identifier for the chat to send the message to (Or username for channels)
@@ -53,6 +54,13 @@ public class GetChatMemberCount extends BotApiMethod<Integer> {
             return answer.getInt(Constants.RESPONSEFIELDRESULT);
         }
         return null;
+    }
+
+    @Override
+    public void validate() throws TelegramApiValidationException {
+        if (chatId == null) {
+            throw new TelegramApiValidationException("ChatId can't be null", this);
+        }
     }
 
     @Override
