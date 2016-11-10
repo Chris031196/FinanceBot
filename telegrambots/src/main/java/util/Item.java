@@ -1,6 +1,8 @@
 package util;
 
-public class Item {
+import java.io.Serializable;
+
+public class Item implements Serializable{
 
 	public enum TYPE {
 		Plane, Upgrade

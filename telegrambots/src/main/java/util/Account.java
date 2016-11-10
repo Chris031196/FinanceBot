@@ -32,6 +32,7 @@ public class Account {
 	}
 
 	public Account(int iD){
+		this.inventory = new Inventory();
 		this.load(iD);
 		curMenu = new NoMenu();
 	}
@@ -57,6 +58,7 @@ public class Account {
 		Properties save = new Properties();
 		try {
 			save.load(new FileInputStream(getSaveFile()));
+			inventory.load(iD);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -64,30 +66,6 @@ public class Account {
 		this.name = save.getProperty("name");
 		this.money = Double.parseDouble(save.getProperty("money"));
 		this.pop = Integer.parseInt(save.getProperty("pop"));
-
-		String[] stocksString = save.getProperty("stocks").split("_");
-		for(int i=0;i<stocksString.length-1;i+=2){
-			System.out.println("loading " +name +"_" +stocksString[i] +"_");
-			inventory.getStocks().put(stocksString[i], Integer.parseInt(stocksString[i+1]));
-		}
-
-		String temp = save.getProperty("items");
-		if(temp.length() > 1){
-			String[] itemsString = temp.split("_");
-			for(int i=0;i<itemsString.length;i++){
-				String itemDesc = itemsString[i];
-				Item item = Item.getNewItem(itemDesc);
-				inventory.getItems().add(item);
-			}
-		}
-		
-		temp = save.getProperty("certs");
-		if(temp.length() > 1){
-			String[] certsString = temp.split("_");
-			for(int i=0;i<certsString.length;i++){
-				inventory.getCerts().add(certsString[i]);
-			}
-		}
 	}
 
 	public String getSaveFile(){

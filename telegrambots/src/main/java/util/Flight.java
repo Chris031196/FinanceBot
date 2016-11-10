@@ -24,7 +24,7 @@ public class Flight {
 		int hours = (int) timeInHours;
 		int minutes =(int) (60.0* (timeInHours-hours));
 		
-		IOController.sendMessage("Flug gestartet! Der Flug dauert mind. " +hours +"h und " +minutes +"min.", new String[]{"🔙","cancel"}, account.getID().toString(), true);
+		IOController.sendMessage("Flug gestartet! Der Flug dauert mind. " +hours +"h und " +minutes +"min.", new String[]{"🔙","cancel"}, account.getID().toString(), false);
 		account.getInventory().getItems().remove(plane);
 		flyNextPart();
 	}
@@ -35,7 +35,7 @@ public class Flight {
 
 	public void flyNextPart(){
 		if(leftParts <= 0){
-			IOController.sendMessage("Sie sind rumgekommen! Sie bekommen " +distance/10 +"+ auf Ihr Punktekonto!", null, account.getID().toString(), true);
+			IOController.sendMessage("Sie sind rumgekommen! Sie bekommen " +distance/10 +"+ auf Ihr Punktekonto!", null, account.getID().toString(), false);
 			account.addPop(distance/10);
 			account.getInventory().addCertificate(CertificateBuilder.getCertificate(this));
 			account.save();

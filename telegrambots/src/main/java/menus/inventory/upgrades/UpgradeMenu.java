@@ -2,8 +2,8 @@ package menus.inventory.upgrades;
 
 import main.FinanceController;
 import main.IOController;
+import menus.generic.SellMenu;
 import menus.inventory.InventoryMenu;
-import menus.inventory.SellMenu;
 import util.Account;
 import util.Item;
 import util.Item.TYPE;
@@ -32,9 +32,9 @@ public class UpgradeMenu extends Menu{
 		}
 
 		if(msg.equals("sell")){
-			SellMenu menu = new SellMenu();
-			FinanceController.getInstance().getAccount(userID).setCurMenu(menu);
-			menu.show(userID);
+//			SellMenu menu = new SellMenu();
+//			FinanceController.getInstance().getAccount(userID).setCurMenu(menu);
+//			menu.show(userID);
 		}
 		else if(msg.equals("use")){
 			AttachMenu menu = new AttachMenu();

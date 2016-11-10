@@ -272,7 +272,7 @@ public class FinanceController {
 		}
 	}
 	
-	public double round(double number){
+	public static double round(double number){
 		int rounded = (int) (number*100);
 		number = ((double) rounded) / 100;
 		return number;

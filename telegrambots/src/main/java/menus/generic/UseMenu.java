@@ -1,24 +1,32 @@
-package menus.inventory.planes;
+package menus.generic;
+
+import java.util.ArrayList;
 
 import main.FinanceController;
 import main.IOController;
+import menus.generic.SelectionMenu;
 import menus.inventory.InventoryMenu;
-import menus.inventory.SellMenu;
+import menus.inventory.planes.FlyMenu;
 import util.Account;
 import util.Item;
 import util.Item.TYPE;
 import util.Menu;
 
-public class PlanesMenu extends Menu {
+public class UseMenu extends Menu {
+	
+	ArrayList<Item> items;
+	String message;
+	
+	public UseMenu(ArrayList<Item> items, String message){
+		this.items = items;
+		this.message = message;
+	}
 
 	@Override
 	public void show(Integer userID) {
-		FinanceController c = FinanceController.getInstance();
 		String inventory = "Flugzeuge:\n\n";
-		Account acc = c.getAccount(userID);
-		for(Item item: acc.getInventory().getItems()){
-			if(item.getType() == TYPE.Plane)
-				inventory += item.getName() + ":\nWert: "+c.round(item.getValue()) +"$\nÜberlandchance: " +item.getChance() +"%\n" +item.getDescription() + "\n\n";
+		for(Item item: items){
+				inventory += item.getName() + ":\nWert: "+FinanceController.round(item.getValue()) +"$\nÜberlandchance: " +item.getChance() +"%\n" +item.getDescription() + "\n\n";
 		}
 
 		IOController.sendMessage(inventory, new String[]{"Flugzeug verkaufen","sell","Überland gehen","use","🔙","cancel"}, userID.toString(), false);
@@ -32,8 +40,9 @@ public class PlanesMenu extends Menu {
 		}
 
 		if(msg.equals("sell")){
-			SellMenu menu = new SellMenu();
-			FinanceController.getInstance().getAccount(userID).setCurMenu(menu);
+			Account acc = FinanceController.getInstance().getAccount(userID);
+			SelectionMenu menu = new SelectionMenu(acc.getInventory().getItemsOfType(TYPE.Plane), "Welches Flugzeug möchten Sie verkaufen?");
+			acc.setCurMenu(menu);
 			menu.show(userID);
 		}
 		else if(msg.equals("use")){

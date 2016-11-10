@@ -1,13 +1,14 @@
 package util;
 
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 import main.FinanceController;
 import main.IOController;
 import menus.inventory.InventoryMenu;
 
-public class Plane extends Item {
+public class Plane extends Item{
 
 	public Plane(String name, double value, int chance, String description) {
 		this.name = name;

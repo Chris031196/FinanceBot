@@ -1,28 +1,31 @@
-package menus.inventory;
+package menus.generic;
 
 import java.util.ArrayList;
 
 import main.FinanceController;
 import main.IOController;
+import menus.inventory.InventoryMenu;
 import util.Account;
 import util.Item;
 import util.Menu;
 
 public class SellMenu extends Menu {
 	
+	ArrayList<Item> items;
+	String message;
+	
 	public SellMenu(ArrayList<Item> items, String message){
-		
+		this.items = items;
+		this.message = message;
 	}
 
 	@Override
 	public void show(Integer userID) {
-		FinanceController c = FinanceController.getInstance();
-		Account acc = c.getAccount(userID);
 
-		String[] buttons = new String[acc.getInventory().getItems().size()*2+2];
+		String[] buttons = new String[items.size()*2+2];
 		int index = 0;
-		for(Item item: acc.getInventory().getItems()){
-			buttons[index] = item.getName() + ": " +c.round(item.getValue()) +"$";
+		for(Item item: items){
+			buttons[index] = item.getName() + ": " +FinanceController.round(item.getValue()) +"$";
 			index++;
 			buttons[index] = "" + (index > 1 ? index/2 : 0);
 			index++;
@@ -30,7 +33,7 @@ public class SellMenu extends Menu {
 		buttons[index] = "🔙";
 		buttons[index+1] = "cancel";
 
-		IOController.sendMessage("Welchen Gegenstand wollen Sie verkaufen?", buttons, userID.toString(), true);
+		IOController.sendMessage(message, buttons, userID.toString(), true);
 	}
 
 	@Override
@@ -44,14 +47,12 @@ public class SellMenu extends Menu {
 		Account acc = c.getAccount(userID);
 		try {
 			int index = Integer.parseInt(msg);
-			acc.addMoney(acc.getInventory().getItems().get(index).getValue());
-			acc.getInventory().getItems().remove(index);
-			acc.save();
-			IOController.sendMessage("Verkauf erfolgreich!", new String[]{"🔙","cancel"}, userID.toString(), true);
+			Item toSell = items.get(index);
+			acc.addMoney(toSell.getValue());
+			acc.getInventory().getItems().remove(toSell);
+			IOController.sendMessage(toSell.getName() +" erfolgreich verkauft!", new String[]{"🔙","cancel"}, userID.toString(), true);
 		}
-		catch(NumberFormatException e){
-
-		}
+		catch(NumberFormatException e){}
 	}
 
 	public void cancel(Integer userID){

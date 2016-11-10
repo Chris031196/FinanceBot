@@ -3,7 +3,7 @@
 import main.FinanceController;
 import main.IOController;
 import menus.MainMenu;
-import menus.inventory.planes.PlanesMenu;
+import menus.generic.UseMenu;
 import menus.inventory.upgrades.UpgradeMenu;
 import util.Account;
 import util.Menu;
@@ -32,7 +32,7 @@ public class InventoryMenu extends Menu {
 			next.show(userID);
 			break;
 		case "planes":
-			next = new PlanesMenu();
+			next = new UseMenu();
 			acc.setCurMenu(next);
 			next.show(userID);
 			break;
