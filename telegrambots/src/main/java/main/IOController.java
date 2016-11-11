@@ -44,7 +44,7 @@ public class IOController {
 			controller.lookForPlus(msg, user.getId());
 			Account account = controller.getAccount(user.getId()) != null ? controller.getAccount(user.getId()) : controller.addAccount(user);
 			Menu menu = account.getCurMenu();
-			menu.answerReceived(msg, user.getId());
+			menu.messageReceived(msg, user.getId());
 		}
 	}
 	
@@ -62,7 +62,7 @@ public class IOController {
 			FinanceController controller = FinanceController.getInstance();
 			Account account = controller.getAccount(user.getId()) != null ? controller.getAccount(user.getId()) : controller.addAccount(user);
 			Menu menu = account.getCurMenu();
-			menu.answerReceived(query, user.getId());
+			menu.messageReceived(query, user.getId());
 			bot.answerCallback(callback);
 		}
 	}
@@ -73,7 +73,7 @@ public class IOController {
 		account.save();
 		if(account != null){
 			NoMenu menu = new NoMenu();
-			account.setCurMenu(menu);
+			account.setMenu(menu);
 			IOController.sendMessage("Erfolgreich ausgeloggt!", null, userID.toString(), false);
 		}
 	}

@@ -27,7 +27,7 @@ public class BuyStocksMenu extends Menu {
 	}
 
 	@Override
-	public void answerReceived(String msg, Integer userID) {
+	public void messageReceived(String msg, Integer userID) {
 		if(msg.equals("cancel")){
 			cancel(userID);
 			return;
@@ -58,7 +58,7 @@ public class BuyStocksMenu extends Menu {
 
 	public void cancel(Integer userID){
 		StocksMenu menu = new StocksMenu();
-		FinanceController.getInstance().getAccount(userID).setCurMenu(menu);
+		FinanceController.getInstance().getAccount(userID).setMenu(menu);
 		menu.show(userID);
 	}
 }

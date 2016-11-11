@@ -25,7 +25,7 @@ public class UpgradeMenu extends Menu{
 	}
 
 	@Override
-	public void answerReceived(String msg, Integer userID) {
+	public void messageReceived(String msg, Integer userID) {
 		if(msg.equals("cancel")){
 			cancel(userID);
 			return;
@@ -33,12 +33,12 @@ public class UpgradeMenu extends Menu{
 
 		if(msg.equals("sell")){
 //			SellMenu menu = new SellMenu();
-//			FinanceController.getInstance().getAccount(userID).setCurMenu(menu);
+//			FinanceController.getInstance().getAccount(userID).setMenu(menu);
 //			menu.show(userID);
 		}
 		else if(msg.equals("use")){
 			AttachMenu menu = new AttachMenu();
-			FinanceController.getInstance().getAccount(userID).setCurMenu(menu);
+			FinanceController.getInstance().getAccount(userID).setMenu(menu);
 			menu.show(userID);
 		}
 
@@ -46,7 +46,7 @@ public class UpgradeMenu extends Menu{
 
 	public void cancel(Integer userID){
 		InventoryMenu menu = new InventoryMenu();
-		FinanceController.getInstance().getAccount(userID).setCurMenu(menu);
+		FinanceController.getInstance().getAccount(userID).setMenu(menu);
 		menu.show(userID);
 	}
 

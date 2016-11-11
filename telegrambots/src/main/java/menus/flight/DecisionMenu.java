@@ -20,15 +20,15 @@ public class DecisionMenu extends Menu {
 	}
 
 	@Override
-	public void answerReceived(String msg, Integer userID) {
+	public void messageReceived(String msg, Integer userID) {
 		switch(msg) {
 		case "fly":
 			flight.flyNextPart();
-			flight.getAccount().setCurMenu(last);
+			flight.getAccount().setMenu(last);
 			last.show(userID);
 		case "return":
 			flight.abort();
-			flight.getAccount().setCurMenu(last);
+			flight.getAccount().setMenu(last);
 			last.show(userID);
 		}
 		

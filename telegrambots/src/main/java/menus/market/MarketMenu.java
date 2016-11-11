@@ -13,24 +13,24 @@ public class MarketMenu extends Menu {
 	}
 
 	@Override
-	public void answerReceived(String msg, Integer userID) {
+	public void messageReceived(String msg, Integer userID) {
 		Account acc = FinanceController.getInstance().getAccount(userID);
 		Menu next;
 		switch(msg){
 		case "cancel": cancel(userID); break;
 		case "stocks":
 			next = new StocksMenu();
-			acc.setCurMenu(next);
+			acc.setMenu(next);
 			next.show(userID);
 			break;
 		case "planes":
 			next = new PlanesMenu();
-			acc.setCurMenu(next);
+			acc.setMenu(next);
 			next.show(userID);
 			break;
 		case "upgrades":
 			next = new UpgradeMenu();
-			acc.setCurMenu(next);
+			acc.setMenu(next);
 			next.show(userID);
 			break;
 		}
@@ -38,7 +38,7 @@ public class MarketMenu extends Menu {
 	
 	public void cancel(Integer userID){
 		MainMenu menu = new MainMenu();
-		FinanceController.getInstance().getAccount(userID).setCurMenu(menu);
+		FinanceController.getInstance().getAccount(userID).setMenu(menu);
 		menu.show(userID);
 	}
 }

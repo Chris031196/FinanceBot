@@ -23,15 +23,15 @@ public class AccountMenu extends Menu {
 	}
 
 	@Override
-	public void answerReceived(String msg, Integer userID) {
+	public void messageReceived(String msg, Integer userID) {
 		if(msg.equals("back")){
 			InventoryMenu menu = new InventoryMenu();
-			FinanceController.getInstance().getAccount(userID).setCurMenu(menu);
+			FinanceController.getInstance().getAccount(userID).setMenu(menu);
 			menu.show(userID);
 		}
 		if(msg.equals("transfer")){
 			TransferMenu menu = new TransferMenu();
-			FinanceController.getInstance().getAccount(userID).setCurMenu(menu);
+			FinanceController.getInstance().getAccount(userID).setMenu(menu);
 			menu.show(userID);
 		}
 

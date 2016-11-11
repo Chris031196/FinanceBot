@@ -15,24 +15,24 @@ public class MainMenu extends Menu{
 	}
 
 	@Override
-	public void answerReceived(String msg, Integer userID) {
+	public void messageReceived(String msg, Integer userID) {
 		
 		switch(msg){
 		case "market":
 			MarketMenu mMenu = new MarketMenu();
-			FinanceController.getInstance().getAccount(userID).setCurMenu(mMenu);
+			FinanceController.getInstance().getAccount(userID).setMenu(mMenu);
 			mMenu.show(userID);
 			break;
 			
 		case "inventory":
 			InventoryMenu iMenu = new InventoryMenu();
-			FinanceController.getInstance().getAccount(userID).setCurMenu(iMenu);
+			FinanceController.getInstance().getAccount(userID).setMenu(iMenu);
 			iMenu.show(userID);
 			break;
 			
 		case "logout":
 			NoMenu nMenu = new NoMenu();
-			FinanceController.getInstance().getAccount(userID).setCurMenu(nMenu);
+			FinanceController.getInstance().getAccount(userID).setMenu(nMenu);
 			nMenu.show(userID);
 			break;
 		}

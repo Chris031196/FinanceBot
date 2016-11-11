@@ -33,7 +33,7 @@ public class UseMenu extends Menu {
 	}
 
 	@Override
-	public void answerReceived(String msg, Integer userID) {
+	public void messageReceived(String msg, Integer userID) {
 		if(msg.equals("cancel")){
 			cancel(userID);
 			return;
@@ -42,12 +42,12 @@ public class UseMenu extends Menu {
 		if(msg.equals("sell")){
 			Account acc = FinanceController.getInstance().getAccount(userID);
 			SelectionMenu menu = new SelectionMenu(acc.getInventory().getItemsOfType(TYPE.Plane), "Welches Flugzeug möchten Sie verkaufen?");
-			acc.setCurMenu(menu);
+			acc.setMenu(menu);
 			menu.show(userID);
 		}
 		else if(msg.equals("use")){
 			FlyMenu menu = new FlyMenu();
-			FinanceController.getInstance().getAccount(userID).setCurMenu(menu);
+			FinanceController.getInstance().getAccount(userID).setMenu(menu);
 			menu.show(userID);
 		}
 
@@ -55,7 +55,7 @@ public class UseMenu extends Menu {
 
 	public void cancel(Integer userID){
 		InventoryMenu menu = new InventoryMenu();
-		FinanceController.getInstance().getAccount(userID).setCurMenu(menu);
+		FinanceController.getInstance().getAccount(userID).setMenu(menu);
 		menu.show(userID);
 	}
 

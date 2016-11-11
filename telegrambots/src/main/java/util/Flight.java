@@ -67,7 +67,7 @@ public class Flight {
 					if(!crashedLast){
 						crashedLast = true;
 						DecisionMenu menu = new DecisionMenu(flight, account.getCurMenu());
-						account.setCurMenu(menu);
+						account.setMenu(menu);
 						menu.show(account.getID());
 					}
 					else {

@@ -24,14 +24,14 @@ public class StocksMenu extends Menu{
 	}
 
 	@Override
-	public void answerReceived(String msg, Integer userID) {
+	public void messageReceived(String msg, Integer userID) {
 		if(msg.equals("back")){
 			MarketMenu sMenu = new MarketMenu();
-			FinanceController.getInstance().getAccount(userID).setCurMenu(sMenu);
+			FinanceController.getInstance().getAccount(userID).setMenu(sMenu);
 			sMenu.show(userID);
 		} else if(msg.equals("buy")){
 			BuyStocksMenu sMenu = new BuyStocksMenu();
-			FinanceController.getInstance().getAccount(userID).setCurMenu(sMenu);
+			FinanceController.getInstance().getAccount(userID).setMenu(sMenu);
 			sMenu.show(userID);
 		} else if (msg.equals("load")){
 			IOController.sendData(FinanceController.logFile, userID.toString());

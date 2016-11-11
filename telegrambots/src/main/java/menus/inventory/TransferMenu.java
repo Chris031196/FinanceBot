@@ -15,7 +15,7 @@ public class TransferMenu extends Menu {
 	}
 
 	@Override
-	public void answerReceived(String msg, Integer userID) {
+	public void messageReceived(String msg, Integer userID) {
 		if(msg.equals("cancel")){
 			cancel(userID);
 			return;
@@ -57,7 +57,7 @@ public class TransferMenu extends Menu {
 
 	public void cancel(Integer userID){
 		AccountMenu menu = new AccountMenu();
-		FinanceController.getInstance().getAccount(userID).setCurMenu(menu);
+		FinanceController.getInstance().getAccount(userID).setMenu(menu);
 		menu.show(userID);
 	}
 

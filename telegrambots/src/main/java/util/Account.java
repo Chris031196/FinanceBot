@@ -19,7 +19,7 @@ public class Account {
 	private int pop;
 	private Inventory inventory;
 
-	private Menu curMenu;
+	private ArrayList<MessageListener> activeListeners = new ArrayList<MessageListener>();
 	public ArrayList<Integer> lastSentMsgs = new ArrayList<Integer>();
 
 	public Account(int iD, String name, double money, int pop, HashMap<String, Integer> stocks){
@@ -28,13 +28,13 @@ public class Account {
 		this.money = money;
 		this.pop = pop;
 		this.inventory = new Inventory();
-		curMenu = new NoMenu();
+		activeListeners.add(new NoMenu());
 	}
 
 	public Account(int iD){
 		this.inventory = new Inventory();
 		this.load(iD);
-		curMenu = new NoMenu();
+		activeListeners.add(new NoMenu());
 	}
 
 	public void save(){
@@ -108,12 +108,25 @@ public class Account {
 		return string;
 	}
 
+	public MessageListener[] getListeners() {
+		return activeListeners.toArray(new MessageListener[]{});
+	}
+	
 	public Menu getCurMenu() {
-		return curMenu;
+		for(MessageListener ml: activeListeners){
+			if(ml instanceof Menu){
+				return (Menu) ml;
+			}
+		}
+		return new NoMenu();
+	}
+	
+	public void setMenu(Menu menu){
+		activeListeners.remove(getCurMenu());
+		activeListeners.add(menu);
 	}
 
-	public void setCurMenu(Menu curMenu) {
-		this.curMenu = curMenu;
+	public void addListener(MessageListener listener) {
+		activeListeners.add(listener);
 	}
-
 }

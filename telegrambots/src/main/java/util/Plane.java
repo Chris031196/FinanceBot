@@ -61,7 +61,7 @@ public class Plane extends Item{
 		}
 
 		@Override
-		public void answerReceived(String msg, Integer userID) {
+		public void messageReceived(String msg, Integer userID) {
 			if(msg.equals("cancel")){
 				InventoryMenu menu = new InventoryMenu();
 				FinanceController.getInstance().getAccount(userID).setCurMenu(menu);;
