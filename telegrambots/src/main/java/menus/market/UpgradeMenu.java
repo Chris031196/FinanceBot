@@ -4,11 +4,11 @@ import java.util.ArrayList;
 
 import main.FinanceController;
 import main.IOController;
-import menus.MainMenu;
 import util.Account;
 import util.Item;
-import util.Menu;
 import util.Item.TYPE;
+import util.Menu;
+import util.Upgrade;
 
 public class UpgradeMenu extends Menu{
 	
@@ -23,10 +23,11 @@ public class UpgradeMenu extends Menu{
 		int index = 0;
 		for(Item item: c.getMarket()){
 			if(item.getType() == TYPE.Upgrade){
-				upgrades.add(item);
-				buttons.add(item.getName() +":\n" +item.getValue() +"$");
+				Upgrade upgrade = (Upgrade) item;
+				upgrades.add(upgrade);
+				buttons.add(upgrade.getName() +":\n" +upgrade.getValue() +"$");
 				buttons.add("" + index);
-				items += item.getName() + ":\nWert: "+c.round(item.getValue()) +"$\nÜberlandchance: " +item.getChance() +"%\n" +item.getDescription() + "\n\n";
+				items += upgrade.getName() + ":\nWert: "+c.round(upgrade.getValue()) +"$\nÜberlandchance: " +upgrade.getChance() +"%\n" +upgrade.getDescription() + "\n\n";
 				index++;
 			}
 		}
@@ -47,7 +48,7 @@ public class UpgradeMenu extends Menu{
 		Account acc = c.getAccount(userID);
 		try {
 			int index = Integer.parseInt(msg);
-			Item schedule = upgrades.get(index);
+			Upgrade schedule =(Upgrade) upgrades.get(index);
 			if(acc.getMoney() >= schedule.getValue()){
 				Item item = Item.getNewItem(schedule.getName(), schedule.getType(), schedule.getValue(), schedule.getChance(), schedule.getDescription());
 				acc.addMoney(-item.getValue());

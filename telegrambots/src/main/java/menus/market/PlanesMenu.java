@@ -8,6 +8,7 @@ import util.Account;
 import util.Item;
 import util.Item.TYPE;
 import util.Menu;
+import util.Plane;
 
 public class PlanesMenu extends Menu{
 	
@@ -22,10 +23,11 @@ public class PlanesMenu extends Menu{
 		int index = 0;
 		for(Item item: c.getMarket()){
 			if(item.getType() == TYPE.Plane){
-				planes.add(item);
-				buttons.add(item.getName() +":\n" +item.getValue() +"$");
+				Plane plane = (Plane) item;
+				planes.add(plane);
+				buttons.add(plane.getName() +":\n" +plane.getValue() +"$");
 				buttons.add("" + index);
-				items += item.getName() + ":\nWert: "+c.round(item.getValue()) +"$\nÜberlandchance: " +item.getChance() +"%\n" +item.getDescription() + "\n\n";
+				items += plane.getName() + ":\nWert: "+c.round(plane.getValue()) +"$\nÜberlandchance: " +plane.getChance() +"%\n" +plane.getDescription() + "\n\n";
 				index++;
 			}
 		}
@@ -46,7 +48,7 @@ public class PlanesMenu extends Menu{
 		Account acc = c.getAccount(userID);
 		try {
 			int index = Integer.parseInt(msg);
-			Item schedule = planes.get(index);
+			Plane schedule = (Plane) planes.get(index);
 			if(acc.getMoney() >= schedule.getValue()){
 				Item item = Item.getNewItem(schedule.getName(), schedule.getType(), schedule.getValue(), schedule.getChance(), schedule.getDescription());
 				acc.addMoney(-item.getValue());

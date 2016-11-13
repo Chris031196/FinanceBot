@@ -14,6 +14,7 @@ import org.telegram.telegrambots.api.objects.User;
 import util.Account;
 import util.Company;
 import util.Item;
+import util.Item.TYPE;
 
 public class FinanceController {
 
@@ -301,17 +302,17 @@ public class FinanceController {
 	public void stockChanged(String company) {
 		Company comp = companies.get(company);
 		for(Account acc: accounts.values()){
-			if(acc.getInventory().getStocks().containsKey(company)){
+			if(acc.getInventory().getItemsOfType(TYPE.Stock).contains(company)){
 				IOController.sendMessage("Der Wert von " +company +" hat sich um " +round(comp.getLastChange()) + "% geändert!", null, acc.getID().toString(), true);
 			}
 		}
 		saveAll();
 	}
 
-	public void sellAllStocks(Integer userID) {
-		Account acc = accounts.get(userID);
-		for(String company: acc.getInventory().getStocks().keySet()){
-			sellStocks(userID, company, 0);
-		}
-	}
+//	public void sellAllStocks(Integer userID) {
+//		Account acc = accounts.get(userID);
+//		for(String company: acc.getInventory().getStocks().keySet()){
+//			sellStocks(userID, company, 0);
+//		}
+//	}
 }

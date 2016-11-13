@@ -6,6 +6,8 @@ import main.FinanceController;
 import main.IOController;
 
 public class Upgrade extends Item{
+	
+	private int chance;
 
 	public Upgrade(String name, double value, int chance, String description) {
 		this.name = name;
@@ -39,7 +41,7 @@ public class Upgrade extends Item{
 			items.addAll(c.getAccount(userID).getInventory().getItems());
 			for(Item item: items){
 				if(msg.equals(item.getName()+item.getValue()) && !item.getDescription().contains(this.name)){
-					((Plane) item).addItem(this);
+					((Plane) item).addUpgrade(this);
 					c.getAccount(userID).getInventory().getItems().remove(this);
 					if(item.getDescription().contains(this.name)){
 						IOController.sendMessage("Erfolgreich angewendet!", new String[]{"🔙","cancel"}, userID.toString(), false);
@@ -50,6 +52,14 @@ public class Upgrade extends Item{
 				}
 			}
 		}
+	}
+	
+	public int getChance(){
+		return chance;
+	}
+	
+	public String print() {
+		return getName() + ":\nWert: "+FinanceController.round(getValue()) +"$\nÜberlandchance: " +getChance() +"%\n" +getDescription() + "\n\n";
 	}
 
 }

@@ -102,9 +102,9 @@ public class Account {
 
 	public String toString(){
 		String string =  iD +"_" +name +"_" +money +"_" +pop;
-		for(Entry<String, Integer> entry: inventory.getStocks().entrySet()){
-			string += "_" +entry.getKey() +"_" +entry.getValue();
-		}
+//		for(Entry<String, Integer> entry: inventory.getStocks().entrySet()){
+//			string += "_" +entry.getKey() +"_" +entry.getValue();
+//		}
 		return string;
 	}
 

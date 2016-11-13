@@ -1,12 +1,15 @@
 package menus.inventory;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map.Entry;
 
 import main.FinanceController;
 import main.IOController;
 import util.Company;
+import util.Item;
+import util.Item.TYPE;
 import util.Menu;
+import util.Stock;
 
 public class StocksMenu extends Menu {
 
@@ -18,7 +21,7 @@ public class StocksMenu extends Menu {
 		FinanceController c = FinanceController.getInstance();
 		String msg;
 		String[] buttons = new String[]{};
-		HashMap<String, Integer> stocks = c.getAccount(userID).getInventory().getStocks();
+		ArrayList<Item> stocks = c.getAccount(userID).getInventory().getItemsOfType(TYPE.Stock);
 
 		if(stocks.isEmpty()){
 			msg = "Du besitzt keine Aktien!";
@@ -28,11 +31,12 @@ public class StocksMenu extends Menu {
 			msg = "Du besitzt folgende Aktien:\n\n";
 			buttons = new String[(stocks.size()*2)+2];
 			int i = 0;
-			for(Entry<String, Integer> entry: stocks.entrySet()){
-				Company comp = c.getCompanies().get(entry.getKey());
-				msg += "Unternehmen: " +entry.getKey() +"\nMenge: " +entry.getValue() +"\nGesamtwert:" + (c.round(entry.getValue()*comp.getValue())) +"$\n\n";
-				buttons[i] = entry.getKey() +" verkaufen.";
-				buttons[i+1] = entry.getKey();
+			for(Item item: stocks){
+				Stock stock = (Stock) item;
+				Company comp = c.getCompanies().get(stock.getName());
+				msg += "Unternehmen: " +stock.getName() +"\nMenge: " +stock.getNumber() +"\nGesamtwert:" + (FinanceController.round(stock.getValue())) +"$\n\n";
+				buttons[i] = stock.getName() +" verkaufen.";
+				buttons[i+1] = stock.getName();
 				i += 2;
 			}
 			buttons[i] = "🔙";
@@ -53,8 +57,8 @@ public class StocksMenu extends Menu {
 			cancel(userID);
 			break;
 		default:
-			HashMap<String, Integer> stocks = c.getAccount(userID).getInventory().getStocks();
-			if(stocks.containsKey(msg)){
+			ArrayList<Item> stocks = c.getAccount(userID).getInventory().getItemsOfType(TYPE.Stock);
+			if(stocks.contains(msg)){
 				stock = msg;
 				IOController.sendMessage("Wieviele Ihrer Aktien möchten Sie verkaufen? (Bitte Anzahl senden)", new String[]{"🔙","cancel"}, userID.toString(), true);
 			}

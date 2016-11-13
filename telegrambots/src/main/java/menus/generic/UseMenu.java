@@ -41,7 +41,7 @@ public class UseMenu extends Menu {
 
 		if(msg.equals("sell")){
 			Account acc = FinanceController.getInstance().getAccount(userID);
-			SelectionMenu menu = new SelectionMenu(acc.getInventory().getItemsOfType(TYPE.Plane), "Welches Flugzeug möchten Sie verkaufen?");
+			SellMenu menu = new SellMenu(acc.getInventory().getItemsOfType(TYPE.Plane), "Welches Flugzeug möchten Sie verkaufen?");
 			acc.setMenu(menu);
 			menu.show(userID);
 		}

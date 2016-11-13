@@ -15,12 +15,10 @@ import util.Item.TYPE;
 public class Inventory implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
-	private HashMap<String, Integer> stocks; //name der Firma, Menge der Aktien
 	private ArrayList<Item> items;
 	private ArrayList<String> certs;
 	
 	public Inventory(){
-		stocks = new HashMap<String, Integer>();
 		items = new ArrayList<Item>();
 		certs = new ArrayList<String>();
 	}
@@ -38,7 +36,6 @@ public class Inventory implements Serializable{
 		try {
 			Inventory temp = (Inventory) ois.readObject();
 			this.certs = temp.certs;
-			this.stocks = temp.stocks;
 			this.items = temp.items;
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
@@ -74,9 +71,5 @@ public class Inventory implements Serializable{
 
 	public void addItem(Item item){
 		items.add(item);
-	}
-	
-	public HashMap<String, Integer> getStocks() {
-		return stocks;
 	}
 }

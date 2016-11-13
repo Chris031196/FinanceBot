@@ -31,11 +31,11 @@ public class InventoryMenu extends Menu {
 			acc.setMenu(next);
 			next.show(userID);
 			break;
-		case "planes":
-			next = new UseMenu();
-			acc.setMenu(next);
-			next.show(userID);
-			break;
+//		case "planes":
+//			next = new UseMenu();
+//			acc.setMenu(next);
+//			next.show(userID);
+//			break;
 		case "upgrades":
 			next = new UpgradeMenu();
 			acc.setMenu(next);

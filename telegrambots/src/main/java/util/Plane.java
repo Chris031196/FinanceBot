@@ -9,6 +9,8 @@ import main.IOController;
 import menus.inventory.InventoryMenu;
 
 public class Plane extends Item{
+	
+	private int chance;
 
 	public Plane(String name, double value, int chance, String description) {
 		this.name = name;
@@ -24,7 +26,7 @@ public class Plane extends Item{
 		int hour = LocalDateTime.now().getHour();
 		if(hour <= 12 && hour >= 8){
 			FlyMenu menu = new FlyMenu(this);
-			FinanceController.getInstance().getAccount(userID).setCurMenu(menu);
+			FinanceController.getInstance().getAccount(userID).setMenu(menu);
 			menu.show(userID);
 		}
 		else {
@@ -32,19 +34,23 @@ public class Plane extends Item{
 		}
 	}
 
-	public void addItem(Item item){
+	public void addUpgrade(Upgrade upgrade){
 		if(description == ""){
-			description += item.getName();
+			description += upgrade.getName();
 		}
 		else {
-			description += "\n" +item.getName();
+			description += "\n" +upgrade.getName();
 		}
-		chance += item.getChance();
-		value += item.getValue();
+		chance += upgrade.getChance();
+		value += upgrade.getValue();
 	}
 
 	public int getChance() {
 		return chance;
+	}
+	
+	public String print() {
+		return getName() + ":\nWert: "+FinanceController.round(getValue()) +"$\nÜberlandchance: " +getChance() +"%\n" +getDescription() + "\n\n";
 	}
 
 	private class FlyMenu extends Menu {
@@ -64,7 +70,7 @@ public class Plane extends Item{
 		public void messageReceived(String msg, Integer userID) {
 			if(msg.equals("cancel")){
 				InventoryMenu menu = new InventoryMenu();
-				FinanceController.getInstance().getAccount(userID).setCurMenu(menu);;
+				FinanceController.getInstance().getAccount(userID).setMenu(menu);;
 				menu.show(userID);
 			}
 			try{
