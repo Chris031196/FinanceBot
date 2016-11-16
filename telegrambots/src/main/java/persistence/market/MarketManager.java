@@ -35,7 +35,7 @@ public class MarketManager {
 		loadMarket();
 	}
 
-	public void buyItem(Item item, String[] options, Integer userID) {
+	public boolean buyItem(Item item, String[] options, Integer userID) {
 		Inventory inv = AccountManager.getInstance().getAccount(userID).getInventory();
 		if(inv.getMoney() >= item.getValue()){
 			Item userItem = item.copy();
@@ -43,10 +43,10 @@ public class MarketManager {
 			userItem.setValue(userItem.getValue()*(3.0/4.0));
 			userItem.setOptions(options);
 			inv.addItem(userItem);
-			IOController.sendMessage("Kauf erfolgreich!", null, userID.toString(), true);
+			return true;
 		}
 		else {
-			IOController.sendMessage("Kauf fehlgeschlagen! (insufficient funds)", null, userID.toString(), true);
+			return false;
 		}
 	}
 	private void loadMarket(){

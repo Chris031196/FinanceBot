@@ -26,17 +26,17 @@ public class MarketMenu extends Menu {
 		switch(msg){
 		case "cancel": cancel(userID); break;
 		case "stocks":
-			next = new BuyMenu(man.getItemsOfType(TYPE.Stock), "Aktienmarkt");
+			next = new ItemListMenu(man.getItemsOfType(TYPE.Stock), "Aktienmarkt");
 			acc.setMenu(next);
 			next.show(userID);
 			break;
 		case "planes":
-			next = new BuyMenu(man.getItemsOfType(TYPE.Plane), "Flugzeugmarkt");
+			next = new ItemListMenu(man.getItemsOfType(TYPE.Plane), "Flugzeugmarkt");
 			acc.setMenu(next);
 			next.show(userID);
 			break;
 		case "upgrades":
-			next = new BuyMenu(man.getItemsOfType(TYPE.Upgrade), "Upgrademarkt");
+			next = new ItemListMenu(man.getItemsOfType(TYPE.Upgrade), "Upgrademarkt");
 			acc.setMenu(next);
 			next.show(userID);
 			break;

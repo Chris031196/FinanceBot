@@ -49,6 +49,7 @@ public class AccountManager {
 
 	public void logout(Integer userID) {
 		IOController.deleteLastMessages(userID.toString());
+		getAccount(userID).save();
 		loggedInAccounts.remove(getAccount(userID));
 	}
 	

@@ -32,22 +32,22 @@ public class InventoryMenu extends Menu {
 			next.show(userID);
 			break;
 		case "stocks":
-			next = new ItemMenu(inv.getItemsOfType(TYPE.Stock), "Ihre Aktien:");
+			next = new ItemListMenu(inv.getItemsOfType(TYPE.Stock), "Ihre Aktien:");
 			acc.setMenu(next);
 			next.show(userID);
 			break;
 		case "planes":
-			next = new ItemMenu(inv.getItemsOfType(TYPE.Plane), "Ihre Flugzeuge:");
+			next = new ItemListMenu(inv.getItemsOfType(TYPE.Plane), "Ihre Flugzeuge:");
 			acc.setMenu(next);
 			next.show(userID);
 			break;
 		case "upgrades":
-			next = new ItemMenu(inv.getItemsOfType(TYPE.Upgrade), "Ihre Upgrades:");
+			next = new ItemListMenu(inv.getItemsOfType(TYPE.Upgrade), "Ihre Upgrades:");
 			acc.setMenu(next);
 			next.show(userID);
 			break;
 		case "certs":
-			next = new ItemMenu(inv.getItemsOfType(TYPE.Certificate), "Ihre Urkunden:");
+			next = new ItemListMenu(inv.getItemsOfType(TYPE.Certificate), "Ihre Urkunden:");
 			acc.setMenu(next);
 			next.show(userID);
 			break;

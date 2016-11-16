@@ -1,7 +1,5 @@
 package view.market;
 
-import java.util.ArrayList;
-
 import main.IOController;
 import persistence.accounts.AccountManager;
 import persistence.market.MarketManager;
@@ -10,57 +8,57 @@ import view.Menu;
 
 public class BuyMenu extends Menu {
 
-	ArrayList<Item> items;
-	String message;
-	Item buyItem;
 	String[] options;
-	int optionIndex = -1;
-	
-	public BuyMenu(ArrayList<Item> items, String message){
-		this.items = items;
-		this.message = message;
-	}
-	
-	@Override
-	public void show(Integer userID) {
-		ArrayList<String> buttons = new ArrayList<String>();
-		for(Item item: items){
-			buttons.add(item.print());
-			buttons.add("" +items.indexOf(item));
-		}
-		buttons.add("🔙");
-		buttons.add("cancel");
+	Item buyItem;
+	int optionIndex = 0;
 
-		IOController.sendMessage(message, buttons.toArray(new String[]{}), userID.toString(), false);
+	public BuyMenu(Item buyItem){
+		this.buyItem = buyItem;
+		this.options = new String[buyItem.getOptionMessages().length];
 	}
 
 	@Override
 	public void messageReceived(String msg, Integer userID) {
-		if(msg.equals("cancel")){
+		if("cancel".equals(msg)){
 			cancel(userID);
 			return;
 		}
-		
-		if(optionIndex == -1){
-			buyItem = items.get(Integer.parseInt(msg));
-			options = new String[buyItem.getOptionMessages().length];
-		}
 		optionIndex++;
-		
-		if(buyItem != null && buyItem.getOptionMessages().length < optionIndex) {
-			IOController.sendMessage(buyItem.getOptionMessages()[optionIndex], null, userID.toString(), false);
+
+		if(buyItem.getOptionMessages().length < optionIndex) {
+			IOController.sendMessage(buyItem.getOptionMessages()[optionIndex], BACK, userID.toString(), false);
 			if(optionIndex-1 >= 0){
 				options[optionIndex-1] = msg;
 			}
 		}
-		else if(buyItem != null){
+		else {
 			MarketManager manager = MarketManager.getInstance();
-			manager.buyItem(buyItem, options, userID);
+			if(manager.buyItem(buyItem, options, userID)){
+				IOController.sendMessage("Kauf erfolgreich!", BACK, userID.toString(), false);
+			}
+			else {
+				IOController.sendMessage("Kauf fehlgeschlagen!", BACK, userID.toString(), false);
+			}
 		}
 	}
-	
+
+	@Override
+	public void show(Integer userID) {
+		if(buyItem.getOptionMessages().length > 0) {
+			IOController.sendMessage(buyItem.getOptionMessages()[optionIndex], BACK, userID.toString(), false);
+		}
+		else {
+			MarketManager manager = MarketManager.getInstance();
+			if(manager.buyItem(buyItem, options, userID)){
+				IOController.sendMessage("Kauf erfolgreich!", BACK, userID.toString(), false);
+			}
+			else {
+				IOController.sendMessage("Kauf fehlgeschlagen!", BACK, userID.toString(), false);
+			}
+		}
+	}
 	public void cancel(Integer userID){
-		MarketMenu menu = new MarketMenu();
+		ItemDetailsMenu menu = new ItemDetailsMenu(buyItem);
 		AccountManager.getInstance().getAccount(userID).setMenu(menu);
 		menu.show(userID);
 	}
