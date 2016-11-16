@@ -15,32 +15,29 @@ public class MarketMenu extends Menu {
 	
 	@Override
 	public void show(Integer userID) {
-		IOController.sendMessage("Kategorien:", new String[]{"Aktienkatalog","stocks","Flugzeugkatalog","planes","Upgradekatalog","upgrades","🔙","cancel"}, userID.toString(), false);
+		TYPE[] types = TYPE.values();
+		String[] buttons = new String[types.length*2+2];
+		for(int i=0;i<types.length;i++){
+			buttons[i*2] = types[i].getSingular() +"katalog";
+			buttons[i*2+1] = types[i].name();
+		}
+		buttons[buttons.length-2] = "🔙";
+		buttons[buttons.length-1] = "cancel";
+		IOController.sendMessage("Kategorien:", buttons, userID.toString(), false);
 	}
 
 	@Override
 	public void messageReceived(String msg, Integer userID) {
-		Account acc = AccountManager.getInstance().getAccount(userID);
-		MarketManager man = MarketManager.getInstance();
-		Menu next;
-		switch(msg){
-		case "cancel": cancel(userID); break;
-		case "stocks":
-			next = new ItemListMenu(man.getItemsOfType(TYPE.Stock), "Aktienmarkt");
-			acc.setMenu(next);
-			next.show(userID);
-			break;
-		case "planes":
-			next = new ItemListMenu(man.getItemsOfType(TYPE.Plane), "Flugzeugmarkt");
-			acc.setMenu(next);
-			next.show(userID);
-			break;
-		case "upgrades":
-			next = new ItemListMenu(man.getItemsOfType(TYPE.Upgrade), "Upgrademarkt");
-			acc.setMenu(next);
-			next.show(userID);
-			break;
+		if("cancel".equals(msg)){
+			cancel(userID);
+			return;
 		}
+		
+		Account acc = AccountManager.getInstance().getAccount(userID);
+		TYPE type = TYPE.valueOf(msg);
+		Menu next = new ItemListMenu(type, type.getSingular()+ "markt");
+		acc.setMenu(next);
+		next.show(userID);
 	}
 	
 	public void cancel(Integer userID){

@@ -6,6 +6,7 @@ import main.IOController;
 import persistence.accounts.AccountManager;
 import persistence.market.MarketManager;
 import persistence.market.items.Item;
+import persistence.market.items.Item.TYPE;
 import view.Menu;
 
 public class ItemListMenu extends Menu {
@@ -13,8 +14,8 @@ public class ItemListMenu extends Menu {
 	ArrayList<Item> items;
 	String message;
 
-	public ItemListMenu(ArrayList<Item> items, String message){
-		this.items = items;
+	public ItemListMenu(TYPE type, String message){
+		this.items = MarketManager.getInstance().getItemsOfType(type);
 		this.message = message;
 	}
 

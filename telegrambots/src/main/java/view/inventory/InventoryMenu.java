@@ -1,10 +1,6 @@
-	package view.inventory;
+package view.inventory;
 
-import controller.FinanceController;
 import main.IOController;
-import old.menus.inventory.CertificateMenu;
-import old.menus.inventory.StocksMenu;
-import old.menus.inventory.upgrades.UpgradeMenu;
 import persistence.accounts.Account;
 import persistence.accounts.AccountManager;
 import persistence.accounts.Inventory;
@@ -16,7 +12,17 @@ public class InventoryMenu extends Menu {
 
 	@Override
 	public void show(Integer userID) {
-		IOController.sendMessage("Kategorien:", new String[]{"Konto", "account", "Aktien","stocks","Flugzeuge","planes","Upgrades","upgrades","Urkunden","certs","🔙","cancel"}, userID.toString(), false);
+		TYPE[] types = TYPE.values();
+		String[] buttons = new String[types.length*2+4];
+		buttons[0] = "Kontoinformationen";
+		buttons[1] = "account";
+		for(int i=0;i<types.length;i++){
+			buttons[i*2+2] = types[i].getPlural();
+			buttons[i*2+3] = types[i].name();
+		}
+		buttons[buttons.length-2] = "🔙";
+		buttons[buttons.length-1] = "cancel";
+		IOController.sendMessage("Kategorien:", buttons, userID.toString(), false);
 	}
 
 	@Override
@@ -31,29 +37,15 @@ public class InventoryMenu extends Menu {
 			acc.setMenu(next);
 			next.show(userID);
 			break;
-		case "stocks":
-			next = new ItemListMenu(inv.getItemsOfType(TYPE.Stock), "Ihre Aktien:");
-			acc.setMenu(next);
-			next.show(userID);
-			break;
-		case "planes":
-			next = new ItemListMenu(inv.getItemsOfType(TYPE.Plane), "Ihre Flugzeuge:");
-			acc.setMenu(next);
-			next.show(userID);
-			break;
-		case "upgrades":
-			next = new ItemListMenu(inv.getItemsOfType(TYPE.Upgrade), "Ihre Upgrades:");
-			acc.setMenu(next);
-			next.show(userID);
-			break;
-		case "certs":
-			next = new ItemListMenu(inv.getItemsOfType(TYPE.Certificate), "Ihre Urkunden:");
+		default:
+			TYPE type = TYPE.valueOf(msg);
+			next = new ItemListMenu(inv.getItemsOfType(type), "Ihre " +type.getPlural() +":");
 			acc.setMenu(next);
 			next.show(userID);
 			break;
 		}
 	}
-	
+
 	public void cancel(Integer userID){
 		MainMenu menu = new MainMenu();
 		AccountManager.getInstance().getAccount(userID).setMenu(menu);

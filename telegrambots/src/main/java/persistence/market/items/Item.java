@@ -1,12 +1,35 @@
 package persistence.market.items;
 
+import java.io.Serializable;
+
 import functions.Function;
 import persistence.Stringable;
 
-public abstract class Item implements Stringable{
+public abstract class Item implements Stringable, Serializable{
+
+	private static final long serialVersionUID = 1L;
 
 	public enum TYPE {
-		Item, Plane, Upgrade, Stock, Certificate
+		Plane ("Flugzeug", "Flugeuge"), 
+		Upgrade ("Upgrade", "Upgrades"), 
+		Stock ("Aktien", "Aktien"), 
+		Certificate ("Urkunde", "Urkunden");
+		
+		private final String singular;
+		private final String plural;
+		
+		TYPE(String singular, String plural){
+			this.singular = singular;
+			this.plural = plural;
+		}
+		
+		public String getSingular(){
+			return singular;
+		}
+		
+		public String getPlural(){
+			return plural;
+		}
 	}
 
 	protected String name;

@@ -1,9 +1,6 @@
 package persistence.market.items;
 
-import java.util.ArrayList;
-
 import controller.FinanceController;
-import main.IOController;
 
 public class Upgrade extends Item{
 	

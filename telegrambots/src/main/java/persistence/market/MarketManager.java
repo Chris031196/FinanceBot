@@ -80,6 +80,14 @@ public class MarketManager {
 			marketItems.add(item);
 		}
 	}
+	
+	public String[] getTypesAsString(){
+		String[] types = new String[TYPE.values().length];
+		for(int i=0;i<types.length;i++){
+			types[i] = TYPE.values()[i].name();
+		}
+		return types;
+	}
 
 	public void saveMarket() {
 		Properties marketSave = new Properties();

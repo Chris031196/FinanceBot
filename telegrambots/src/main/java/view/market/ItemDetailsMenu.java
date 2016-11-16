@@ -39,7 +39,7 @@ public class ItemDetailsMenu extends Menu {
 	}
 	
 	public void cancel(Integer userID){
-		MarketMenu menu = new MarketMenu();
+		ItemListMenu menu = new ItemListMenu(item.getType(), item.getType().getSingular()+ "markt");
 		AccountManager.getInstance().getAccount(userID).setMenu(menu);
 		menu.show(userID);
 	}
