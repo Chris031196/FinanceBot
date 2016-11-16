@@ -37,9 +37,9 @@ public class Upgrade extends Item{
 	public void stringToObject(String string) {
 		String[] data = string.split(NEXT);
 		this.name = data[0];
-		this.value = Double.parseDouble(data[1]);
-		this.chance = Integer.parseInt(data[2]);
-		this.description = data[3];
+		this.value = Double.parseDouble(data[2]);
+		this.chance = Integer.parseInt(data[3]);
+		this.description = data[4];
 	}
 
 	@Override

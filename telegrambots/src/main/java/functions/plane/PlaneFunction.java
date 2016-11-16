@@ -5,10 +5,10 @@ import java.time.LocalDateTime;
 import controller.FinanceController;
 import functions.Function;
 import main.IOController;
-import old.menus.inventory.InventoryMenu;
 import persistence.accounts.Account;
 import persistence.market.items.Plane;
 import view.Menu;
+import view.inventory.InventoryMenu;
 
 public class PlaneFunction implements Function {
 

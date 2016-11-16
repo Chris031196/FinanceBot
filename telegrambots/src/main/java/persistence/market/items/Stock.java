@@ -16,6 +16,7 @@ public class Stock extends Item {
 		this.number = number;
 		this.value = value*number;
 		this.lastChange = lastChange;
+		this.type = TYPE.Stock;
 	}
 	
 	public void add(int number) {

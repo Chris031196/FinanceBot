@@ -3,6 +3,7 @@ package old.menus.inventory;
 import controller.FinanceController;
 import main.IOController;
 import view.Menu;
+import view.inventory.AccountMenu;
 
 public class TransferMenu extends Menu {
 

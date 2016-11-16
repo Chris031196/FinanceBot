@@ -1,24 +1,26 @@
-package old.menus.inventory;
+package view.inventory;
 
 import controller.FinanceController;
 import main.IOController;
+import old.menus.inventory.TransferMenu;
 import persistence.accounts.Account;
+import persistence.accounts.AccountManager;
 import view.Menu;
 
 public class AccountMenu extends Menu {
 
 	@Override
 	public void show(Integer userID) {
-		Account account = FinanceController.getInstance().getAccounts().get(userID);
+		Account account = AccountManager.getInstance().getAccount(userID);
 		String message = "";
 		message += "Name: ";
 		message += account.getName() +"\n";
 		message += "User ID: ";
 		message += account.getID() +"\n";
 		message += "Kontostand: ";
-		message += FinanceController.getInstance().round(account.getMoney()) +"$\n";
+		message += FinanceController.round(account.getInventory().getMoney()) +"$\n";
 		message += "Popularität: ";
-		message += account.getPop() +"+";
+		message += account.getInventory().getPop() +"+";
 		IOController.sendMessage(message, new String[]{"Geld überweisen","transfer","🔙", "back"}, userID.toString(), false);
 	}
 
@@ -26,12 +28,12 @@ public class AccountMenu extends Menu {
 	public void messageReceived(String msg, Integer userID) {
 		if(msg.equals("back")){
 			InventoryMenu menu = new InventoryMenu();
-			FinanceController.getInstance().getAccount(userID).setMenu(menu);
+			AccountManager.getInstance().getAccount(userID).setMenu(menu);
 			menu.show(userID);
 		}
 		if(msg.equals("transfer")){
 			TransferMenu menu = new TransferMenu();
-			FinanceController.getInstance().getAccount(userID).setMenu(menu);
+			AccountManager.getInstance().getAccount(userID).setMenu(menu);
 			menu.show(userID);
 		}
 

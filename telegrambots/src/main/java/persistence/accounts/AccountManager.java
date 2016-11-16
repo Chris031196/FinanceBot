@@ -8,9 +8,9 @@ import java.util.Properties;
 
 import org.telegram.telegrambots.api.objects.User;
 
-import controller.FinanceController;
 import main.IOController;
 import old.htmlTest.Test;
+import view.MainMenu;
 import view.Menu;
 
 public class AccountManager {
@@ -21,7 +21,7 @@ public class AccountManager {
 	private HashMap<Integer, Account> loggedInAccounts;
 
 	public static AccountManager getInstance(){
-		return instance == null ? new AccountManager() : instance;
+		return instance == null ? instance = new AccountManager() : instance;
 	}
 
 	private AccountManager(){
@@ -41,9 +41,14 @@ public class AccountManager {
 	public void login(int userID) {
 		Account acc = Account.loadAccount(userID);
 		loggedInAccounts.put(acc.getID(), acc);
+		
+		MainMenu menu = new MainMenu();
+		acc.setMenu(menu);
+		menu.show(userID);
 	}
 
-	public void logout(int userID) {
+	public void logout(Integer userID) {
+		IOController.deleteLastMessages(userID.toString());
 		loggedInAccounts.remove(getAccount(userID));
 	}
 	
@@ -71,7 +76,7 @@ public class AccountManager {
 			return;
 		}
 		if("/login".equals(msg)){
-			AccountManager.getInstance().login(user.getId());
+			login(user.getId());
 			return;
 		}
 		//TODO html test

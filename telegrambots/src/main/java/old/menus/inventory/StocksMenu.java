@@ -10,6 +10,7 @@ import persistence.market.items.Item;
 import persistence.market.items.Stock;
 import persistence.market.items.Item.TYPE;
 import view.Menu;
+import view.inventory.InventoryMenu;
 
 public class StocksMenu extends Menu {
 

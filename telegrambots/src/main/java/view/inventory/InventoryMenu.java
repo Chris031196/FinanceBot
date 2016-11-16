@@ -1,10 +1,14 @@
-	package old.menus.inventory;
+	package view.inventory;
 
 import controller.FinanceController;
 import main.IOController;
-import old.menus.generic.UseMenu;
+import old.menus.inventory.CertificateMenu;
+import old.menus.inventory.StocksMenu;
 import old.menus.inventory.upgrades.UpgradeMenu;
 import persistence.accounts.Account;
+import persistence.accounts.AccountManager;
+import persistence.accounts.Inventory;
+import persistence.market.items.Item.TYPE;
 import view.MainMenu;
 import view.Menu;
 
@@ -17,7 +21,8 @@ public class InventoryMenu extends Menu {
 
 	@Override
 	public void messageReceived(String msg, Integer userID) {
-		Account acc = FinanceController.getInstance().getAccount(userID);
+		Account acc = AccountManager.getInstance().getAccount(userID);
+		Inventory inv = acc.getInventory();
 		Menu next;
 		switch(msg){
 		case "cancel": cancel(userID); break;
@@ -27,22 +32,22 @@ public class InventoryMenu extends Menu {
 			next.show(userID);
 			break;
 		case "stocks":
-			next = new StocksMenu();
+			next = new ItemMenu(inv.getItemsOfType(TYPE.Stock), "Ihre Aktien:");
 			acc.setMenu(next);
 			next.show(userID);
 			break;
-//		case "planes":
-//			next = new UseMenu();
-//			acc.setMenu(next);
-//			next.show(userID);
-//			break;
+		case "planes":
+			next = new ItemMenu(inv.getItemsOfType(TYPE.Plane), "Ihre Flugzeuge:");
+			acc.setMenu(next);
+			next.show(userID);
+			break;
 		case "upgrades":
-			next = new UpgradeMenu();
+			next = new ItemMenu(inv.getItemsOfType(TYPE.Upgrade), "Ihre Upgrades:");
 			acc.setMenu(next);
 			next.show(userID);
 			break;
 		case "certs":
-			next = new CertificateMenu();
+			next = new ItemMenu(inv.getItemsOfType(TYPE.Certificate), "Ihre Urkunden:");
 			acc.setMenu(next);
 			next.show(userID);
 			break;
@@ -51,7 +56,7 @@ public class InventoryMenu extends Menu {
 	
 	public void cancel(Integer userID){
 		MainMenu menu = new MainMenu();
-		FinanceController.getInstance().getAccount(userID).setMenu(menu);
+		AccountManager.getInstance().getAccount(userID).setMenu(menu);
 		menu.show(userID);
 	}
 }

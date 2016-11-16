@@ -4,12 +4,12 @@ import java.util.ArrayList;
 
 import controller.FinanceController;
 import main.IOController;
-import old.menus.inventory.InventoryMenu;
 import persistence.accounts.Account;
 import persistence.market.items.Item;
 import persistence.market.items.Upgrade;
 import persistence.market.items.Item.TYPE;
 import view.Menu;
+import view.inventory.InventoryMenu;
 
 public class AttachMenu extends Menu {
 

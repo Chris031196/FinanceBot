@@ -4,10 +4,10 @@ import java.util.ArrayList;
 
 import controller.FinanceController;
 import main.IOController;
-import old.menus.inventory.InventoryMenu;
 import persistence.accounts.Account;
 import persistence.market.items.Item;
 import view.Menu;
+import view.inventory.InventoryMenu;
 
 public class SellMenu extends Menu {
 	

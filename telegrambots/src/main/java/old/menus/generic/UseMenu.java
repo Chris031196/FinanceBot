@@ -5,12 +5,12 @@ import java.util.ArrayList;
 import controller.FinanceController;
 import main.IOController;
 import old.menus.generic.SelectionMenu;
-import old.menus.inventory.InventoryMenu;
 import old.menus.inventory.planes.FlyMenu;
 import persistence.accounts.Account;
 import persistence.market.items.Item;
 import persistence.market.items.Item.TYPE;
 import view.Menu;
+import view.inventory.InventoryMenu;
 
 public class UseMenu extends Menu {
 	

@@ -4,6 +4,7 @@ import controller.FinanceController;
 import main.IOController;
 import persistence.accounts.Account;
 import view.Menu;
+import view.inventory.InventoryMenu;
 
 public class CertificateMenu extends Menu {
 

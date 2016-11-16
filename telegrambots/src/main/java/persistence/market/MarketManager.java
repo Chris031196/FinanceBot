@@ -24,7 +24,7 @@ public class MarketManager {
 	private static MarketManager instance;
 
 	public static MarketManager getInstance(){
-		return instance == null ? new MarketManager() : instance;
+		return instance == null ? instance = new MarketManager() : instance;
 	}
 
 	public MarketManager(){

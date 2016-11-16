@@ -6,9 +6,9 @@ import java.time.LocalDateTime;
 import controller.FinanceController;
 import functions.plane.Flight;
 import main.IOController;
-import old.menus.inventory.InventoryMenu;
 import persistence.accounts.Account;
 import view.Menu;
+import view.inventory.InventoryMenu;
 
 public class Plane extends Item {
 	
@@ -60,15 +60,15 @@ public class Plane extends Item {
 
 	@Override
 	public String toSaveString() {
-		return name +NEXT+ value +NEXT+ description +NEXT+ chance;
+		return name +NEXT+ type +NEXT+ value +NEXT+ description +NEXT+ chance;
 	}
 
 	@Override
 	public void stringToObject(String string) {
 		String[] data = string.split(NEXT);
 		this.name = data[0];
-		this.value = Double.parseDouble(data[1]);
-		this.description = data[2];
+		this.value = Double.parseDouble(data[2]);
+		this.description = data[4];
 		this.chance = Integer.parseInt(data[3]);
 	}
 }

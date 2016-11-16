@@ -7,21 +7,21 @@ import functions.plane.Flight;
 
 public class Certificate extends Item {
 	
-	private String certificate;
-	
 	public Certificate(Flight flight) {
 		Plane plane = flight.getPlane();
 		int distance = flight.getDistance();
 		FinanceController c = FinanceController.getInstance();
-		certificate = "URKUNDE\n";
-		certificate += "Datum: " +getDate() +"\n";
-		certificate += "Pilot: " +flight.getAccount().getName() +"\n";
-		certificate += "Flugzeug:\n" +plane.getName() + "\nWert: "+c.round(plane.getValue()) +"$\nÜberlandchance: " +plane.getChance() +"%\n\n";
+		description = "URKUNDE\n";
+		description += "Datum: " +getDate() +"\n";
+		description += "Pilot: " +flight.getAccount().getName() +"\n";
+		description += "Flugzeug:\n" +plane.getName() + "\nWert: "+c.round(plane.getValue()) +"$\nÜberlandchance: " +plane.getChance() +"%\n\n";
+		
+		this.type = TYPE.Certificate;
 	}
 
 	@Override
 	public String print() {
-		return certificate;
+		return description;
 	}
 	
 	private static String getDate(){

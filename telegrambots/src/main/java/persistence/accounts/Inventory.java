@@ -56,7 +56,11 @@ public class Inventory implements Stringable{
 			ObjectOutputStream oos = new ObjectOutputStream(baos);
 			oos.writeObject(items);
 			oos.close();
-			builder.append(baos.toByteArray());
+			for(int i=0;i<baos.toByteArray().length;i++){
+				System.out.print(baos.toByteArray()[i]+" ");
+				builder.append(baos.toByteArray()[i] +" ");
+			}
+			System.out.println();
 		}
 		catch (IOException e){
 			e.printStackTrace();
@@ -72,7 +76,12 @@ public class Inventory implements Stringable{
 		money = Double.parseDouble(parts[1]);
 		
 		try {
-			ByteArrayInputStream bais = new ByteArrayInputStream(parts[2].getBytes());
+			String[] data = parts[2].split(" ");
+			byte[] bytes = new byte[data.length];
+			for(int i=0;i<data.length;i++){
+				bytes[i] = Byte.parseByte(data[i]);
+			}
+			ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
 			ObjectInputStream ois = new ObjectInputStream(bais);
 			items = (ArrayList<Item>) ois.readObject();
 		} catch (IOException e) {

@@ -2,7 +2,7 @@ package persistence;
 
 public interface Stringable {
 	
-	public static final String NEXT = "X|d:|X";
+	public static final String NEXT = "²";
 	
 	public String toSaveString();
 	

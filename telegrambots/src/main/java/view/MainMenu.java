@@ -1,8 +1,8 @@
 package view;
 
 import main.IOController;
-import old.menus.inventory.InventoryMenu;
 import persistence.accounts.AccountManager;
+import view.inventory.InventoryMenu;
 import view.market.MarketMenu;
 
 public class MainMenu extends Menu {
