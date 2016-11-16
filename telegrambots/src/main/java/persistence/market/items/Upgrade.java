@@ -52,7 +52,7 @@ public class Upgrade extends Item{
 
 	@Override
 	public Item copy() {
-		return new Upgrade(name, value, chance, description);
+		return new Upgrade(name, value, description, chance);
 	}
 
 }

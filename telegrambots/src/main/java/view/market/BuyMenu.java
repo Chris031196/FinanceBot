@@ -2,24 +2,20 @@ package view.market;
 
 import java.util.ArrayList;
 
-import controller.FinanceController;
 import main.IOController;
-import persistence.accounts.Account;
 import persistence.accounts.AccountManager;
 import persistence.market.MarketManager;
 import persistence.market.items.Item;
-import persistence.market.items.Plane;
-import persistence.market.items.Upgrade;
-import persistence.market.items.Item.TYPE;
-import view.MainMenu;
 import view.Menu;
 
 public class BuyMenu extends Menu {
 
 	ArrayList<Item> items;
 	String message;
+	Item buyItem;
+	String[] options;
+	int optionIndex = -1;
 	
-
 	public BuyMenu(ArrayList<Item> items, String message){
 		this.items = items;
 		this.message = message;
@@ -45,8 +41,22 @@ public class BuyMenu extends Menu {
 			return;
 		}
 		
-		MarketManager manager = MarketManager.getInstance();
-		manager.buyItem(items.get(Integer.parseInt(msg)), userID);
+		if(optionIndex == -1){
+			buyItem = items.get(Integer.parseInt(msg));
+			options = new String[buyItem.getOptionMessages().length];
+		}
+		optionIndex++;
+		
+		if(buyItem != null && buyItem.getOptionMessages().length < optionIndex) {
+			IOController.sendMessage(buyItem.getOptionMessages()[optionIndex], null, userID.toString(), false);
+			if(optionIndex-1 >= 0){
+				options[optionIndex-1] = msg;
+			}
+		}
+		else if(buyItem != null){
+			MarketManager manager = MarketManager.getInstance();
+			manager.buyItem(buyItem, options, userID);
+		}
 	}
 	
 	public void cancel(Integer userID){

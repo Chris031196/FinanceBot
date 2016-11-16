@@ -15,38 +15,40 @@ import persistence.market.items.Item.TYPE;
 import persistence.market.items.Plane;
 import persistence.market.items.Stock;
 import persistence.market.items.Upgrade;
-import view.MessageListener;
 
-public class MarketManager implements MessageListener{
-	
+public class MarketManager {
+
 	private static final String marketFile = "save/market.mgs";		
 	ArrayList<Item> marketItems;
-	int optionIndex = 0;
-	
+
 	private static MarketManager instance;
-	
+
 	public static MarketManager getInstance(){
 		return instance == null ? new MarketManager() : instance;
 	}
-	
+
 	public MarketManager(){
 		marketItems = new ArrayList<Item>();
 	}
+	
+	public void init() {
+		loadMarket();
+	}
 
-	public void buyItem(Item item, Integer userID) {
-		if(item.getOptionMessages().length < optionIndex){
-			AccountManager.getInstance().getAccount(userID).addListener(this);
-			IOController.sendMessage(item.getOptionMessages()[optionIndex], null, userID.toString(), false);
+	public void buyItem(Item item, String[] options, Integer userID) {
+		Inventory inv = AccountManager.getInstance().getAccount(userID).getInventory();
+		if(inv.getMoney() >= item.getValue()){
+			Item userItem = item.copy();
+			inv.addMoney(-userItem.getValue());
+			userItem.setValue(userItem.getValue()*(3.0/4.0));
+			userItem.setOptions(options);
+			inv.addItem(userItem);
+			IOController.sendMessage("Kauf erfolgreich!", null, userID.toString(), true);
 		}
 		else {
-			
+			IOController.sendMessage("Kauf fehlgeschlagen! (insufficient funds)", null, userID.toString(), true);
 		}
 	}
-	
-	private void buyItem(Item item, Integer userID, String[] options) {
-		
-	}
-	
 	private void loadMarket(){
 		Properties marketSave = new Properties();
 
@@ -64,21 +66,21 @@ public class MarketManager implements MessageListener{
 				item = new Plane("", 0, "", 0);
 				item.stringToObject(itemDesc);
 				break;
-				
+
 			case "Upgrade":
 				item = new Upgrade("", 0, "", 0);
 				item.stringToObject(itemDesc);
 				break;
-				
+
 			case "Stock":
 				item = new Stock("", 0, 0, 0);
 				item.stringToObject(itemDesc);
 			}
-			
+
 			marketItems.add(item);
 		}
 	}
-	
+
 	public void saveMarket() {
 		Properties marketSave = new Properties();
 
@@ -86,13 +88,13 @@ public class MarketManager implements MessageListener{
 			marketSave.put(item.getName(), item.toSaveString());
 		}
 		try {
-			comps.store(new FileOutputStream(companiesFile), null);
+			marketSave.store(new FileOutputStream(marketFile), null);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-		
-	
+
+
 	public ArrayList<Item> getItemsOfType(TYPE type){
 		ArrayList<Item> itemsOfType = new ArrayList<Item>();
 		for(Item item: marketItems){
@@ -102,27 +104,4 @@ public class MarketManager implements MessageListener{
 		}
 		return itemsOfType;
 	}
-
-	@Override
-	public void messageReceived(String msg, Integer userID) {
-		if(item.getOptionMessages().length < optionIndex){
-			IOController.sendMessage(item.getOptionMessages()[optionIndex], null, userID.toString(), false);
-		}
-		Inventory inv = AccountManager.getInstance().getAccount(userID).getInventory();
-		if(inv.getMoney() >= item.getValue()){
-			Item userItem = item.copy();
-			inv.addMoney(-userItem.getValue());
-			userItem.setValue(userItem.getValue()*(3.0/4.0));
-			inv.addItem(userItem);
-			IOController.sendMessage("Kauf erfolgreich!", null, userID.toString(), true);
-		}
-		else {
-			IOController.sendMessage("Kauf fehlgeschlagen! (insufficient funds)", null, userID.toString(), true);
-		}
-	}
-	catch(NumberFormatException e){
-
-	}
-	}
-
 }

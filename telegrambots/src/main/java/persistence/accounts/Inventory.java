@@ -72,7 +72,7 @@ public class Inventory implements Stringable{
 		money = Double.parseDouble(parts[1]);
 		
 		try {
-			ByteArrayInputStream bais = new ByteArrayInputStream(new byte[]{});
+			ByteArrayInputStream bais = new ByteArrayInputStream(parts[2].getBytes());
 			ObjectInputStream ois = new ObjectInputStream(bais);
 			items = (ArrayList<Item>) ois.readObject();
 		} catch (IOException e) {
