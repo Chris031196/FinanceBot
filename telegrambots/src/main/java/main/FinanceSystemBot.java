@@ -6,6 +6,8 @@ import org.telegram.telegrambots.api.objects.Update;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
 
+import controller.FinanceController;
+
 public class FinanceSystemBot extends TelegramLongPollingBot{
 
 	public FinanceSystemBot() {

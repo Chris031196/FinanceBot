@@ -13,10 +13,9 @@ import org.telegram.telegrambots.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
 
-import htmlTest.Test;
-import menus.NoMenu;
-import util.Account;
-import util.Menu;
+import persistence.accounts.Account;
+import persistence.accounts.AccountManager;
+import view.Menu;
 
 public class IOController {
 
@@ -32,52 +31,24 @@ public class IOController {
 		String msg = message.getText();
 		User user = message.getFrom();
 		if(msg != null && user != null){
-			if(msg != null && msg.equals("/logout")){
-				logout(user.getId());
-				return;
-			}
-			if(msg != null && msg.equals("/html")){
-				sendMessage(Test.getHTML(), null, user.getId().toString(), false);
-				return;
-			}
-			FinanceController controller = FinanceController.getInstance();
-			controller.lookForPlus(msg, user.getId());
-			Account account = controller.getAccount(user.getId()) != null ? controller.getAccount(user.getId()) : controller.addAccount(user);
-			Menu menu = account.getCurMenu();
-			menu.messageReceived(msg, user.getId());
+			AccountManager.getInstance().messageReceived(msg, user);
 		}
 	}
-	
-
 
 	public static void callbackReceived(CallbackQuery callback){
 		String query = callback.getData();
 		User user = callback.getFrom();
 		if(query != null && user != null){
-			if(query.equals("logout")){
-				logout(user.getId());
-				bot.answerCallback(callback);
-				return;
-			}
-			FinanceController controller = FinanceController.getInstance();
-			Account account = controller.getAccount(user.getId()) != null ? controller.getAccount(user.getId()) : controller.addAccount(user);
-			Menu menu = account.getCurMenu();
-			menu.messageReceived(query, user.getId());
+			AccountManager.getInstance().messageReceived(query, user);
 			bot.answerCallback(callback);
 		}
 	}
 
 	public static void logout(Integer userID){
-		FinanceController controller = FinanceController.getInstance();
-		Account account = controller.getAccount(userID);
-		account.save();
-		if(account != null){
-			NoMenu menu = new NoMenu();
-			account.setMenu(menu);
-			IOController.sendMessage("Erfolgreich ausgeloggt!", null, userID.toString(), false);
-		}
+		AccountManager.getInstance().logout(userID);
+		IOController.sendMessage("Erfolgreich ausgeloggt!", null, userID.toString(), false);
 	}
-	
+
 	public static void sendData(String path, String chatID){
 		SendDocument doc = new SendDocument();
 		doc.setNewDocument(new File(path));
@@ -90,11 +61,11 @@ public class IOController {
 	}
 
 	public static void sendMessage(String message, String[] keyboard, String chatID, boolean newMessage){
-		if(!FinanceController.getInstance().getAccount(Integer.parseInt(chatID)).lastSentMsgs.isEmpty() && !newMessage){
+		if(!AccountManager.getInstance().getAccount(Integer.parseInt(chatID)).lastSentMsgs.isEmpty() && !newMessage){
 			EditMessageText edit = new EditMessageText();
 			edit.setChatId(chatID);
 			edit.enableMarkdown(true);
-			edit.setMessageId(FinanceController.getInstance().getAccount(Integer.parseInt(chatID)).lastSentMsgs.get(FinanceController.getInstance().getAccount(Integer.parseInt(chatID)).lastSentMsgs.size()-1));
+			edit.setMessageId(AccountManager.getInstance().getAccount(Integer.parseInt(chatID)).lastSentMsgs.get(AccountManager.getInstance().getAccount(Integer.parseInt(chatID)).lastSentMsgs.size()-1));
 			if(message != null){
 				edit.setText(message);
 			}
@@ -103,7 +74,7 @@ public class IOController {
 			}
 			deleteLastMessages(chatID);
 			try {
-				FinanceController.getInstance().getAccount(Integer.parseInt(chatID)).lastSentMsgs.add(bot.editMessageText(edit).getMessageId());
+				AccountManager.getInstance().getAccount(Integer.parseInt(chatID)).lastSentMsgs.add(bot.editMessageText(edit).getMessageId());
 			} catch (TelegramApiException e) {
 				e.printStackTrace();
 			}
@@ -120,7 +91,7 @@ public class IOController {
 				msg.setReplyMarkup(assembleKeyboard(keyboard));
 			}
 			try {
-				FinanceController.getInstance().getAccount(Integer.parseInt(chatID)).lastSentMsgs.add(bot.sendMessage(msg).getMessageId());
+				AccountManager.getInstance().getAccount(Integer.parseInt(chatID)).lastSentMsgs.add(bot.sendMessage(msg).getMessageId());
 			} catch (TelegramApiException e) {
 				e.printStackTrace();
 			}
@@ -128,7 +99,7 @@ public class IOController {
 	}
 
 	public static void deleteLastMessages(String chatID) {
-		for(Integer m: FinanceController.getInstance().getAccount(Integer.parseInt(chatID)).lastSentMsgs){
+		for(Integer m: AccountManager.getInstance().getAccount(Integer.parseInt(chatID)).lastSentMsgs){
 			EditMessageText edit = new EditMessageText();
 			edit.setChatId(chatID);
 			edit.setMessageId(m);
@@ -141,7 +112,7 @@ public class IOController {
 				e.printStackTrace();
 			}
 		}
-		FinanceController.getInstance().getAccount(Integer.parseInt(chatID)).lastSentMsgs = new ArrayList<Integer>();
+		AccountManager.getInstance().getAccount(Integer.parseInt(chatID)).lastSentMsgs = new ArrayList<Integer>();
 	}
 
 	private static InlineKeyboardMarkup assembleKeyboard(String[] options){

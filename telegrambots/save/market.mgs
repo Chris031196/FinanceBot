@@ -1,15 +1,15 @@
 #Mon Sep 26 15:09:29 CEST 2016
-SG38=SG38;Plane;200000;10;Der Schulgleiter der Flieger-HJ!
-Ka8=Ka8;Plane;2000;50;Die Ka8 ist ein strammer einsitziger Holzbomber.
-Mucha100=Mucha100;Plane;10000;50;Fuer die Polen unter euch.
-LS4=LS4;Plane;40000;70;Gutes einsitziges Leistungsflugzeug.
-ASH25=ASH25;Plane;500000;80;Krasser Rich-Guy Doppelsitzer.
-ETA=ETA;Plane;1000000;90;Hat mehr Tragflaeche als alles andere.
-Winglets=Winglets;Upgrade;2000;4;Upgrade fuer dein Flugzeug.
-Kotztüten=Kotztueten;Upgrade;5;1;Falls dir uebel wird!
-Wasserballastsaecke=Wasserballastsaecke;Upgrade;5000;10;Lol er hat "Saecke" gesagt.
-Mueckenputzer=Mueckenputzer;Upgrade;1000;2;Sauberer Flieger = Guter Flieger
-Kabriohaube=Kabriohaube;Upgrade;1000;-5;EINFACH EPIC!
-Goldlack=Goldlack;Upgrade;1000000;0;Bringt dir garnichts. Sieht nur geil aus.
-Flammenlackierung=Flammenlackierung;Upgrade;10000;0;Assis stehen drauf.
-Haischnauze=Haischnauze;Upgrade;5000;0;Fuer "Moechtegern-Airforce-Piloten".
+SG38=SG38X|d:)|XPlaneX|d:)|X200000X|d:)|X10X|d:)|XDer Schulgleiter der Flieger-HJ!
+Ka8=Ka8X|d:)|XPlaneX|d:)|X2000X|d:)|X50X|d:)|XDie Ka8 ist ein strammer einsitziger Holzbomber.
+Mucha100=Mucha100X|d:)|XPlaneX|d:)|X10000X|d:)|X50X|d:)|XFuer die Polen unter euch.
+LS4=LS4X|d:)|XPlaneX|d:)|X40000X|d:)|X70X|d:)|XGutes einsitziges Leistungsflugzeug.
+ASH25=ASH25X|d:)|XPlaneX|d:)|X500000X|d:)|X80X|d:)|XKrasser Rich-Guy Doppelsitzer.
+ETA=ETAX|d:)|XPlaneX|d:)|X1000000X|d:)|X90X|d:)|XHat mehr Tragflaeche als alles andere.
+Winglets=WingletsX|d:)|XUpgradeX|d:)|X2000X|d:)|X4X|d:)|XUpgrade fuer dein Flugzeug.
+Kotztüten=KotztuetenX|d:)|XUpgradeX|d:)|X5X|d:)|X1X|d:)|XFalls dir uebel wird!
+Wasserballastsaecke=WasserballastsaeckeX|d:)|XUpgradeX|d:)|X5000X|d:)|X10X|d:)|XLol er hat "Saecke" gesagt.
+Mueckenputzer=MueckenputzerX|d:)|XUpgradeX|d:)|X1000X|d:)|X2X|d:)|XSauberer Flieger = Guter Flieger
+Kabriohaube=KabriohaubeX|d:)|XUpgradeX|d:)|X1000X|d:)|X-5X|d:)|XEINFACH EPIC!
+Goldlack=GoldlackX|d:)|XUpgradeX|d:)|X1000000X|d:)|X0X|d:)|XBringt dir garnichts. Sieht nur geil aus.
+Flammenlackierung=FlammenlackierungX|d:)|XUpgradeX|d:)|X10000X|d:)|X0X|d:)|XAssis stehen drauf.
+Haischnauze=HaischnauzeX|d:)|XUpgradeX|d:)|X5000X|d:)|X0X|d:)|XFuer "Moechtegern-Airforce-Piloten".
