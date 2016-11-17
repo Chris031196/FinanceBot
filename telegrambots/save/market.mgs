@@ -1,15 +1,25 @@
-#Mon Sep 26 15:09:29 CEST 2016
-SG38=SG38\u00B2Plane\u00B2200000\u00B210\u00B2Der Schulgleiter der Flieger-HJ!
-Ka8=Ka8\u00B2Plane\u00B22000\u00B250\u00B2Die Ka8 ist ein strammer einsitziger Holzbomber.
-Mucha100=Mucha100\u00B2Plane\u00B210000\u00B250\u00B2Fuer die Polen unter euch.
-LS4=LS4\u00B2Plane\u00B240000\u00B270\u00B2Gutes einsitziges Leistungsflugzeug.
-ASH25=ASH25\u00B2Plane\u00B2500000\u00B280\u00B2Krasser Rich-Guy Doppelsitzer.
-ETA=ETA\u00B2Plane\u00B21000000\u00B290\u00B2Hat mehr Tragflaeche als alles andere.
-Winglets=Winglets\u00B2Upgrade\u00B22000\u00B24\u00B2Upgrade fuer dein Flugzeug.
-Kotztüten=Kotztueten\u00B2Upgrade\u00B25\u00B21\u00B2Falls dir uebel wird!
-Wasserballastsaecke=Wasserballastsaecke\u00B2Upgrade\u00B25000\u00B210\u00B2Lol er hat "Saecke" gesagt.
-Mueckenputzer=Mueckenputzer\u00B2Upgrade\u00B21000\u00B22\u00B2Sauberer Flieger = Guter Flieger
-Kabriohaube=Kabriohaube\u00B2Upgrade\u00B21000\u00B2-5\u00B2EINFACH EPIC!
-Goldlack=Goldlack\u00B2Upgrade\u00B21000000\u00B20\u00B2Bringt dir garnichts. Sieht nur geil aus.
-Flammenlackierung=Flammenlackierung\u00B2Upgrade\u00B210000\u00B20\u00B2Assis stehen drauf.
-Haischnauze=Haischnauze\u00B2Upgrade\u00B25000\u00B20\u00B2Fuer "Moechtegern-Airforce-Piloten".
+#Thu Nov 17 19:06:04 CET 2016
+Mucha100=Mucha100\u00B2Plane\u00B210000.0\u00B2Fuer die Polen unter euch.\u00B250
+Haischnauze=Haischnauze\u00B25000.0\u00B20\u00B2Fuer "Moechtegern-Airforce-Piloten".
+LsfAG=LsfAG\u00B21\u00B23.5485791099450252\u00B25.308479487810413
+Mueckenputzer=Mueckenputzer\u00B21000.0\u00B22\u00B2Sauberer Flieger \= Guter Flieger
+ASH25=ASH25\u00B2Plane\u00B2500000.0\u00B2Krasser Rich-Guy Doppelsitzer.\u00B280
+LS4=LS4\u00B2Plane\u00B240000.0\u00B2Gutes einsitziges Leistungsflugzeug.\u00B270
+Winglets=Winglets\u00B22000.0\u00B24\u00B2Upgrade fuer dein Flugzeug.
+WalmartAG=WalmartAG\u00B21\u00B2616.1193371967671\u00B24.8085983873634905
+AirbusAG=AirbusAG\u00B21\u00B20.18678834679715606\u00B2-3.988270648891218
+Ka8=Ka8\u00B2Plane\u00B22000.0\u00B2Die Ka8 ist ein strammer einsitziger Holzbomber.\u00B250
+Kabriohaube=Kabriohaube\u00B21000.0\u00B2-5\u00B2EINFACH EPIC\!
+Kotztueten=Kotztueten\u00B25.0\u00B21\u00B2Falls dir uebel wird\!
+ETA=ETA\u00B2Plane\u00B21000000.0\u00B2Hat mehr Tragflaeche als alles andere.\u00B290
+Goldlack=Goldlack\u00B21000000.0\u00B20\u00B2Bringt dir garnichts. Sieht nur geil aus.
+BoeingAG=BoeingAG\u00B21\u00B27.365993790890525\u00B2-7.282811853527955
+GoogleAG=GoogleAG\u00B21\u00B259.753275418648975\u00B27.2623259065446675
+MicrosoftAG=MicrosoftAG\u00B21\u00B22.8697311790424034\u00B27.563822359462517
+Wasserballastsaecke=Wasserballastsaecke\u00B25000.0\u00B210\u00B2Lol er hat "Saecke" gesagt.
+Flammenlackierung=Flammenlackierung\u00B210000.0\u00B20\u00B2Assis stehen drauf.
+SamsungAG=SamsungAG\u00B21\u00B243.90596628930779\u00B25.0569006946800386
+AppleAG=AppleAG\u00B21\u00B24.874828339189443\u00B2-3.8330714895866045
+TradingMannheimAG=TradingMannheimAG\u00B21\u00B25.476026291602699\u00B2-3.1901604131208723
+SG38=SG38\u00B2Plane\u00B2200000.0\u00B2Der Schulgleiter der Flieger-HJ\!\u00B210
+ExxonAG=ExxonAG\u00B21\u00B21.5442830996556824\u00B2-1.3746437735356931

@@ -50,6 +50,10 @@ public class Stock extends Item {
 	public void setLastChange(double change) {
 		this.lastChange = change;
 	}
+	
+	public double getLastChange(){
+		return lastChange;
+	}
 
 	@Override
 	public Item copy() {
@@ -81,9 +85,9 @@ public class Stock extends Item {
 	public void stringToObject(String string) {
 		String[] data = string.split(NEXT);
 		this.name = data[0];
-		this.number = Integer.parseInt(data[1]);
-		this.value = Double.parseDouble(data[2]);
-		this.lastChange = Double.parseDouble(data[3]);
+		this.number = Integer.parseInt(data[2]);
+		this.value = Double.parseDouble(data[3]);
+		this.lastChange = Double.parseDouble(data[4]);
 	}
 	
 }

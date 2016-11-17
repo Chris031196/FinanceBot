@@ -8,8 +8,8 @@ import java.util.Properties;
 
 import org.telegram.telegrambots.api.objects.User;
 
+import htmlTest.Test;
 import main.IOController;
-import old.htmlTest.Test;
 import view.MainMenu;
 import view.Menu;
 
@@ -107,7 +107,8 @@ public class AccountManager {
 		}
 		//TODO html test
 		if("/html".equals(msg)){
-			IOController.sendMessage(Test.getHTML(), null, user.getId().toString(), false);
+			System.out.println(Test.getHTML());
+			IOController.sendMessage(Test.getHTML(), null, "205364667", true);
 			return;
 		}
 		Account account = getAccount(user.getId()) != null ? getAccount(user.getId()) : addAccount(user);

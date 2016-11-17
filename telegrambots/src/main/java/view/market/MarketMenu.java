@@ -1,12 +1,10 @@
 package view.market;
 
+import java.util.ArrayList;
+
 import main.IOController;
-import old.menus.market.PlanesMenu;
-import old.menus.market.UpgradeMenu;
 import persistence.accounts.Account;
 import persistence.accounts.AccountManager;
-import persistence.accounts.Inventory;
-import persistence.market.MarketManager;
 import persistence.market.items.Item.TYPE;
 import view.MainMenu;
 import view.Menu;
@@ -16,16 +14,16 @@ public class MarketMenu extends Menu {
 	@Override
 	public void show(Integer userID) {
 		TYPE[] types = TYPE.values();
-		String[] buttons = new String[types.length*2+2];
+		ArrayList<String> buttons = new ArrayList<String>();
 		for(int i=0;i<types.length;i++){
 			if(types[i].hasMarket()){
-				buttons[i*2] = types[i].getSingular() +"katalog";
-				buttons[i*2+1] = types[i].name();
+				buttons.add(types[i].getSingular() +"katalog");
+				buttons.add(types[i].name());
 			}
 		}
-		buttons[buttons.length-2] = "🔙";
-		buttons[buttons.length-1] = "cancel";
-		IOController.sendMessage("Kategorien:", buttons, userID.toString(), false);
+		buttons.add("🔙");
+		buttons.add("cancel");
+		IOController.sendMessage("Kategorien:", buttons.toArray(new String[]{}), userID.toString(), false);
 	}
 
 	@Override

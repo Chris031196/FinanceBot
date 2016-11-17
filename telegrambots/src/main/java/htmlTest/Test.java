@@ -1,4 +1,4 @@
-package old.htmlTest;
+package htmlTest;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -9,7 +9,7 @@ public class Test {
 	public static String getHTML() {
 		StringBuilder contentBuilder = new StringBuilder();
 		try {
-		    BufferedReader in = new BufferedReader(new FileReader("gravity.html"));
+		    BufferedReader in = new BufferedReader(new FileReader("src/main/java/htmlTest/gravity.html"));
 		    String str;
 		    while ((str = in.readLine()) != null) {
 		        contentBuilder.append(str);

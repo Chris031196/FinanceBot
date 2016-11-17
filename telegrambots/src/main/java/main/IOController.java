@@ -61,7 +61,7 @@ public class IOController {
 	}
 
 	public static void sendMessage(String message, String[] keyboard, String chatID, boolean newMessage){
-		if(!AccountManager.getInstance().getAccount(Integer.parseInt(chatID)).lastSentMsgs.isEmpty() && !newMessage){
+		if(!newMessage && !AccountManager.getInstance().getAccount(Integer.parseInt(chatID)).lastSentMsgs.isEmpty()){
 			EditMessageText edit = new EditMessageText();
 			edit.setChatId(chatID);
 			edit.enableMarkdown(true);
@@ -83,7 +83,6 @@ public class IOController {
 			SendMessage msg = new SendMessage();
 			msg.setChatId(chatID);
 			msg.enableMarkdown(true);
-			msg.enableHtml(true); // TODO funzt das bei jeder message?
 			if(message != null){
 				msg.setText(message);
 			}

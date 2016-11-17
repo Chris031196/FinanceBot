@@ -3,7 +3,6 @@ package view.inventory;
 import main.IOController;
 import persistence.accounts.Account;
 import persistence.accounts.AccountManager;
-import persistence.accounts.Inventory;
 import persistence.market.items.Item.TYPE;
 import view.MainMenu;
 import view.Menu;

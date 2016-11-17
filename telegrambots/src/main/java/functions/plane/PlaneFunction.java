@@ -2,14 +2,12 @@ package functions.plane;
 
 import java.time.LocalDateTime;
 
-import controller.FinanceController;
 import functions.Function;
 import main.IOController;
 import persistence.accounts.Account;
 import persistence.accounts.AccountManager;
 import persistence.market.items.Plane;
 import view.Menu;
-import view.MessageListener;
 import view.inventory.InventoryMenu;
 
 public class PlaneFunction implements Function {

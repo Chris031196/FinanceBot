@@ -5,6 +5,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Properties;
+
+import functions.stock.StockmarketController;
 import persistence.Stringable;
 import persistence.accounts.AccountManager;
 import persistence.accounts.Inventory;
@@ -80,6 +82,7 @@ public class MarketManager {
 			case "Stock":
 				item = new Stock("", 0, 0, 0);
 				item.stringToObject(itemDesc);
+				StockmarketController.getInstance().registerCompany(item.getName(), item.getValue(), ((Stock) item).getLastChange());
 			}
 
 			marketItems.add(item);

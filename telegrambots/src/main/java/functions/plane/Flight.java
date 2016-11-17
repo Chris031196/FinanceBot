@@ -1,10 +1,10 @@
 package functions.plane;
 
 import main.IOController;
-import old.menus.flight.DecisionMenu;
 import persistence.accounts.Account;
 import persistence.market.items.Certificate;
 import persistence.market.items.Plane;
+import view.Menu;
 
 public class Flight {
 
@@ -53,8 +53,9 @@ public class Flight {
 			public void run() {
 				
 				try {
-					Thread.sleep(2700000);
-					//Thread.sleep(10000);
+					//Thread.sleep(2700000);
+					//TODO
+					Thread.sleep(10000);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
@@ -115,6 +116,35 @@ public class Flight {
 		return distance;
 	}
 
+	private class DecisionMenu extends Menu {
+		
+		Flight flight;
+		Menu last;
+		
+		public DecisionMenu(Flight flight, Menu last){
+			this.flight = flight;
+			this.last = last;
+		}
 
+		@Override
+		public void show(Integer userID) {
+			IOController.sendMessage("Ihre " +flight.getPlane().getName() +" hat eine kritische Höhe erreicht! Was möchten Sie tun?", new String[]{"Weiterfliegen!","fly","Umkehren","return"}, userID.toString(), false);
+		}
+
+		@Override
+		public void messageReceived(String msg, Integer userID) {
+			switch(msg) {
+			case "fly":
+				flight.flyNextPart();
+				flight.getAccount().setMenu(last);
+				last.show(userID);
+			case "return":
+				flight.abort();
+				flight.getAccount().setMenu(last);
+				last.show(userID);
+			}
+			
+		}
+	}
 
 }
