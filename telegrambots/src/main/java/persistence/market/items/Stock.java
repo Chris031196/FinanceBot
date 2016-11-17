@@ -1,11 +1,14 @@
 package persistence.market.items;
 
 import controller.FinanceController;
+import functions.plane.PlaneFunction;
 import functions.stock.Company;
 import functions.stock.StockmarketController;
 
 public class Stock extends Item {
 	
+	private static final long serialVersionUID = 1L;
+
 	private static StockmarketController controller = StockmarketController.getInstance();
 	
 	int number;

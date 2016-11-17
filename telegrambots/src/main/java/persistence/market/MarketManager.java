@@ -5,8 +5,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Properties;
-
-import main.IOController;
 import persistence.Stringable;
 import persistence.accounts.AccountManager;
 import persistence.accounts.Inventory;
@@ -40,7 +38,7 @@ public class MarketManager {
 		if(inv.getMoney() >= item.getValue()){
 			Item userItem = item.copy();
 			inv.addMoney(-userItem.getValue());
-			userItem.setValue(userItem.getValue()*(3.0/4.0));
+			userItem.setValue(userItem.getValue()*(7.0/8.0));
 			userItem.setOptions(options);
 			inv.addItem(userItem);
 			return true;
@@ -48,6 +46,13 @@ public class MarketManager {
 		else {
 			return false;
 		}
+	}
+	
+	public boolean sellItem(Item item, Integer userID){
+		Inventory inv = AccountManager.getInstance().getAccount(userID).getInventory();
+		inv.addMoney(item.getValue());
+		inv.getItems().remove(item);
+		return true;
 	}
 	private void loadMarket(){
 		Properties marketSave = new Properties();

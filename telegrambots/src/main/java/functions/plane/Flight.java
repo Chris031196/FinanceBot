@@ -3,6 +3,7 @@ package functions.plane;
 import main.IOController;
 import old.menus.flight.DecisionMenu;
 import persistence.accounts.Account;
+import persistence.market.items.Certificate;
 import persistence.market.items.Plane;
 
 public class Flight {
@@ -38,9 +39,8 @@ public class Flight {
 	public void flyNextPart(){
 		if(leftParts <= 0){
 			IOController.sendMessage("Sie sind rumgekommen! Sie bekommen " +distance/10 +"+ auf Ihr Punktekonto!", null, account.getID().toString(), false);
-			account.addPop(distance/10);
-			account.getInventory().addCertificate(CertificateBuilder.getCertificate(this));
-			account.save();
+			account.getInventory().addPop(distance/10);
+			account.getInventory().addItem(new Certificate(this));
 			account.getInventory().addItem(plane);
 			return;
 		}

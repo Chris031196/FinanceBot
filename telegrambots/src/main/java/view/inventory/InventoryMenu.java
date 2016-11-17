@@ -28,7 +28,6 @@ public class InventoryMenu extends Menu {
 	@Override
 	public void messageReceived(String msg, Integer userID) {
 		Account acc = AccountManager.getInstance().getAccount(userID);
-		Inventory inv = acc.getInventory();
 		Menu next;
 		switch(msg){
 		case "cancel": cancel(userID); break;
@@ -39,7 +38,7 @@ public class InventoryMenu extends Menu {
 			break;
 		default:
 			TYPE type = TYPE.valueOf(msg);
-			next = new ItemListMenu(inv.getItemsOfType(type), "Ihre " +type.getPlural() +":");
+			next = new ItemListMenu(userID, type, "Ihre " +type.getPlural() +":");
 			acc.setMenu(next);
 			next.show(userID);
 			break;

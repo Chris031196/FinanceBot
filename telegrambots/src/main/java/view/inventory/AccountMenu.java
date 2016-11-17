@@ -2,9 +2,9 @@ package view.inventory;
 
 import controller.FinanceController;
 import main.IOController;
-import old.menus.inventory.TransferMenu;
 import persistence.accounts.Account;
 import persistence.accounts.AccountManager;
+import persistence.accounts.TransferMenu;
 import view.Menu;
 
 public class AccountMenu extends Menu {

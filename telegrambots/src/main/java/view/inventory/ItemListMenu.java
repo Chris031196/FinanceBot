@@ -5,16 +5,16 @@ import java.util.ArrayList;
 import main.IOController;
 import persistence.accounts.AccountManager;
 import persistence.market.items.Item;
+import persistence.market.items.Item.TYPE;
 import view.Menu;
-import view.market.MarketMenu;
 
 public class ItemListMenu extends Menu{
 
 	ArrayList<Item> items;
 	String message;
 	
-	public ItemListMenu(ArrayList<Item> items, String message){
-		this.items = items;
+	public ItemListMenu(Integer userID, TYPE type, String message){
+		this.items = AccountManager.getInstance().getAccount(userID).getInventory().getItemsOfType(type);
 		this.message = message;
 	}
 	

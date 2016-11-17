@@ -1,4 +1,4 @@
-package old.menus.inventory;
+package persistence.accounts;
 
 import controller.FinanceController;
 import main.IOController;
@@ -21,7 +21,7 @@ public class TransferMenu extends Menu {
 			cancel(userID);
 			return;
 		}
-		FinanceController controller = FinanceController.getInstance();
+		AccountManager manager = AccountManager.getInstance();
 
 		if(transferTargetID == 0){
 			try{
@@ -30,7 +30,7 @@ public class TransferMenu extends Menu {
 			catch(NumberFormatException e){
 				IOController.sendMessage("Keine Zahl!", new String[]{"🔙","cancel"}, userID.toString(), true);
 			}
-			if(controller.getAccounts().containsKey(transferTargetID)){
+			if(manager.isRegistered(transferTargetID)){
 				IOController.sendMessage("Wieviel Geld möchten Sie überweisen?", new String[]{"🔙","cancel"}, userID.toString(), true);
 			}
 			else {
@@ -45,8 +45,8 @@ public class TransferMenu extends Menu {
 			catch(NumberFormatException e){
 				IOController.sendMessage("Keine Zahl! (Format: x.x, z.B 39.5)", new String[]{"🔙","cancel"}, userID.toString(), true);
 			}
-			if(controller.transferMoney(userID, transferTargetID, transferAmount)){
-				IOController.sendMessage("Dir wurden " +transferAmount +"$ von " +controller.getAccount(userID).getName() +" überwiesen!", new String[]{"🔙","cancel"}, transferTargetID.toString(), true);
+			if(manager.transferMoney(userID, transferTargetID, transferAmount)){
+				IOController.sendMessage("Dir wurden " +transferAmount +"$ von " +manager.getAccount(userID).getName() +" überwiesen!", new String[]{"🔙","cancel"}, transferTargetID.toString(), true);
 				IOController.sendMessage("Überweisung erfolgreich!", new String[]{"🔙","cancel"}, userID.toString(), true);
 			}
 			else {
@@ -58,7 +58,7 @@ public class TransferMenu extends Menu {
 
 	public void cancel(Integer userID){
 		AccountMenu menu = new AccountMenu();
-		FinanceController.getInstance().getAccount(userID).setMenu(menu);
+		AccountManager.getInstance().getAccount(userID).setMenu(menu);
 		menu.show(userID);
 	}
 

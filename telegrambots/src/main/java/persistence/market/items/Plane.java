@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 
 import controller.FinanceController;
 import functions.plane.Flight;
+import functions.plane.PlaneFunction;
 import main.IOController;
 import persistence.accounts.Account;
 import view.Menu;
@@ -20,6 +21,7 @@ public class Plane extends Item {
 		this.value = value;
 		this.description = description;
 		this.chance = chance;
+		this.function = new PlaneFunction(this);
 	}
 
 	public void addUpgrade(Upgrade upgrade){
@@ -41,8 +43,6 @@ public class Plane extends Item {
 	public String print() {
 		return getName() + ":\nWert: "+FinanceController.round(getValue()) +"$\nÜberlandchance: " +getChance() +"%\n" +getDescription() + "\n\n";
 	}
-
-
 
 	@Override
 	public Item copy() {

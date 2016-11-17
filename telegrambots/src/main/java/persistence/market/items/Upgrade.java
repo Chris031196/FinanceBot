@@ -1,9 +1,11 @@
 package persistence.market.items;
 
 import controller.FinanceController;
+import functions.upgrade.UpgradeFunction;
 
 public class Upgrade extends Item{
 	
+	private static final long serialVersionUID = 1L;
 	private int chance;
 
 	public Upgrade(String name, double value, String description, int chance) {
@@ -12,10 +14,9 @@ public class Upgrade extends Item{
 		this.value = value;
 		this.description = description;
 		this.chance = chance;
+		this.function = new UpgradeFunction(this);
 	}
 
-
-	
 	public int getChance(){
 		return chance;
 	}

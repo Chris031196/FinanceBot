@@ -58,19 +58,7 @@ public class FinanceController {
 		}
 	}
 
-	public boolean transferMoney(Inventory origin, Inventory target, double money) {
-		if(money <= 0){
-			return false;
-		}
-		if(origin.getMoney() >= money){
-			origin.addMoney(-money);
-			target.addMoney(money);
-			return true;
-		}
-		else {
-			return false;
-		}	
-	}
+
 	
 //	public void lookForPlus(String msg, Integer userID){
 //		if(msg.contains("+")){

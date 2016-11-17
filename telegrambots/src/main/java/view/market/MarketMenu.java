@@ -12,14 +12,16 @@ import view.MainMenu;
 import view.Menu;
 
 public class MarketMenu extends Menu {
-	
+
 	@Override
 	public void show(Integer userID) {
 		TYPE[] types = TYPE.values();
 		String[] buttons = new String[types.length*2+2];
 		for(int i=0;i<types.length;i++){
-			buttons[i*2] = types[i].getSingular() +"katalog";
-			buttons[i*2+1] = types[i].name();
+			if(types[i].hasMarket()){
+				buttons[i*2] = types[i].getSingular() +"katalog";
+				buttons[i*2+1] = types[i].name();
+			}
 		}
 		buttons[buttons.length-2] = "🔙";
 		buttons[buttons.length-1] = "cancel";
@@ -32,14 +34,14 @@ public class MarketMenu extends Menu {
 			cancel(userID);
 			return;
 		}
-		
+
 		Account acc = AccountManager.getInstance().getAccount(userID);
 		TYPE type = TYPE.valueOf(msg);
 		Menu next = new ItemListMenu(type, type.getSingular()+ "markt");
 		acc.setMenu(next);
 		next.show(userID);
 	}
-	
+
 	public void cancel(Integer userID){
 		MainMenu menu = new MainMenu();
 		AccountManager.getInstance().getAccount(userID).setMenu(menu);

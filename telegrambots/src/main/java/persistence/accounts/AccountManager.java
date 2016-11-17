@@ -53,6 +53,31 @@ public class AccountManager {
 		loggedInAccounts.remove(getAccount(userID));
 	}
 	
+	public boolean transferMoney(Integer originID, Integer targetID, double money) {
+		Inventory origin = getAccount(originID).getInventory();
+		Inventory target = getAccount(targetID).getInventory();
+		if(money <= 0){
+			return false;
+		}
+		if(origin.getMoney() >= money){
+			origin.addMoney(-money);
+			target.addMoney(money);
+			return true;
+		}
+		else {
+			return false;
+		}	
+	}
+	
+	public boolean isRegistered(Integer iD) {
+		for(Account acc: getAllAccounts()) {
+			if(acc.getID().equals(iD)){
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	public ArrayList<Account> getAllAccounts(){
 		ArrayList<Account> accounts = new  ArrayList<Account>();
 		Properties accs = new Properties();
