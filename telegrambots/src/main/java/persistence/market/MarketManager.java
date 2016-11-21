@@ -30,7 +30,7 @@ public class MarketManager {
 	public MarketManager(){
 		marketItems = new ArrayList<Item>();
 	}
-	
+
 	public void init() {
 		loadMarket();
 	}
@@ -49,13 +49,14 @@ public class MarketManager {
 			return false;
 		}
 	}
-	
+
 	public boolean sellItem(Item item, Integer userID){
 		Inventory inv = AccountManager.getInstance().getAccount(userID).getInventory();
 		inv.addMoney(item.getValue());
 		inv.getItems().remove(item);
 		return true;
 	}
+	
 	private void loadMarket(){
 		Properties marketSave = new Properties();
 
@@ -67,28 +68,13 @@ public class MarketManager {
 
 		for (String key : marketSave.stringPropertyNames()) {
 			String itemDesc = marketSave.getProperty(key);
-			Item item = null;
-			switch(itemDesc.split(Stringable.NEXT)[1]){
-			case "Plane":
-				item = new Plane("", 0, "", 0);
-				item.stringToObject(itemDesc);
-				break;
-
-			case "Upgrade":
-				item = new Upgrade("", 0, "", 0);
-				item.stringToObject(itemDesc);
-				break;
-
-			case "Stock":
-				item = new Stock("", 0, 0, 0);
-				item.stringToObject(itemDesc);
-				StockmarketController.getInstance().registerCompany(item.getName(), item.getValue(), ((Stock) item).getLastChange());
+			Item item = Item.stringToItem(itemDesc);
+			synchronized (marketItems){
+				marketItems.add(item);
 			}
-
-			marketItems.add(item);
 		}
 	}
-	
+
 	public String[] getTypesAsString(){
 		String[] types = new String[TYPE.values().length];
 		for(int i=0;i<types.length;i++){
@@ -100,8 +86,10 @@ public class MarketManager {
 	public void saveMarket() {
 		Properties marketSave = new Properties();
 
-		for(Item item: marketItems){
-			marketSave.put(item.getName(), item.toSaveString());
+		synchronized (marketItems){
+			for(Item item: marketItems){
+				marketSave.put(item.getName(), item.toSaveString());
+			}
 		}
 		try {
 			marketSave.store(new FileOutputStream(marketFile), null);
@@ -113,9 +101,11 @@ public class MarketManager {
 
 	public ArrayList<Item> getItemsOfType(TYPE type){
 		ArrayList<Item> itemsOfType = new ArrayList<Item>();
-		for(Item item: marketItems){
-			if(item.getType().equals(type)){
-				itemsOfType.add(item);
+		synchronized (marketItems) {
+			for(Item item: marketItems){
+				if(item.getType().equals(type)){
+					itemsOfType.add(item);
+				}
 			}
 		}
 		return itemsOfType;

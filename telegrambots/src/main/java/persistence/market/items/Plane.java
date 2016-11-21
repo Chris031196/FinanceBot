@@ -1,15 +1,8 @@
 package persistence.market.items;
 
 
-import java.time.LocalDateTime;
-
 import controller.FinanceController;
-import functions.plane.Flight;
 import functions.plane.PlaneFunction;
-import main.IOController;
-import persistence.accounts.Account;
-import view.Menu;
-import view.inventory.InventoryMenu;
 
 public class Plane extends Item {
 	
@@ -29,7 +22,7 @@ public class Plane extends Item {
 			description += upgrade.getName();
 		}
 		else {
-			description += "\n" +upgrade.getName();
+			description += "\n-" +upgrade.getName();
 		}
 		chance += upgrade.getChance();
 		value += upgrade.getValue();
@@ -46,7 +39,7 @@ public class Plane extends Item {
 
 	@Override
 	public Item copy() {
-		return new Plane(name, chance, description, chance);
+		return new Plane(name, value, description, chance);
 	}
 
 	@Override
@@ -60,7 +53,7 @@ public class Plane extends Item {
 
 	@Override
 	public String toSaveString() {
-		return name +NEXT+ type +NEXT+ value +NEXT+ description +NEXT+ chance;
+		return name +NEXT+ type +NEXT+ value +NEXT+ chance +NEXT+ description;
 	}
 
 	@Override
@@ -70,5 +63,10 @@ public class Plane extends Item {
 		this.value = Double.parseDouble(data[2]);
 		this.description = data[4];
 		this.chance = Integer.parseInt(data[3]);
+	}
+
+	@Override
+	public String getShort() {
+		return name +": " +chance +"%";
 	}
 }

@@ -1,13 +1,10 @@
 package persistence.market.items;
 
-import java.io.Serializable;
-
 import functions.Function;
+import functions.stock.StockmarketController;
 import persistence.Stringable;
 
-public abstract class Item implements Stringable, Serializable{
-
-	private static final long serialVersionUID = 1L;
+public abstract class Item implements Stringable {
 
 	public enum TYPE {
 		Plane ("Flugzeug", "Flugeuge", true), 
@@ -56,26 +53,35 @@ public abstract class Item implements Stringable, Serializable{
 //		}
 //	}
 //
-//	public static Item getNewItem(String itemString){
-//		String[] stringArray = itemString.split(";");
-//		String name = stringArray[0];
-//		TYPE type = TYPE.valueOf(stringArray[1]);
-//		double value = Double.parseDouble(stringArray[2]);
-//		int chance = Integer.parseInt(stringArray[3]);
-//		String description = "";
-//		if(stringArray.length >= 5){
-//			description = stringArray[4];
-//		}
-//		if(type == TYPE.Plane){
-//			return new Plane(name, value, chance, description);
-//		}
-//		else if(type == TYPE.Upgrade){
-//			return new Upgrade(name, value, chance, description);
-//		}
-//		else {
-//			return new Item(name, type, value, description);
-//		}
-//	}
+	public static Item stringToItem(String saveString){
+		String[] stringArray = saveString.split(NEXT);
+		String type = stringArray[1];
+		Item item = null;
+		switch(type){
+		case "Plane":
+			item = new Plane("", 0, "", 0);
+			item.stringToObject(saveString);
+			break;
+
+		case "Upgrade":
+			item = new Upgrade("", 0, "", 0);
+			item.stringToObject(saveString);
+			break;
+
+		case "Stock":
+			item = new Stock("", 0, 0, 0);
+			item.stringToObject(saveString);
+			((Stock) item).register();
+			break;
+			
+		case "Certificate":
+			item = new Certificate(null);
+			item.stringToObject(saveString);
+			break;
+		}
+		
+		return item;
+	}
 
 	public String getName() {
 		return name;
@@ -84,6 +90,8 @@ public abstract class Item implements Stringable, Serializable{
 	public String getDescription() {
 		return description;
 	}
+	
+	public abstract String getShort();
 
 	public void setDescription(String description) {
 		this.description = description;

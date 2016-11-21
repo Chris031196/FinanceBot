@@ -36,13 +36,13 @@ public class MarketMenu extends Menu {
 		Account acc = AccountManager.getInstance().getAccount(userID);
 		TYPE type = TYPE.valueOf(msg);
 		Menu next = new ItemListMenu(type, type.getSingular()+ "markt");
-		acc.setMenu(next);
+		acc.setListener(next);
 		next.show(userID);
 	}
 
 	public void cancel(Integer userID){
 		MainMenu menu = new MainMenu();
-		AccountManager.getInstance().getAccount(userID).setMenu(menu);
+		AccountManager.getInstance().getAccount(userID).setListener(menu);
 		menu.show(userID);
 	}
 }

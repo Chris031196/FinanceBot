@@ -6,15 +6,15 @@ import controller.FinanceController;
 import functions.plane.Flight;
 
 public class Certificate extends Item {
-	
+
 	public Certificate(Flight flight) {
 		Plane plane = flight.getPlane();
 		int distance = flight.getDistance();
-		FinanceController c = FinanceController.getInstance();
 		description = "URKUNDE\n";
 		description += "Datum: " +getDate() +"\n";
 		description += "Pilot: " +flight.getAccount().getName() +"\n";
-		description += "Flugzeug:\n" +plane.getName() + "\nWert: "+c.round(plane.getValue()) +"$\nÜberlandchance: " +plane.getChance() +"%\n\n";
+		description += "Flugzeug:\n" +plane.getName() + "\nWert: "+FinanceController.round(plane.getValue()) +"$\nÜberlandchance: " +plane.getChance() +"%\n\n";
+		description += "Distanz:\n" +distance +"km";
 		
 		this.type = TYPE.Certificate;
 	}
@@ -59,6 +59,12 @@ public class Certificate extends Item {
 
 	@Override
 	public Item copy() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getShort() {
 		// TODO Auto-generated method stub
 		return null;
 	}

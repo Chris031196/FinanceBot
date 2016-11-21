@@ -54,7 +54,7 @@ public class ItemDetailsMenu extends Menu {
 
 	public void cancel(Integer userID){
 		ItemListMenu menu = new ItemListMenu(userID, item.getType(), item.getType().getPlural());
-		AccountManager.getInstance().getAccount(userID).setMenu(menu);
+		AccountManager.getInstance().getAccount(userID).setListener(menu);
 		menu.show(userID);
 	}
 

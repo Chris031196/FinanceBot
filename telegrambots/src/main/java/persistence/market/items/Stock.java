@@ -1,13 +1,10 @@
 package persistence.market.items;
 
 import controller.FinanceController;
-import functions.plane.PlaneFunction;
 import functions.stock.Company;
 import functions.stock.StockmarketController;
 
 public class Stock extends Item {
-	
-	private static final long serialVersionUID = 1L;
 
 	private static StockmarketController controller = StockmarketController.getInstance();
 	
@@ -17,16 +14,21 @@ public class Stock extends Item {
 	public Stock(String name, int number, double value, double lastChange) {
 		this.name = name;
 		this.number = number;
-		this.value = value*number;
+		this.value = value;
 		this.lastChange = lastChange;
 		this.type = TYPE.Stock;
+	}
+	
+	@Override
+	public double getValue(){
+		return value*number;
 	}
 	
 	public void add(int number) {
 		this.number += number;
 	}
 	
-	public void registerAsMain(){
+	public void register(){
 		controller.registerCompany(name, number, lastChange);
 	}
 
@@ -37,12 +39,11 @@ public class Stock extends Item {
 	@Override
 	public String print() {
 		String msg = "";
-		Company comp = StockmarketController.getInstance().getCompany(name);
-		if(comp.getLastChange() > 0){
-			msg += "*"+comp.getName() +", " +FinanceController.round(comp.getValue()) +"$, " +FinanceController.round(comp.getLastChange()) +"%*\n";
+		if(number > 1){
+			msg += "Unternehmen:"+getName() +"\nAnzahl: " +number +"\nGesamtwert:" +FinanceController.round(getValue()) +"$, " +FinanceController.round(getLastChange()) +"%\n";
 		}
-		else if (comp.getLastChange() <= 0){
-			msg += comp.getName() +", " +FinanceController.round(comp.getValue()) +"$, " +FinanceController.round(comp.getLastChange()) +"%\n";
+		else {
+			msg += "Unternehmen:"+getName() +"\nWert:" +FinanceController.round(getValue()) +"$, " +FinanceController.round(getLastChange()) +"%\n";
 		}
 		return msg;
 	}
@@ -64,7 +65,7 @@ public class Stock extends Item {
 	public void setOptions(String[] options) {
 		try {
 			String num = options[0].replace("$", "");
-			this.number = Integer.parseInt(options[0]);
+			this.number = Integer.parseInt(num);
 		}
 		catch(NumberFormatException e){}
 	}
@@ -78,7 +79,7 @@ public class Stock extends Item {
 
 	@Override
 	public String toSaveString() {
-		return name +NEXT+ number +NEXT+ value +NEXT+ lastChange;
+		return name +NEXT+ type +NEXT+ number +NEXT+ value +NEXT+ lastChange;
 	}
 
 	@Override
@@ -88,6 +89,12 @@ public class Stock extends Item {
 		this.number = Integer.parseInt(data[2]);
 		this.value = Double.parseDouble(data[3]);
 		this.lastChange = Double.parseDouble(data[4]);
+	}
+
+	@Override
+	public String getShort() {
+		String n = lastChange > 0.0 ? "+" : "";
+		return name + ": " +n+ FinanceController.round(lastChange) +"%";
 	}
 	
 }

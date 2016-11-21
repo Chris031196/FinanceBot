@@ -1,10 +1,6 @@
 package functions.stock;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Properties;
 
 import controller.FinanceController;
 import main.IOController;
@@ -24,7 +20,7 @@ public class StockmarketController {
 	private static StockmarketController instance;
 
 	public static StockmarketController getInstance(){
-		return instance == null ? new StockmarketController() : instance;
+		return instance == null ? instance = new StockmarketController() : instance;
 	}
 
 	private StockmarketController(){
@@ -32,8 +28,25 @@ public class StockmarketController {
 	}
 
 	public void registerCompany(String name, double value, double lastChange){
+		System.out.println(name);
+		for(Account acc: AccountManager.getInstance().getAllAccounts()){
+			for(Item item: acc.getInventory().getItemsOfType(TYPE.Stock)){
+				if(item.getName().equals(company.getName())){
+					IOController.sendMessage("Der Wert von " +company.getName() +" hat sich um " +FinanceController.round(company.getLastChange()) + "% geändert!", null, acc.getID().toString(), true);
+					Stock stock = (Stock) item;
+					stock.setValue(company.getValue()*stock.getNumber());
+					stock.setLastChange(company.getLastChange());
+				}
+			}
+		}
+		for(Company comp: companies){
+			if(comp.getName().equals(name)){
+				return;
+			}
+		}
 		Company comp = new Company(name, value, lastChange);
 		companies.add(comp);
+		System.out.println("Company \"" +name +"\" registered!");
 		comp.startCircleOfLife();
 	}
 

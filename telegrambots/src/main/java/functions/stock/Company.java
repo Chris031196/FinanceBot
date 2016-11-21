@@ -42,8 +42,8 @@ public class Company implements Stringable{
 					
 //					save();
 					
-					long waitTime = (long) (Math.random()*16200000+1800000);
-//					long waitTime = (long) (Math.random()*10000);
+//					long waitTime = (long) (Math.random()*16200000+1800000);
+					long waitTime = (long) (Math.random()*60000);
 					try {
 						Thread.sleep(waitTime);
 					} catch (InterruptedException e) {

@@ -32,13 +32,13 @@ public class InventoryMenu extends Menu {
 		case "cancel": cancel(userID); break;
 		case "account":
 			next = new AccountMenu();
-			acc.setMenu(next);
+			acc.setListener(next);
 			next.show(userID);
 			break;
 		default:
 			TYPE type = TYPE.valueOf(msg);
 			next = new ItemListMenu(userID, type, "Ihre " +type.getPlural() +":");
-			acc.setMenu(next);
+			acc.setListener(next);
 			next.show(userID);
 			break;
 		}
@@ -46,7 +46,7 @@ public class InventoryMenu extends Menu {
 
 	public void cancel(Integer userID){
 		MainMenu menu = new MainMenu();
-		AccountManager.getInstance().getAccount(userID).setMenu(menu);
+		AccountManager.getInstance().getAccount(userID).setListener(menu);
 		menu.show(userID);
 	}
 }

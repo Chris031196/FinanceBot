@@ -4,7 +4,6 @@ import controller.FinanceController;
 import main.IOController;
 import persistence.accounts.Account;
 import persistence.accounts.AccountManager;
-import persistence.accounts.TransferMenu;
 import view.Menu;
 
 public class AccountMenu extends Menu {
@@ -28,12 +27,12 @@ public class AccountMenu extends Menu {
 	public void messageReceived(String msg, Integer userID) {
 		if(msg.equals("back")){
 			InventoryMenu menu = new InventoryMenu();
-			AccountManager.getInstance().getAccount(userID).setMenu(menu);
+			AccountManager.getInstance().getAccount(userID).setListener(menu);
 			menu.show(userID);
 		}
 		if(msg.equals("transfer")){
 			TransferMenu menu = new TransferMenu();
-			AccountManager.getInstance().getAccount(userID).setMenu(menu);
+			AccountManager.getInstance().getAccount(userID).setListener(menu);
 			menu.show(userID);
 		}
 

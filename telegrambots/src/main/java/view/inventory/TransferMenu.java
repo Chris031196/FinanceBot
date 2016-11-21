@@ -1,9 +1,9 @@
-package persistence.accounts;
+package view.inventory;
 
 import controller.FinanceController;
 import main.IOController;
+import persistence.accounts.AccountManager;
 import view.Menu;
-import view.inventory.AccountMenu;
 
 public class TransferMenu extends Menu {
 
@@ -58,7 +58,7 @@ public class TransferMenu extends Menu {
 
 	public void cancel(Integer userID){
 		AccountMenu menu = new AccountMenu();
-		AccountManager.getInstance().getAccount(userID).setMenu(menu);
+		AccountManager.getInstance().getAccount(userID).setListener(menu);
 		menu.show(userID);
 	}
 

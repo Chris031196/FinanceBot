@@ -11,7 +11,7 @@ import org.telegram.telegrambots.api.objects.User;
 import htmlTest.Test;
 import main.IOController;
 import view.MainMenu;
-import view.Menu;
+import view.MessageListener;
 
 public class AccountManager {
 	
@@ -35,7 +35,11 @@ public class AccountManager {
 	}
 
 	public Account getAccount(Integer userID){
-		return loggedInAccounts.get(userID);
+		Account acc = loggedInAccounts.get(userID);
+//		if(acc == null) {
+//			acc = Account.loadAccount(userID);
+//		}
+		return acc;
 	}
 
 	public void login(int userID) {
@@ -43,12 +47,11 @@ public class AccountManager {
 		loggedInAccounts.put(acc.getID(), acc);
 		
 		MainMenu menu = new MainMenu();
-		acc.setMenu(menu);
+		acc.setListener(menu);
 		menu.show(userID);
 	}
 
 	public void logout(Integer userID) {
-		IOController.deleteLastMessages(userID.toString());
 		getAccount(userID).save();
 		loggedInAccounts.remove(getAccount(userID));
 	}
@@ -112,7 +115,7 @@ public class AccountManager {
 			return;
 		}
 		Account account = getAccount(user.getId()) != null ? getAccount(user.getId()) : addAccount(user);
-		Menu menu = account.getCurMenu();
-		menu.messageReceived(msg, user.getId());
+		MessageListener listener = account.getListener();
+		listener.messageReceived(msg, user.getId());
 	}
 }

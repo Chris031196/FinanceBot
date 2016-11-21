@@ -15,6 +15,8 @@ import persistence.market.items.Item;
 import persistence.market.items.Item.TYPE;
 
 public class Inventory implements Stringable{
+	
+	private static final String LISTCUT = ";newitem;";
 
 	private int pop;
 	private double money;
@@ -50,20 +52,9 @@ public class Inventory implements Stringable{
 		StringBuilder builder = new StringBuilder();
 		builder.append(pop+NEXT);
 		builder.append(money+NEXT);
-
-		try {
-			ByteArrayOutputStream baos = new ByteArrayOutputStream();
-			ObjectOutputStream oos = new ObjectOutputStream(baos);
-			oos.writeObject(items);
-			oos.close();
-			for(int i=0;i<baos.toByteArray().length;i++){
-				System.out.print(baos.toByteArray()[i]+" ");
-				builder.append(baos.toByteArray()[i] +" ");
-			}
-			System.out.println();
-		}
-		catch (IOException e){
-			e.printStackTrace();
+		
+		for(Item item: items){
+			builder.append(LISTCUT +item.toSaveString());
 		}
 
 		return builder.toString();
@@ -71,23 +62,14 @@ public class Inventory implements Stringable{
 	
 	@Override
 	public void stringToObject(String string) {
-		String[] parts = string.split(NEXT);
-		pop = Integer.parseInt(parts[0]);
-		money = Double.parseDouble(parts[1]);
+		String[] parts = string.split(LISTCUT);
 		
-		try {
-			String[] data = parts[2].split(" ");
-			byte[] bytes = new byte[data.length];
-			for(int i=0;i<data.length;i++){
-				bytes[i] = Byte.parseByte(data[i]);
-			}
-			ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
-			ObjectInputStream ois = new ObjectInputStream(bais);
-			items = (ArrayList<Item>) ois.readObject();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
+		String[] data = parts[0].split(NEXT);
+		pop = Integer.parseInt(data[0]);
+		money = Double.parseDouble(data[1]);
+		
+		for(int i=1;i<parts.length;i++) {
+			items.add(Item.stringToItem(parts[i]));
 		}
 	}
 	

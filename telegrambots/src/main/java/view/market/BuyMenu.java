@@ -23,13 +23,12 @@ public class BuyMenu extends Menu {
 			cancel(userID);
 			return;
 		}
+		options[optionIndex] = msg;
+		
 		optionIndex++;
 
 		if(buyItem.getOptionMessages().length < optionIndex) {
 			IOController.sendMessage(buyItem.getOptionMessages()[optionIndex], BACK, userID.toString(), false);
-			if(optionIndex-1 >= 0){
-				options[optionIndex-1] = msg;
-			}
 		}
 		else {
 			MarketManager manager = MarketManager.getInstance();
@@ -58,8 +57,8 @@ public class BuyMenu extends Menu {
 		}
 	}
 	public void cancel(Integer userID){
-		ItemDetailsMenu menu = new ItemDetailsMenu(buyItem);
-		AccountManager.getInstance().getAccount(userID).setMenu(menu);
+		ItemListMenu menu = new ItemListMenu(buyItem.getType(), buyItem.getType().getSingular()+ "markt");
+		AccountManager.getInstance().getAccount(userID).setListener(menu);
 		menu.show(userID);
 	}
 }

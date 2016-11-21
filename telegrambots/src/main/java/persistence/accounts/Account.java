@@ -17,7 +17,7 @@ public class Account {
 	private Integer iD;
 	private Inventory inventory;
 
-	private ArrayList<MessageListener> activeListeners = new ArrayList<MessageListener>();
+	private MessageListener activeListener;
 	public ArrayList<Integer> lastSentMsgs = new ArrayList<Integer>();
 
 	public Account(int iD, String name){
@@ -77,25 +77,15 @@ public class Account {
 		return iD;
 	}
 
-	public MessageListener[] getListeners() {
-		return activeListeners.toArray(new MessageListener[]{});
+	public MessageListener getListener() {
+		return activeListener;
 	}
 	
-	public Menu getCurMenu() {
-		for(MessageListener ml: activeListeners){
-			if(ml instanceof Menu){
-				return (Menu) ml;
-			}
-		}
-		return null;
+	public MessageListener getCurMenu() {
+		return activeListener;
 	}
 	
-	public void setMenu(Menu menu){
-		activeListeners.remove(getCurMenu());
-		activeListeners.add(menu);
-	}
-
-	public void addListener(MessageListener listener) {
-		activeListeners.add(listener);
+	public void setListener(MessageListener menu){
+		activeListener = menu;
 	}
 }

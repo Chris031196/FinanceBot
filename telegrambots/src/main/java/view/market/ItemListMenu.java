@@ -23,7 +23,7 @@ public class ItemListMenu extends Menu {
 	public void show(Integer userID) {
 		ArrayList<String> buttons = new ArrayList<String>();
 		for(Item item: items){
-			buttons.add(item.getName() + ": " +item.getValue() +"$");
+			buttons.add(item.getShort());
 			buttons.add("" +items.indexOf(item));
 		}
 		buttons.add("🔙");
@@ -43,7 +43,7 @@ public class ItemListMenu extends Menu {
 			Item item = items.get(Integer.parseInt(msg));
 			if(item != null){
 				ItemDetailsMenu menu = new ItemDetailsMenu(item);
-				AccountManager.getInstance().getAccount(userID).setMenu(menu);
+				AccountManager.getInstance().getAccount(userID).setListener(menu);
 				menu.show(userID);
 			}
 		}
@@ -52,7 +52,7 @@ public class ItemListMenu extends Menu {
 
 	public void cancel(Integer userID){
 		MarketMenu menu = new MarketMenu();
-		AccountManager.getInstance().getAccount(userID).setMenu(menu);
+		AccountManager.getInstance().getAccount(userID).setListener(menu);
 		menu.show(userID);
 	}
 }

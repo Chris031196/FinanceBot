@@ -5,6 +5,7 @@ import persistence.accounts.Account;
 import persistence.market.items.Certificate;
 import persistence.market.items.Plane;
 import view.Menu;
+import view.MessageListener;
 
 public class Flight {
 
@@ -22,11 +23,11 @@ public class Flight {
 		this.leftParts = distance / 100;
 	}
 
-	public void start(){
+	public void start() {
 		double timeInHours = ((double)(distance/100.0))*0.75;
 		int hours = (int) timeInHours;
 		int minutes =(int) (60.0* (timeInHours-hours));
-		
+
 		IOController.sendMessage("Flug gestartet! Der Flug dauert mind. " +hours +"h und " +minutes +"min.", new String[]{"🔙","cancel"}, account.getID().toString(), false);
 		account.getInventory().getItems().remove(plane);
 		flyNextPart();
@@ -45,13 +46,13 @@ public class Flight {
 			return;
 		}
 		leftParts--;
-		
+
 		Flight flight = this;
 		Thread fly = new Thread(new Runnable() {
 
 			@Override
 			public void run() {
-				
+
 				try {
 					//Thread.sleep(2700000);
 					//TODO
@@ -70,7 +71,7 @@ public class Flight {
 					if(!crashedLast){
 						crashedLast = true;
 						DecisionMenu menu = new DecisionMenu(flight, account.getCurMenu());
-						account.setMenu(menu);
+						account.setListener(menu);
 						menu.show(account.getID());
 					}
 					else {
@@ -117,11 +118,11 @@ public class Flight {
 	}
 
 	private class DecisionMenu extends Menu {
-		
+
 		Flight flight;
-		Menu last;
-		
-		public DecisionMenu(Flight flight, Menu last){
+		MessageListener last;
+
+		public DecisionMenu(Flight flight, MessageListener last){
 			this.flight = flight;
 			this.last = last;
 		}
@@ -136,14 +137,18 @@ public class Flight {
 			switch(msg) {
 			case "fly":
 				flight.flyNextPart();
-				flight.getAccount().setMenu(last);
-				last.show(userID);
+				flight.getAccount().setListener(last);
+				if(last instanceof Menu){
+					((Menu) last).show(userID);
+				}
 			case "return":
 				flight.abort();
-				flight.getAccount().setMenu(last);
-				last.show(userID);
+				flight.getAccount().setListener(last);
+				if(last instanceof Menu){
+					((Menu) last).show(userID);
+				}
 			}
-			
+
 		}
 	}
 

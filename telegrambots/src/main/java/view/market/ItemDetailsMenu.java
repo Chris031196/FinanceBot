@@ -18,7 +18,7 @@ public class ItemDetailsMenu extends Menu {
 		switch(msg){
 		case "buy":
 			BuyMenu menu = new BuyMenu(item);
-			AccountManager.getInstance().getAccount(userID).setMenu(menu);
+			AccountManager.getInstance().getAccount(userID).setListener(menu);
 			menu.show(userID);
 			break;
 		case "cancel":
@@ -40,7 +40,7 @@ public class ItemDetailsMenu extends Menu {
 	
 	public void cancel(Integer userID){
 		ItemListMenu menu = new ItemListMenu(item.getType(), item.getType().getSingular()+ "markt");
-		AccountManager.getInstance().getAccount(userID).setMenu(menu);
+		AccountManager.getInstance().getAccount(userID).setListener(menu);
 		menu.show(userID);
 	}
 

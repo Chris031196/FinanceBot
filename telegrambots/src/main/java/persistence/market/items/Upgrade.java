@@ -1,11 +1,10 @@
 package persistence.market.items;
 
 import controller.FinanceController;
-import functions.upgrade.UpgradeFunction;
+import functions.plane.UpgradeFunction;
 
 public class Upgrade extends Item{
-	
-	private static final long serialVersionUID = 1L;
+
 	private int chance;
 
 	public Upgrade(String name, double value, String description, int chance) {
@@ -27,7 +26,7 @@ public class Upgrade extends Item{
 
 	@Override
 	public String toSaveString() {
-		String save = name +NEXT+ value +NEXT+ chance +NEXT+ description;
+		String save = name +NEXT+ type +NEXT+ value +NEXT+ chance +NEXT+ description;
 		return save;
 	}
 
@@ -52,5 +51,9 @@ public class Upgrade extends Item{
 	public Item copy() {
 		return new Upgrade(name, value, description, chance);
 	}
-
+	
+	@Override
+	public String getShort() {
+		return name +": " +chance +"%";
+	}
 }

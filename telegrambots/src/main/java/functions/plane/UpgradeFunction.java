@@ -1,4 +1,4 @@
-package functions.upgrade;
+package functions.plane;
 
 import java.util.ArrayList;
 
@@ -11,6 +11,7 @@ import persistence.market.items.Plane;
 import persistence.market.items.Upgrade;
 import view.MessageListener;
 import view.inventory.ItemDetailsMenu;
+import view.inventory.ItemListMenu;
 
 public class UpgradeFunction implements Function, MessageListener {
 
@@ -24,11 +25,13 @@ public class UpgradeFunction implements Function, MessageListener {
 	@Override
 	public void use(Integer userID) {
 		AccountManager m = AccountManager.getInstance();
-		m.getAccount(userID).addListener(this);
+		m.getAccount(userID).setListener(this);
 		ArrayList<String> buttons = new ArrayList<String>();
+		int index = 0;
 		for(Item item: m.getAccount(userID).getInventory().getItemsOfType(TYPE.Plane)){
 			buttons.add(item.getName() +": " +item.getValue() +"$");
-			buttons.add(item.print());
+			buttons.add("" +index);
+			index++;
 		}
 		buttons.add("🔙");
 		buttons.add("cancel");
@@ -39,23 +42,21 @@ public class UpgradeFunction implements Function, MessageListener {
 	public void messageReceived(String msg, Integer userID) {
 		AccountManager m = AccountManager.getInstance();
 		if("cancel".equals(msg)){
-			ItemDetailsMenu menu = new ItemDetailsMenu(upgrade);
-			m.getAccount(userID).setMenu(menu);
+			ItemListMenu menu = new ItemListMenu(userID, TYPE.Upgrade, "Ihre Upgrades:");
+			m.getAccount(userID).setListener(menu);
 			menu.show(userID);
+			return;
 		}
-		ArrayList<Item> items = new ArrayList<Item>();
-		items.addAll(m.getAccount(userID).getInventory().getItems());
-		for(Item item: items){
-			if(msg.equals(item.print()) && !item.getDescription().contains(upgrade.getName())){
-				((Plane) item).addUpgrade(upgrade);
-				m.getAccount(userID).getInventory().getItems().remove(upgrade);
-				if(item.getDescription().contains(upgrade.getName())){
-					IOController.sendMessage("Erfolgreich angewendet!", new String[]{"🔙","cancel"}, userID.toString(), false);
-				}
+		Item item = m.getAccount(userID).getInventory().getItemsOfType(TYPE.Plane).get(Integer.parseInt(msg));
+		if(!item.getDescription().contains(upgrade.getName())){
+			((Plane) item).addUpgrade(upgrade);
+			m.getAccount(userID).getInventory().getItems().remove(upgrade);
+			if(item.getDescription().contains(upgrade.getName())){
+				IOController.sendMessage("Erfolgreich angewendet!", new String[]{"🔙","cancel"}, userID.toString(), false);
 			}
-			else if(item.getDescription().contains(upgrade.getName())){
-				IOController.sendMessage("Das Flugzeug besitzt dieses Upgrade bereits!", new String[]{"🔙","cancel"}, userID.toString(), false);
-			}
+		}
+		else {
+			IOController.sendMessage("Das Flugzeug besitzt dieses Upgrade bereits!", new String[]{"🔙","cancel"}, userID.toString(), false);
 		}
 	}
 

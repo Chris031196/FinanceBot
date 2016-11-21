@@ -9,8 +9,7 @@ public class MainMenu extends Menu {
 
 	@Override
 	public void show(Integer userID) {
-		IOController.deleteLastMessages(userID.toString());
-		IOController.sendMessage("Wilkommen! Was möchten Sie tun?", new String[]{"Inventar","inventory","Markt","market","Ausloggen (Speichern)","logout"}, userID.toString(), true);
+		IOController.sendMessage("Wilkommen! Was möchten Sie tun?", new String[]{"Inventar","inventory","Markt","market","Ausloggen (Speichern)","logout"}, userID.toString(), false);
 	}
 
 	@Override
@@ -19,13 +18,13 @@ public class MainMenu extends Menu {
 		switch(msg){
 		case "market":
 			MarketMenu mMenu = new MarketMenu();
-			AccountManager.getInstance().getAccount(userID).setMenu(mMenu);
+			AccountManager.getInstance().getAccount(userID).setListener(mMenu);
 			mMenu.show(userID);
 			break;
 			
 		case "inventory":
 			InventoryMenu iMenu = new InventoryMenu();
-			AccountManager.getInstance().getAccount(userID).setMenu(iMenu);
+			AccountManager.getInstance().getAccount(userID).setListener(iMenu);
 			iMenu.show(userID);
 			break;
 			
