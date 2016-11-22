@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 import addons.Function;
 import addons.TYPE;
 import addons.planes.items.Plane;
-import core.accounts.Account;
 import core.accounts.AccountManager;
 import core.main.IOController;
 import core.view.Menu;
@@ -54,7 +53,6 @@ public class PlaneFunction implements Function {
 				menu.show(userID);
 			}
 			try {
-				Account acc = AccountManager.getInstance().getAccount(userID);
 				plane.setValue(plane.getValue() * 9.0/10.0);
 				Flight flight = new Flight(userID, plane, Integer.parseInt(msg));
 				flight.start();

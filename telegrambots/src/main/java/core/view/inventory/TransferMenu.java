@@ -1,6 +1,5 @@
 package core.view.inventory;
 
-import core.FinanceController;
 import core.accounts.AccountManager;
 import core.main.IOController;
 import core.view.Menu;

@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Properties;
 
-import core.view.Menu;
 import core.view.MessageListener;
 
 public class Account {
