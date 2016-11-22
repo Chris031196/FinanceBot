@@ -34,7 +34,7 @@ public class UpgradeFunction implements Function, MessageListener {
 		}
 		buttons.add("🔙");
 		buttons.add("cancel");
-		IOController.sendMessage("An welches Flugzeug möchten Sie dieses Upgrade anbringen?", buttons.toArray(new String[]{}), userID.toString(), true);
+		IOController.sendMessage("An welches Flugzeug möchten Sie dieses Upgrade anbringen?", buttons.toArray(new String[]{}), userID.toString(), false);
 	}
 
 	@Override
@@ -51,11 +51,11 @@ public class UpgradeFunction implements Function, MessageListener {
 			((Plane) item).addUpgrade(upgrade);
 			m.getAccount(userID).getInventory().getItems().remove(upgrade);
 			if(item.getDescription().contains(upgrade.getName())){
-				IOController.sendMessage("Erfolgreich angewendet!", new String[]{"🔙","cancel"}, userID.toString(), true);
+				IOController.sendMessage("Erfolgreich angewendet!", new String[]{"🔙","cancel"}, userID.toString(), false);
 			}
 		}
 		else {
-			IOController.sendMessage("Das Flugzeug besitzt dieses Upgrade bereits!", new String[]{"🔙","cancel"}, userID.toString(), true);
+			IOController.sendMessage("Das Flugzeug besitzt dieses Upgrade bereits!", new String[]{"🔙","cancel"}, userID.toString(), false);
 		}
 	}
 

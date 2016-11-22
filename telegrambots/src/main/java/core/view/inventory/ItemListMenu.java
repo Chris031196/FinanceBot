@@ -28,7 +28,7 @@ public class ItemListMenu extends Menu{
 		buttons.add("🔙");
 		buttons.add("cancel");
 
-		IOController.sendMessage(message, buttons.toArray(new String[]{}), userID.toString(), true);
+		IOController.sendMessage(message, buttons.toArray(new String[]{}), userID.toString(), false);
 	}
 
 	@Override

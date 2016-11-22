@@ -11,7 +11,7 @@ public class TransferMenu extends Menu {
 
 	@Override
 	public void show(Integer userID) {
-		IOController.sendMessage("Wem möchten Sie Geld überweisen? Bitte User ID senden:", new String[]{"🔙","cancel"}, userID.toString(), true);
+		IOController.sendMessage("Wem möchten Sie Geld überweisen? Bitte User ID senden:", new String[]{"🔙","cancel"}, userID.toString(), false);
 	}
 
 	@Override
@@ -27,14 +27,14 @@ public class TransferMenu extends Menu {
 				transferTargetID = Integer.parseInt(msg);
 			}
 			catch(NumberFormatException e){
-				IOController.sendMessage("Keine Zahl!", new String[]{"🔙","cancel"}, userID.toString(), true);
+				IOController.sendMessage("Keine Zahl!", new String[]{"🔙","cancel"}, userID.toString(), false);
 			}
 			if(manager.isRegistered(transferTargetID)){
-				IOController.sendMessage("Wieviel Geld möchten Sie überweisen?", new String[]{"🔙","cancel"}, userID.toString(), true);
+				IOController.sendMessage("Wieviel Geld möchten Sie überweisen?", new String[]{"🔙","cancel"}, userID.toString(), false);
 			}
 			else {
 				transferTargetID = 0;
-				IOController.sendMessage("Dieser User ist nicht registriert. Bitte User-ID senden:", new String[]{"🔙","cancel"}, userID.toString(), true);
+				IOController.sendMessage("Dieser User ist nicht registriert. Bitte User-ID senden:", new String[]{"🔙","cancel"}, userID.toString(), false);
 			}
 		}
 		else if(transferAmount == 0){
@@ -42,15 +42,15 @@ public class TransferMenu extends Menu {
 				transferAmount = Double.parseDouble(msg);
 			}
 			catch(NumberFormatException e){
-				IOController.sendMessage("Keine Zahl! (Format: x.x, z.B 39.5)", new String[]{"🔙","cancel"}, userID.toString(), true);
+				IOController.sendMessage("Keine Zahl! (Format: x.x, z.B 39.5)", new String[]{"🔙","cancel"}, userID.toString(), false);
 			}
 			if(manager.transferMoney(userID, transferTargetID, transferAmount)){
-				IOController.sendMessage("Dir wurden " +transferAmount +"$ von " +manager.getAccount(userID).getName() +" überwiesen!", new String[]{"🔙","cancel"}, transferTargetID.toString(), true);
-				IOController.sendMessage("Überweisung erfolgreich!", new String[]{"🔙","cancel"}, userID.toString(), true);
+				IOController.sendMessage("Dir wurden " +transferAmount +"$ von " +manager.getAccount(userID).getName() +" überwiesen!", new String[]{"🔙","cancel"}, transferTargetID.toString(), false);
+				IOController.sendMessage("Überweisung erfolgreich!", new String[]{"🔙","cancel"}, userID.toString(), false);
 			}
 			else {
 				transferAmount = 0;
-				IOController.sendMessage("Überweisung nicht möglich! Bitte validen Wert senden:", new String[]{"🔙","cancel"}, userID.toString(), true);
+				IOController.sendMessage("Überweisung nicht möglich! Bitte validen Wert senden:", new String[]{"🔙","cancel"}, userID.toString(), false);
 			}
 		}
 	}

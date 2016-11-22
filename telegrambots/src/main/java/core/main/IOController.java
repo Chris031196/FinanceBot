@@ -46,7 +46,7 @@ public class IOController {
 
 	public static void logout(Integer userID){
 		AccountManager.getInstance().logout(userID);
-		IOController.sendMessage("Erfolgreich ausgeloggt!", null, userID.toString(), true);
+		IOController.sendMessage("Erfolgreich ausgeloggt!", null, userID.toString(), false);
 	}
 
 	public static void sendData(String path, String chatID){
@@ -60,31 +60,49 @@ public class IOController {
 		}
 	}
 
-	public static void sendMessage(String message, String[] keyboard, String chatID, boolean deletable){
-		newMessage = !deletable || newMessage;
-		if(!newMessage && !AccountManager.getInstance().getAccount(Integer.parseInt(chatID)).lastSentMsgs.isEmpty()){
+	public static void sendMessage(String message, String[] keyboard, String chatID, boolean note){
+		MessageModel lastSend = AccountManager.getInstance().getAccount(Integer.parseInt(chatID)).lastSentMsg;
+		System.out.println("BREAK");
+		if(!newMessage && lastSend != null){
 			EditMessageText edit = new EditMessageText();
 			edit.setChatId(chatID);
 			edit.enableMarkdown(true);
-			edit.setMessageId(AccountManager.getInstance().getAccount(Integer.parseInt(chatID)).lastSentMsgs.get(AccountManager.getInstance().getAccount(Integer.parseInt(chatID)).lastSentMsgs.size()-1));
-			if(message != null){
+			edit.setMessageId(lastSend.getMessageId());
+			if(message != null) {
 				edit.setText(message);
 			}
-			if(keyboard != null){
+			if(keyboard != null) {
 				edit.setReplyMarkup(assembleKeyboard(keyboard));
 			}
 			try {
-				if(deletable) {
-					AccountManager.getInstance().getAccount(Integer.parseInt(chatID)).lastSentMsgs.add(bot.editMessageText(edit).getMessageId());
+				if(!note) {
+					MessageModel model = (MessageModel) bot.editMessageText(edit);
+					model.setKeyboard(keyboard);
+					AccountManager.getInstance().getAccount(Integer.parseInt(chatID)).lastSentMsg = model;
 				} else {
 					bot.editMessageText(edit).getMessageId();
+					SendMessage msg = new SendMessage();
+					msg.setChatId(lastSend.getChatId().toString());
+					msg.enableMarkdown(true);
+					if(lastSend.getText() != null){
+						msg.setText(message);
+					}
+					if(lastSend.getKeyboard() != null){
+						msg.setReplyMarkup(assembleKeyboard(lastSend.getKeyboard()));
+					}
+					try {
+						AccountManager.getInstance().getAccount(Integer.parseInt(chatID)).lastSentMsg = (MessageModel) bot.sendMessage(msg);
+					} catch (TelegramApiException e) {
+						e.printStackTrace();
+					}
 				}
 			} catch (TelegramApiException e) {
 				e.printStackTrace();
 			}
 		}
 		else {
-			deleteLastMessages(chatID);
+			newMessage = false;
+			deleteLastMessage(chatID);
 			SendMessage msg = new SendMessage();
 			msg.setChatId(chatID);
 			msg.enableMarkdown(true);
@@ -95,8 +113,10 @@ public class IOController {
 				msg.setReplyMarkup(assembleKeyboard(keyboard));
 			}
 			try {
-				if(deletable) {
-					AccountManager.getInstance().getAccount(Integer.parseInt(chatID)).lastSentMsgs.add(bot.sendMessage(msg).getMessageId());
+				if(!note) {
+					MessageModel model = (MessageModel) bot.sendMessage(msg);
+					model.setKeyboard(keyboard);
+					AccountManager.getInstance().getAccount(Integer.parseInt(chatID)).lastSentMsg = model;
 				} else {
 					bot.sendMessage(msg).getMessageId();
 				}
@@ -106,21 +126,19 @@ public class IOController {
 		}
 	}
 
-	public static void deleteLastMessages(String chatID) {
-		for(Integer m: AccountManager.getInstance().getAccount(Integer.parseInt(chatID)).lastSentMsgs){
-			EditMessageText edit = new EditMessageText();
-			edit.setChatId(chatID);
-			edit.setMessageId(m);
-			edit.setText("-");
-			edit.setReplyMarkup(null);
+	public static void deleteLastMessage(String chatID) {
+		EditMessageText edit = new EditMessageText();
+		edit.setChatId(chatID);
+		edit.setMessageId(Integer.parseInt(AccountManager.getInstance().getAccount(Integer.parseInt(chatID)).lastSentMsg.getChatId().toString()));
+		edit.setText("-");
+		edit.setReplyMarkup(null);
 
-			try {
-				bot.editMessageText(edit);
-			} catch (TelegramApiException e) {
-				e.printStackTrace();
-			}
+		try {
+			bot.editMessageText(edit);
+		} catch (TelegramApiException e) {
+			e.printStackTrace();
 		}
-		AccountManager.getInstance().getAccount(Integer.parseInt(chatID)).lastSentMsgs = new ArrayList<Integer>();
+		AccountManager.getInstance().getAccount(Integer.parseInt(chatID)).lastSentMsg = null;
 	}
 
 	private static InlineKeyboardMarkup assembleKeyboard(String[] options){

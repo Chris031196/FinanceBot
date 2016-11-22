@@ -36,12 +36,11 @@ public class PlaneFunction implements Function {
 		@Override
 		public void show(Integer userID) {
 			int hour = LocalDateTime.now().getHour();
-			//TODO falsche zeit
-			if(hour <= 20 && hour >= 8){
-				IOController.sendMessage("Wie viele Kilometer möchten Sie ausschreiben?", new String[]{"100km FAI","100","300km FAI","300","500km FAI","500","700km FAI","700","1000km FAI","1000","🔙","cancel"}, userID.toString(), true);
+			if(hour <= 12 && hour >= 8){
+				IOController.sendMessage("Wie viele Kilometer möchten Sie ausschreiben?", new String[]{"100km FAI","100","300km FAI","300","500km FAI","500","700km FAI","700","1000km FAI","1000","🔙","cancel"}, userID.toString(), false);
 			}
 			else {
-				IOController.sendMessage("Sie sollten zwischen 09:00 Uhr und 13:00 Uhr starten. Sonst haben Sie keine Chance!", BACK, userID.toString(), true);
+				IOController.sendMessage("Sie sollten zwischen 09:00 Uhr und 13:00 Uhr starten. Sonst haben Sie keine Chance!", BACK, userID.toString(), false);
 			}
 		}
 

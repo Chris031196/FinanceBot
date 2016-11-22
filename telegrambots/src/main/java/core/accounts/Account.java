@@ -3,9 +3,9 @@ package core.accounts;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Properties;
 
+import core.main.MessageModel;
 import core.view.MessageListener;
 
 public class Account {
@@ -17,7 +17,7 @@ public class Account {
 	private Inventory inventory;
 
 	private MessageListener activeListener;
-	public ArrayList<Integer> lastSentMsgs = new ArrayList<Integer>();
+	public MessageModel lastSentMsg;
 
 	public Account(int iD, String name){
 		this.iD = iD;

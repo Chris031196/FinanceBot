@@ -9,7 +9,7 @@ public class MainMenu extends Menu {
 
 	@Override
 	public void show(Integer userID) {
-		IOController.sendMessage("Wilkommen! Was möchten Sie tun?", new String[]{"Inventar","inventory","Markt","market","Ausloggen (Speichern)","logout"}, userID.toString(), true);
+		IOController.sendMessage("Wilkommen! Was möchten Sie tun?", new String[]{"Inventar","inventory","Markt","market","Ausloggen (Speichern)","logout"}, userID.toString(), false);
 	}
 
 	@Override
@@ -30,7 +30,7 @@ public class MainMenu extends Menu {
 			
 		case "logout":
 			AccountManager.getInstance().logout(userID);
-			IOController.sendMessage("Erfolgreich ausgeloggt und gespeichert!", null, userID.toString(), true);
+			IOController.sendMessage("Erfolgreich ausgeloggt und gespeichert!", null, userID.toString(), false);
 			break;
 		}
 		

@@ -20,7 +20,7 @@ public class AccountMenu extends Menu {
 		message += FinanceController.round(account.getInventory().getMoney()) +"$\n";
 		message += "Popularität: ";
 		message += account.getInventory().getPop() +"+";
-		IOController.sendMessage(message, new String[]{"Geld überweisen","transfer","🔙", "back"}, userID.toString(), true);
+		IOController.sendMessage(message, new String[]{"Geld überweisen","transfer","🔙", "back"}, userID.toString(), false);
 	}
 
 	@Override

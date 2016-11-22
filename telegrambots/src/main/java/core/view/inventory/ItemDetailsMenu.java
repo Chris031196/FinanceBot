@@ -22,7 +22,7 @@ public class ItemDetailsMenu extends Menu {
 			break;
 		case "sell":
 			if(MarketManager.getInstance().sellItem(item, userID)){
-				IOController.sendMessage(item.getName() +" erfolgreich verkauft!", new String[]{"🔙","cancel"}, userID.toString(), true);
+				IOController.sendMessage(item.getName() +" erfolgreich verkauft!", new String[]{"🔙","cancel"}, userID.toString(), false);
 			}
 		case "cancel":
 			cancel(userID);
@@ -40,7 +40,7 @@ public class ItemDetailsMenu extends Menu {
 			buttons[3] = "sell";
 			buttons[4] = "🔙";
 			buttons[5] = "cancel";
-			IOController.sendMessage(item.print(), buttons, userID.toString(), true);
+			IOController.sendMessage(item.print(), buttons, userID.toString(), false);
 		}
 		else {
 			String[] buttons = new String[4];
@@ -48,7 +48,7 @@ public class ItemDetailsMenu extends Menu {
 			buttons[1] = "sell";
 			buttons[2] = "🔙";
 			buttons[3] = "cancel";
-			IOController.sendMessage(item.print(), buttons, userID.toString(), true);
+			IOController.sendMessage(item.print(), buttons, userID.toString(), false);
 		}
 	}
 

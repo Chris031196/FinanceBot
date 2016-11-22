@@ -47,7 +47,7 @@ public class AccountManager {
 
 	public Account addAccount(User user) {
 		loggedInAccounts.put(user.getId(), new Account(user.getId(), user.getFirstName()));
-		IOController.sendMessage("Willkommen "+user.getFirstName() +"!\nEin neuer Account mit 10.000$ Startkapital wurde für Sie angelegt!", null, user.getId().toString(), false);
+		IOController.sendMessage("Willkommen "+user.getFirstName() +"!\nEin neuer Account mit 10.000$ Startkapital wurde für Sie angelegt!", null, user.getId().toString(), true);
 		return loggedInAccounts.get(user.getId());
 	}
 
@@ -111,11 +111,11 @@ public class AccountManager {
 			return;
 		}
 		//TODO html test
-		if("/html".equals(msg)){
-			System.out.println(Test.getHTML());
-			IOController.sendMessage(Test.getHTML(), null, "205364667", true);
-			return;
-		}
+//		if("/html".equals(msg)){
+//			System.out.println(Test.getHTML());
+//			IOController.sendMessage(Test.getHTML(), null, "205364667", true);
+//			return;
+//		}
 		Account account = getAccount(user.getId()) != null ? getAccount(user.getId()) : addAccount(user);
 		MessageListener listener = account.getListener();
 		listener.messageReceived(msg, user.getId());

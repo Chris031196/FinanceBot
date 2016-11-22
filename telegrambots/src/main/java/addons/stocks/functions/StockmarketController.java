@@ -87,7 +87,7 @@ public class StockmarketController {
 					Stock stock = (Stock) item;
 					stock.setValue(company.getValue());
 					stock.setLastChange(company.getLastChange());
-					IOController.sendMessage("Der Wert von " +company.getName() +" hat sich um " +FinanceController.round(company.getLastChange()) + "% geändert!", null, acc.getID().toString(), false);
+					IOController.sendMessage("Der Wert von " +company.getName() +" hat sich um " +FinanceController.round(company.getLastChange()) + "% geändert!", null, acc.getID().toString(), true);
 				}
 			}
 		}

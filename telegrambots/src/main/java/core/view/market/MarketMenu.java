@@ -23,7 +23,7 @@ public class MarketMenu extends Menu {
 		}
 		buttons.add("🔙");
 		buttons.add("cancel");
-		IOController.sendMessage("Kategorien:", buttons.toArray(new String[]{}), userID.toString(), true);
+		IOController.sendMessage("Kategorien:", buttons.toArray(new String[]{}), userID.toString(), false);
 	}
 
 	@Override

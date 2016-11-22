@@ -21,7 +21,7 @@ public class InventoryMenu extends Menu {
 		}
 		buttons[buttons.length-2] = "🔙";
 		buttons[buttons.length-1] = "cancel";
-		IOController.sendMessage("Kategorien:", buttons, userID.toString(), true);
+		IOController.sendMessage("Kategorien:", buttons, userID.toString(), false);
 	}
 
 	@Override

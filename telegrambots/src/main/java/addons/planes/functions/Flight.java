@@ -29,7 +29,7 @@ public class Flight {
 		int hours = (int) timeInHours;
 		int minutes =(int) (60.0* (timeInHours-hours));
 
-		IOController.sendMessage("Flug gestartet! Der Flug dauert mind. " +hours +"h und " +minutes +"min.", new String[]{"🔙","cancel"}, userID.toString(), true);
+		IOController.sendMessage("Flug gestartet! Der Flug dauert mind. " +hours +"h und " +minutes +"min.", new String[]{"🔙","cancel"}, userID.toString(), false);
 		AccountManager.getInstance().getAccount(userID).getInventory().getItems().remove(plane);
 		flyNextPart();
 	}
@@ -58,9 +58,8 @@ public class Flight {
 			public void run() {
 
 				try {
-//					Thread.sleep(2700000);
-					//TODO
-					Thread.sleep(10000);
+					Thread.sleep(2700000);
+//					Thread.sleep(10000);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
@@ -156,7 +155,7 @@ public class Flight {
 
 		@Override
 		public void show(Integer userID) {
-			IOController.sendMessage("Sie sind rumgekommen! Sie bekommen " +distance/10 +"+ auf Ihr Punktekonto! Urkunde des Fluges speichern?", new String[]{"Urkunde speichern!","save","Nicht speichern!","not"}, userID.toString(), true);
+			IOController.sendMessage("Sie sind rumgekommen! Sie bekommen " +distance/10 +"+ auf Ihr Punktekonto! Urkunde des Fluges speichern?", new String[]{"Urkunde speichern!","save","Nicht speichern!","not"}, userID.toString(), false);
 		}
 		
 	}
@@ -173,7 +172,7 @@ public class Flight {
 
 		@Override
 		public void show(Integer userID) {
-			IOController.sendMessage("Ihre " +flight.getPlane().getName() +" hat eine kritische Höhe erreicht! Was möchten Sie tun?", new String[]{"Weiterfliegen!","fly","Umkehren","return"}, userID.toString(), true);
+			IOController.sendMessage("Ihre " +flight.getPlane().getName() +" hat eine kritische Höhe erreicht! Was möchten Sie tun?", new String[]{"Weiterfliegen!","fly","Umkehren","return"}, userID.toString(), false);
 		}
 
 		@Override
