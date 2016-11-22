@@ -62,12 +62,11 @@ public class IOController {
 
 	public static void sendMessage(String message, String[] keyboard, String chatID, boolean note){
 		MessageModel lastSend = AccountManager.getInstance().getAccount(Integer.parseInt(chatID)).lastSentMsg;
-		System.out.println("BREAK");
 		if(!newMessage && lastSend != null){
 			EditMessageText edit = new EditMessageText();
 			edit.setChatId(chatID);
 			edit.enableMarkdown(true);
-			edit.setMessageId(lastSend.getMessageId());
+			edit.setMessageId(lastSend.getMessageID());
 			if(message != null) {
 				edit.setText(message);
 			}
@@ -76,22 +75,24 @@ public class IOController {
 			}
 			try {
 				if(!note) {
-					MessageModel model = (MessageModel) bot.editMessageText(edit);
+					MessageModel model = new MessageModel(bot.editMessageText(edit));
 					model.setKeyboard(keyboard);
 					AccountManager.getInstance().getAccount(Integer.parseInt(chatID)).lastSentMsg = model;
 				} else {
 					bot.editMessageText(edit).getMessageId();
 					SendMessage msg = new SendMessage();
-					msg.setChatId(lastSend.getChatId().toString());
+					msg.setChatId(lastSend.getChatID());
 					msg.enableMarkdown(true);
 					if(lastSend.getText() != null){
-						msg.setText(message);
+						msg.setText(lastSend.getText());
 					}
 					if(lastSend.getKeyboard() != null){
 						msg.setReplyMarkup(assembleKeyboard(lastSend.getKeyboard()));
 					}
 					try {
-						AccountManager.getInstance().getAccount(Integer.parseInt(chatID)).lastSentMsg = (MessageModel) bot.sendMessage(msg);
+						MessageModel model = new MessageModel(bot.sendMessage(msg));
+						model.setKeyboard(keyboard);
+						AccountManager.getInstance().getAccount(Integer.parseInt(chatID)).lastSentMsg = model;
 					} catch (TelegramApiException e) {
 						e.printStackTrace();
 					}
@@ -114,7 +115,7 @@ public class IOController {
 			}
 			try {
 				if(!note) {
-					MessageModel model = (MessageModel) bot.sendMessage(msg);
+					MessageModel model = new MessageModel(bot.sendMessage(msg));
 					model.setKeyboard(keyboard);
 					AccountManager.getInstance().getAccount(Integer.parseInt(chatID)).lastSentMsg = model;
 				} else {
@@ -127,18 +128,20 @@ public class IOController {
 	}
 
 	public static void deleteLastMessage(String chatID) {
-		EditMessageText edit = new EditMessageText();
-		edit.setChatId(chatID);
-		edit.setMessageId(Integer.parseInt(AccountManager.getInstance().getAccount(Integer.parseInt(chatID)).lastSentMsg.getChatId().toString()));
-		edit.setText("-");
-		edit.setReplyMarkup(null);
+		if(AccountManager.getInstance().getAccount(Integer.parseInt(chatID)).lastSentMsg != null) {
+			EditMessageText edit = new EditMessageText();
+			edit.setChatId(chatID);
+			edit.setMessageId(AccountManager.getInstance().getAccount(Integer.parseInt(chatID)).lastSentMsg.getMessageID());
+			edit.setText("-");
+			edit.setReplyMarkup(null);
 
-		try {
-			bot.editMessageText(edit);
-		} catch (TelegramApiException e) {
-			e.printStackTrace();
+			try {
+				bot.editMessageText(edit);
+			} catch (TelegramApiException e) {
+				e.printStackTrace();
+			}
+			AccountManager.getInstance().getAccount(Integer.parseInt(chatID)).lastSentMsg = null;
 		}
-		AccountManager.getInstance().getAccount(Integer.parseInt(chatID)).lastSentMsg = null;
 	}
 
 	private static InlineKeyboardMarkup assembleKeyboard(String[] options){

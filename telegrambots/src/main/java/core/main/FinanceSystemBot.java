@@ -1,5 +1,8 @@
 package core.main;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+
 import org.telegram.telegrambots.api.methods.AnswerCallbackQuery;
 import org.telegram.telegrambots.api.objects.CallbackQuery;
 import org.telegram.telegrambots.api.objects.Update;
@@ -19,7 +22,6 @@ public class FinanceSystemBot extends TelegramLongPollingBot{
 
 	@Override
 	public void onUpdateReceived(Update update) {
-		System.out.println("PETAAAAAAA!");
 		try{
 			if(update.hasCallbackQuery() && update.getCallbackQuery() != null){
 				IOController.callbackReceived(update.getCallbackQuery());
@@ -31,8 +33,10 @@ public class FinanceSystemBot extends TelegramLongPollingBot{
 				IOController.messageReceived(update.getMessage());
 			}
 		} catch (Exception e){
-			e.printStackTrace();
-//			IOController.sendMessage(e.getMessage(), null, (new Integer(205364667)).toString(), true);
+			StringWriter sw = new StringWriter();
+			PrintWriter pw = new PrintWriter(sw);
+			e.printStackTrace(pw);
+			IOController.sendMessage(sw.toString(), null, (new Integer(205364667)).toString(), true);
 		}
 	}
 
@@ -53,8 +57,8 @@ public class FinanceSystemBot extends TelegramLongPollingBot{
 
 	@Override
 	public String getBotToken() {
-		return "274593850:AAG3Wc3vKK6X_dtC9nI1PRhwkJabPgeypnw"; // DEBUG
-//		return "264511117:AAE1MlMYUe0UliHd_O0R_D8UbRtpm_5VMw8"; // REAL
+//		return "274593850:AAG3Wc3vKK6X_dtC9nI1PRhwkJabPgeypnw"; // DEBUG
+		return "264511117:AAE1MlMYUe0UliHd_O0R_D8UbRtpm_5VMw8"; // REAL
 	}
 
 	public void initialize() {

@@ -2,12 +2,17 @@ package core.main;
 
 import org.telegram.telegrambots.api.objects.Message;
 
-public class MessageModel extends Message{
+public class MessageModel{
 	
-	private static final long serialVersionUID = 1L;
-	private String[] keyboard;
+	private String[] keyboard = null;
+	private String chatID;
+	private String text;
+	private Integer messageID;
 	
-	public MessageModel() {
+	public MessageModel(Message m) {
+		this.chatID = m.getChatId().toString();
+		this.text = m.getText();
+		this.messageID = m.getMessageId();
 	}
 
 	public String[] getKeyboard() {
@@ -17,7 +22,17 @@ public class MessageModel extends Message{
 	public void setKeyboard(String[] keyboard) {
 		this.keyboard = keyboard;
 	}
-	
-	
 
+	public String getChatID() {
+		return chatID;
+	}
+
+	public String getText() {
+		return text;
+	}
+
+	public Integer getMessageID() {
+		return messageID;
+	}
+	
 }

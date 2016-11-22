@@ -14,7 +14,7 @@ import core.view.MessageListener;
 import htmlTest.Test;
 
 public class AccountManager {
-	
+
 	private static final String accountsFile = "save/accounts.mgs";
 
 	private static AccountManager instance;
@@ -27,11 +27,11 @@ public class AccountManager {
 	private AccountManager(){
 		loggedInAccounts = new HashMap<Integer, Account>();
 	}
-	
+
 	public void init() {
 		loadAccounts();
 	}
-	
+
 	private void loadAccounts(){
 		Properties accountList = new Properties();
 		try {
@@ -39,7 +39,7 @@ public class AccountManager {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 		for(String key: accountList.stringPropertyNames()){
 			loggedInAccounts.put(Integer.parseInt(key), Account.loadAccount(Integer.parseInt(key)));
 		}
@@ -65,7 +65,7 @@ public class AccountManager {
 	public void logout(Integer userID) {
 		getAccount(userID).save();
 	}
-	
+
 	public boolean transferMoney(Integer originID, Integer targetID, double money) {
 		Inventory origin = getAccount(originID).getInventory();
 		Inventory target = getAccount(targetID).getInventory();
@@ -81,7 +81,7 @@ public class AccountManager {
 			return false;
 		}	
 	}
-	
+
 	public boolean isRegistered(Integer iD) {
 		for(Account acc: getAllAccounts()) {
 			if(acc.getID().equals(iD)){
@@ -90,14 +90,14 @@ public class AccountManager {
 		}
 		return false;
 	}
-	
+
 	public ArrayList<Account> getAllAccounts(){
 		ArrayList<Account> accounts = new  ArrayList<Account>();
 
 		for (Account acc: loggedInAccounts.values()) {
 			accounts.add(acc);
 		}
-		
+
 		return accounts;
 	}
 
@@ -111,13 +111,15 @@ public class AccountManager {
 			return;
 		}
 		//TODO html test
-//		if("/html".equals(msg)){
-//			System.out.println(Test.getHTML());
-//			IOController.sendMessage(Test.getHTML(), null, "205364667", true);
-//			return;
-//		}
+		//		if("/html".equals(msg)){
+		//			System.out.println(Test.getHTML());
+		//			IOController.sendMessage(Test.getHTML(), null, "205364667", true);
+		//			return;
+		//		}
 		Account account = getAccount(user.getId()) != null ? getAccount(user.getId()) : addAccount(user);
 		MessageListener listener = account.getListener();
-		listener.messageReceived(msg, user.getId());
+		if(listener != null) {
+			listener.messageReceived(msg, user.getId());
+		}
 	}
 }
