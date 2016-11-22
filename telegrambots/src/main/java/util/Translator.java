@@ -5,7 +5,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Properties;
-import persistence.accounts.Account;
+
+import core.accounts.Account;
 
 public class Translator {
 
