@@ -34,9 +34,8 @@ public class MarketManager {
 		Inventory inv = AccountManager.getInstance().getAccount(userID).getInventory();
 		Item userItem = item.copy();
 		userItem.setOptions(options);
-		if(inv.getMoney() >= userItem.getValue()){
+		if(inv.getMoney() >= item.getValue()){
 			inv.addMoney(-userItem.getValue());
-			userItem.setValue(item.getValue()*(7.0/8.0));
 			inv.addItem(userItem);
 			return true;
 		}

@@ -41,7 +41,7 @@ public class Plane extends Item {
 
 	@Override
 	public Item copy() {
-		return new Plane(name, value, description, chance);
+		return new Plane(name, value*(9.0/10.0), description, chance);
 	}
 
 	@Override

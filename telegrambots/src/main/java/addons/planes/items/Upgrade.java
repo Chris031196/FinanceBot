@@ -51,7 +51,7 @@ public class Upgrade extends Item{
 
 	@Override
 	public Item copy() {
-		return new Upgrade(name, value, description, chance);
+		return new Upgrade(name, value*(9.0/10.0), description, chance);
 	}
 	
 	@Override

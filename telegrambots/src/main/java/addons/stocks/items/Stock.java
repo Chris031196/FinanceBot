@@ -62,8 +62,8 @@ public class Stock extends Item {
 	@Override
 	public void setOptions(String[] options) {
 		try {
-			String num = options[0].replace("$", "");
-			this.number = Integer.parseInt(num);
+			String price = options[0].replace("$", "");
+			this.number = (int) (Integer.parseInt(price) / value);
 		}
 		catch(NumberFormatException e){}
 	}
