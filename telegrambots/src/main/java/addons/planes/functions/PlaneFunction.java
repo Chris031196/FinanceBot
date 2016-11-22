@@ -37,7 +37,7 @@ public class PlaneFunction implements Function {
 		public void show(Integer userID) {
 			int hour = LocalDateTime.now().getHour();
 			//TODO falsche zeit
-			if(hour <= 19 && hour >= 8){
+			if(hour <= 20 && hour >= 8){
 				IOController.sendMessage("Wie viele Kilometer möchten Sie ausschreiben?", new String[]{"100km FAI","100","300km FAI","300","500km FAI","500","700km FAI","700","1000km FAI","1000","🔙","cancel"}, userID.toString(), true);
 			}
 			else {

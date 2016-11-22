@@ -1,17 +1,22 @@
-package core.market.items;
+package addons.planes.items;
 
 import java.time.LocalDateTime;
 
 import addons.TYPE;
 import addons.planes.functions.Flight;
-import addons.planes.items.Plane;
 import core.FinanceController;
+import core.market.items.Item;
 
 public class Certificate extends Item {
+	
+	public Certificate(){
+		this.type = TYPE.Certificate;
+	}
 
 	public Certificate(Flight flight) {
 		Plane plane = flight.getPlane();
 		int distance = flight.getDistance();
+		this.value = 0.0;
 		description = "URKUNDE\n";
 		description += "Datum: " +getDate() +"\n";
 		description += "Pilot: " +flight.getAccount().getName() +"\n";
@@ -37,37 +42,33 @@ public class Certificate extends Item {
 
 	@Override
 	public String toSaveString() {
-		// TODO Auto-generated method stub
-		return null;
+		return "cert" +NEXT+ type +NEXT+ description;
 	}
 
 	@Override
 	public void stringToObject(String string) {
-		// TODO Auto-generated method stub
-		
+		String[] data = string.split(NEXT);
+		this.name = data[0];
+		this.description = data[2];
 	}
 
 	@Override
-	public void setOptions(String[] options) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void setOptions(String[] options) {}
 
 	@Override
 	public String[] getOptionMessages() {
-		// TODO Auto-generated method stub
-		return null;
+		return new String[]{};
 	}
 
 	@Override
 	public Item copy() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public String getShort() {
-		// TODO Auto-generated method stub
-		return null;
+		String[] parts = description.split("Datum:");
+		parts = parts[1].split("\n");
+		return parts[0];
 	}
 }

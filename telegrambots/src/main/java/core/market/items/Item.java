@@ -2,6 +2,7 @@ package core.market.items;
 
 import addons.Function;
 import addons.TYPE;
+import addons.planes.items.Certificate;
 import addons.planes.items.Plane;
 import addons.planes.items.Upgrade;
 import addons.stocks.items.Stock;
@@ -48,7 +49,7 @@ public abstract class Item implements Stringable {
 			break;
 			
 		case "Certificate":
-			item = new Certificate(null);
+			item = new Certificate();
 			item.stringToObject(saveString);
 			break;
 		}

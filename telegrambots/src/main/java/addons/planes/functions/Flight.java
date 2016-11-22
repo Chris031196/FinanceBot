@@ -1,10 +1,10 @@
 package addons.planes.functions;
 
+import addons.planes.items.Certificate;
 import addons.planes.items.Plane;
 import core.accounts.Account;
 import core.accounts.AccountManager;
 import core.main.IOController;
-import core.market.items.Certificate;
 import core.view.Menu;
 import core.view.MessageListener;
 
@@ -42,11 +42,11 @@ public class Flight {
 		
 		if(leftParts <= 0){
 			Account account = AccountManager.getInstance().getAccount(userID);
-			IOController.sendMessage("Sie sind rumgekommen! Sie bekommen " +distance/10 +"+ auf Ihr Punktekonto!", null, userID.toString(), true);
 			account.getInventory().addPop(distance/10);
-			account.getInventory().addItem(new Certificate(this));
 			account.getInventory().addItem(plane);
-			account.save();
+			SaveMenu menu = new SaveMenu(this, account.getListener());
+			account.setListener(menu);
+			menu.show(userID);
 			return;
 		}
 		leftParts--;
@@ -58,7 +58,7 @@ public class Flight {
 			public void run() {
 
 				try {
-					//Thread.sleep(2700000);
+//					Thread.sleep(2700000);
 					//TODO
 					Thread.sleep(10000);
 				} catch (InterruptedException e) {
@@ -120,6 +120,45 @@ public class Flight {
 
 	public int getDistance() {
 		return distance;
+	}
+	
+	private class SaveMenu extends Menu{
+		
+		Flight flight;
+		MessageListener last;
+		
+		public SaveMenu(Flight flight, MessageListener last){
+			this.flight = flight;
+			this.last = last;
+		}
+
+		@Override
+		public void messageReceived(String msg, Integer userID) {
+			Account account = AccountManager.getInstance().getAccount(userID);
+			switch(msg){
+			case "save":
+				account.getInventory().addItem(new Certificate(flight));
+				account.save();
+				account.setListener(last);
+				if(last instanceof Menu){
+					((Menu) last).show(userID);
+				}
+				break;
+			case "not":
+				account.save();
+				account.setListener(last);
+				if(last instanceof Menu){
+					((Menu) last).show(userID);
+				}
+				break;
+			}
+		}
+
+		@Override
+		public void show(Integer userID) {
+			IOController.sendMessage("Sie sind rumgekommen! Sie bekommen " +distance/10 +"+ auf Ihr Punktekonto! Urkunde des Fluges speichern?", new String[]{"Urkunde speichern!","save","Nicht speichern!","not"}, userID.toString(), true);
+		}
+		
 	}
 
 	private class DecisionMenu extends Menu {
