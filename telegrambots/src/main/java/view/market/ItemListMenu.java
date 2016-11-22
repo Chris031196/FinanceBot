@@ -29,7 +29,7 @@ public class ItemListMenu extends Menu {
 		buttons.add("🔙");
 		buttons.add("cancel");
 
-		IOController.sendMessage(message, buttons.toArray(new String[]{}), userID.toString(), false);
+		IOController.sendMessage(message, buttons.toArray(new String[]{}), userID.toString(), true);
 	}
 
 	@Override

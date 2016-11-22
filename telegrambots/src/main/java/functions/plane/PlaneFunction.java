@@ -40,11 +40,11 @@ public class PlaneFunction implements Function {
 		public void show(Integer userID) {
 			int hour = LocalDateTime.now().getHour();
 			//TODO falsche zeit
-			if(hour <= 15 && hour >= 8){
-				IOController.sendMessage("Wie viele Kilometer möchten Sie ausschreiben?", new String[]{"100km FAI","100","300km FAI","300","500km FAI","500","700km FAI","700","1000km FAI","1000","🔙","cancel"}, userID.toString(), false);
+			if(hour <= 19 && hour >= 8){
+				IOController.sendMessage("Wie viele Kilometer möchten Sie ausschreiben?", new String[]{"100km FAI","100","300km FAI","300","500km FAI","500","700km FAI","700","1000km FAI","1000","🔙","cancel"}, userID.toString(), true);
 			}
 			else {
-				IOController.sendMessage("Sie sollten zwischen 09:00 Uhr und 13:00 Uhr starten. Sonst haben Sie keine Chance!", BACK, userID.toString(), false);
+				IOController.sendMessage("Sie sollten zwischen 09:00 Uhr und 13:00 Uhr starten. Sonst haben Sie keine Chance!", BACK, userID.toString(), true);
 			}
 		}
 
@@ -57,8 +57,8 @@ public class PlaneFunction implements Function {
 			}
 			try {
 				Account acc = AccountManager.getInstance().getAccount(userID);
-				plane.setValue(plane.getValue() * 7/8);
-				Flight flight = new Flight(acc, plane, Integer.parseInt(msg));
+				plane.setValue(plane.getValue() * 9.0/10.0);
+				Flight flight = new Flight(userID, plane, Integer.parseInt(msg));
 				flight.start();
 			}
 			catch(NumberFormatException e){}

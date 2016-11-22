@@ -6,15 +6,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Properties;
 
-import functions.stock.StockmarketController;
-import persistence.Stringable;
 import persistence.accounts.AccountManager;
 import persistence.accounts.Inventory;
 import persistence.market.items.Item;
 import persistence.market.items.Item.TYPE;
-import persistence.market.items.Plane;
-import persistence.market.items.Stock;
-import persistence.market.items.Upgrade;
 
 public class MarketManager {
 
@@ -37,11 +32,11 @@ public class MarketManager {
 
 	public boolean buyItem(Item item, String[] options, Integer userID) {
 		Inventory inv = AccountManager.getInstance().getAccount(userID).getInventory();
-		if(inv.getMoney() >= item.getValue()){
-			Item userItem = item.copy();
+		Item userItem = item.copy();
+		userItem.setOptions(options);
+		if(inv.getMoney() >= userItem.getValue()){
 			inv.addMoney(-userItem.getValue());
-			userItem.setValue(userItem.getValue()*(7.0/8.0));
-			userItem.setOptions(options);
+			userItem.setValue(item.getValue()*(7.0/8.0));
 			inv.addItem(userItem);
 			return true;
 		}

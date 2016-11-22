@@ -12,7 +12,7 @@ public class TransferMenu extends Menu {
 
 	@Override
 	public void show(Integer userID) {
-		IOController.sendMessage("Wem möchten Sie Geld überweisen? Bitte User ID senden:", new String[]{"🔙","cancel"}, userID.toString(), false);
+		IOController.sendMessage("Wem möchten Sie Geld überweisen? Bitte User ID senden:", new String[]{"🔙","cancel"}, userID.toString(), true);
 	}
 
 	@Override

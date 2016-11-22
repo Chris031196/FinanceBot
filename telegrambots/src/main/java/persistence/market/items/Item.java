@@ -71,7 +71,6 @@ public abstract class Item implements Stringable {
 		case "Stock":
 			item = new Stock("", 0, 0, 0);
 			item.stringToObject(saveString);
-			((Stock) item).register();
 			break;
 			
 		case "Certificate":

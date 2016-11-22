@@ -7,6 +7,7 @@ import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
 
 import controller.FinanceController;
+import functions.stock.StockmarketController;
 import persistence.accounts.AccountManager;
 import persistence.market.MarketManager;
 
@@ -58,8 +59,8 @@ public class FinanceSystemBot extends TelegramLongPollingBot{
 	public void initialize() {
 		IOController.init(this);
 		FinanceController.getInstance().init();
-		AccountManager.getInstance();
 		MarketManager.getInstance().init();
+		AccountManager.getInstance().init();
+		StockmarketController.getInstance().init();
 	}
-
 }

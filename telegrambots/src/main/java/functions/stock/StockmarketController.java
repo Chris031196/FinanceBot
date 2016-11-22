@@ -13,7 +13,7 @@ import persistence.market.items.Stock;
 
 public class StockmarketController {
 
-//	private static final String companiesFile = "save/companies.mgs";
+	//	private static final String companiesFile = "save/companies.mgs";
 
 	ArrayList<Company> companies;
 
@@ -27,57 +27,38 @@ public class StockmarketController {
 		companies = new ArrayList<Company>();
 	}
 
-	public void registerCompany(String name, double value, double lastChange){
-		System.out.println(name);
-		for(Account acc: AccountManager.getInstance().getAllAccounts()){
-			for(Item item: acc.getInventory().getItemsOfType(TYPE.Stock)){
-				if(item.getName().equals(company.getName())){
-					IOController.sendMessage("Der Wert von " +company.getName() +" hat sich um " +FinanceController.round(company.getLastChange()) + "% geändert!", null, acc.getID().toString(), true);
-					Stock stock = (Stock) item;
-					stock.setValue(company.getValue()*stock.getNumber());
-					stock.setLastChange(company.getLastChange());
+	public void init() {
+		LOOP: for(Item item: MarketManager.getInstance().getItemsOfType(TYPE.Stock)) {
+			for(Company company: companies){
+				if(company.getName().equals(item.getName())){
+					continue LOOP;
 				}
 			}
+			Company comp = new Company(item.getName(), item.getValue(), ((Stock) item).getLastChange());
+			companies.add(comp);
+			comp.startCircleOfLife();
 		}
-		for(Company comp: companies){
-			if(comp.getName().equals(name)){
-				return;
-			}
-		}
-		Company comp = new Company(name, value, lastChange);
-		companies.add(comp);
-		System.out.println("Company \"" +name +"\" registered!");
-		comp.startCircleOfLife();
 	}
 
-	//	private void loadCompanies() {
-	//		companies = new ArrayList<Company>();
-	//		Properties comps = new Properties();
-	//
-	//		try {
-	//			comps.load(new FileInputStream(companiesFile));
-	//		} catch (IOException e) {
-	//			e.printStackTrace();
+	//	public void register(String name, double value, double lastChange){
+	//		System.out.println(name);
+	//		Company comp = new Company(name, value, lastChange);
+	//		for(Account acc: AccountManager.getInstance().getAllAccounts()){
+	//			for(Item item: acc.getInventory().getItemsOfType(TYPE.Stock)){
+	//				if(item.getName().equals(comp.getName())){
+	//					comp.addHolder(acc.getID());
+	//				}
+	//			}
 	//		}
-	//		for (String key : comps.stringPropertyNames()) {
-	//			String companyData = comps.getProperty(key);
-	//			Company comp = new Company(key, 0, 0);
-	//			comp.stringToObject(companyData);
-	//			comp.startCircleOfLife();
+	//		
+	//		for(Company temp: companies){
+	//			if(temp.getName().equals(name)){
+	//				return;
+	//			}
 	//		}
-	//	}
-	//	
-	//	private void saveCompanies() {
-	//		Properties comps = new Properties();
-	//
-	//		for(Company comp: companies){
-	//			comps.put(comp.getName(), comp.toSaveString());
-	//		}
-	//		try {
-	//			comps.store(new FileOutputStream(companiesFile), null);
-	//		} catch (IOException e) {
-	//			e.printStackTrace();
-	//		}
+	//		companies.add(comp);
+	//		System.out.println("Company \"" +name +"\" registered!");
+	//		comp.startCircleOfLife();
 	//	}
 
 	public Company getCompany(String name) {
@@ -103,10 +84,10 @@ public class StockmarketController {
 		for(Account acc: AccountManager.getInstance().getAllAccounts()){
 			for(Item item: acc.getInventory().getItemsOfType(TYPE.Stock)){
 				if(item.getName().equals(company.getName())){
-					IOController.sendMessage("Der Wert von " +company.getName() +" hat sich um " +FinanceController.round(company.getLastChange()) + "% geändert!", null, acc.getID().toString(), true);
 					Stock stock = (Stock) item;
-					stock.setValue(company.getValue()*stock.getNumber());
+					stock.setValue(company.getValue());
 					stock.setLastChange(company.getLastChange());
+					IOController.sendMessage("Der Wert von " +company.getName() +" hat sich um " +FinanceController.round(company.getLastChange()) + "% geändert!", null, acc.getID().toString(), false);
 				}
 			}
 		}

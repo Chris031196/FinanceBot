@@ -2,6 +2,7 @@ package functions.plane;
 
 import main.IOController;
 import persistence.accounts.Account;
+import persistence.accounts.AccountManager;
 import persistence.market.items.Certificate;
 import persistence.market.items.Plane;
 import view.Menu;
@@ -9,15 +10,15 @@ import view.MessageListener;
 
 public class Flight {
 
-	private Account account;
+	private Integer userID;
 	private Plane plane;
 	private int chance;
 	private int leftParts;
 	private int distance;
 	private boolean crashedLast;
 
-	public Flight(Account account, Plane plane, int distance){
-		this.account = account;
+	public Flight(Integer userID, Plane plane, int distance){
+		this.userID = userID;
 		this.plane = plane;
 		this.distance = distance;
 		this.leftParts = distance / 100;
@@ -28,21 +29,24 @@ public class Flight {
 		int hours = (int) timeInHours;
 		int minutes =(int) (60.0* (timeInHours-hours));
 
-		IOController.sendMessage("Flug gestartet! Der Flug dauert mind. " +hours +"h und " +minutes +"min.", new String[]{"🔙","cancel"}, account.getID().toString(), false);
-		account.getInventory().getItems().remove(plane);
+		IOController.sendMessage("Flug gestartet! Der Flug dauert mind. " +hours +"h und " +minutes +"min.", new String[]{"🔙","cancel"}, userID.toString(), true);
+		AccountManager.getInstance().getAccount(userID).getInventory().getItems().remove(plane);
 		flyNextPart();
 	}
 
 	public void abort() {
-		account.getInventory().addItem(plane);
+		AccountManager.getInstance().getAccount(userID).getInventory().addItem(plane);
 	}
 
 	public void flyNextPart(){
+		
 		if(leftParts <= 0){
-			IOController.sendMessage("Sie sind rumgekommen! Sie bekommen " +distance/10 +"+ auf Ihr Punktekonto!", null, account.getID().toString(), false);
+			Account account = AccountManager.getInstance().getAccount(userID);
+			IOController.sendMessage("Sie sind rumgekommen! Sie bekommen " +distance/10 +"+ auf Ihr Punktekonto!", null, userID.toString(), true);
 			account.getInventory().addPop(distance/10);
 			account.getInventory().addItem(new Certificate(this));
 			account.getInventory().addItem(plane);
+			account.save();
 			return;
 		}
 		leftParts--;
@@ -60,6 +64,7 @@ public class Flight {
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
+				Account account = AccountManager.getInstance().getAccount(userID);
 				double chance = 100;
 				chance -= (distance / 10);
 				chance += plane.getChance();
@@ -98,7 +103,7 @@ public class Flight {
 	}
 
 	public Account getAccount() {
-		return account;
+		return AccountManager.getInstance().getAccount(userID);
 	}
 
 	public Plane getPlane() {
@@ -129,7 +134,7 @@ public class Flight {
 
 		@Override
 		public void show(Integer userID) {
-			IOController.sendMessage("Ihre " +flight.getPlane().getName() +" hat eine kritische Höhe erreicht! Was möchten Sie tun?", new String[]{"Weiterfliegen!","fly","Umkehren","return"}, userID.toString(), false);
+			IOController.sendMessage("Ihre " +flight.getPlane().getName() +" hat eine kritische Höhe erreicht! Was möchten Sie tun?", new String[]{"Weiterfliegen!","fly","Umkehren","return"}, userID.toString(), true);
 		}
 
 		@Override
@@ -141,12 +146,14 @@ public class Flight {
 				if(last instanceof Menu){
 					((Menu) last).show(userID);
 				}
+				break;
 			case "return":
 				flight.abort();
 				flight.getAccount().setListener(last);
 				if(last instanceof Menu){
 					((Menu) last).show(userID);
 				}
+				break;
 			}
 
 		}

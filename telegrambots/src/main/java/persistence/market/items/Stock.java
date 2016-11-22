@@ -1,12 +1,9 @@
 package persistence.market.items;
 
 import controller.FinanceController;
-import functions.stock.Company;
 import functions.stock.StockmarketController;
 
 public class Stock extends Item {
-
-	private static StockmarketController controller = StockmarketController.getInstance();
 	
 	int number;
 	double lastChange;
@@ -28,9 +25,9 @@ public class Stock extends Item {
 		this.number += number;
 	}
 	
-	public void register(){
-		controller.registerCompany(name, number, lastChange);
-	}
+//	public void register() {
+//		controller.register(name, number, lastChange);
+//	}
 
 	public int getNumber() {
 		return number;

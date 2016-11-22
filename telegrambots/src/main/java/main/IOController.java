@@ -20,6 +20,7 @@ import view.Menu;
 public class IOController {
 
 	private static FinanceSystemBot bot;
+	private static boolean newMessage = true;
 
 	private IOController(){}
 
@@ -28,6 +29,7 @@ public class IOController {
 	}
 
 	public static void messageReceived(Message message){
+		newMessage = true;
 		String msg = message.getText();
 		User user = message.getFrom();
 		if(msg != null && user != null){
@@ -46,7 +48,7 @@ public class IOController {
 
 	public static void logout(Integer userID){
 		AccountManager.getInstance().logout(userID);
-		IOController.sendMessage("Erfolgreich ausgeloggt!", null, userID.toString(), false);
+		IOController.sendMessage("Erfolgreich ausgeloggt!", null, userID.toString(), true);
 	}
 
 	public static void sendData(String path, String chatID){
@@ -60,7 +62,8 @@ public class IOController {
 		}
 	}
 
-	public static void sendMessage(String message, String[] keyboard, String chatID, boolean newMessage){
+	public static void sendMessage(String message, String[] keyboard, String chatID, boolean deletable){
+		newMessage = !deletable || newMessage;
 		if(!newMessage && !AccountManager.getInstance().getAccount(Integer.parseInt(chatID)).lastSentMsgs.isEmpty()){
 			EditMessageText edit = new EditMessageText();
 			edit.setChatId(chatID);
@@ -72,14 +75,18 @@ public class IOController {
 			if(keyboard != null){
 				edit.setReplyMarkup(assembleKeyboard(keyboard));
 			}
-			deleteLastMessages(chatID);
 			try {
-				AccountManager.getInstance().getAccount(Integer.parseInt(chatID)).lastSentMsgs.add(bot.editMessageText(edit).getMessageId());
+				if(deletable) {
+					AccountManager.getInstance().getAccount(Integer.parseInt(chatID)).lastSentMsgs.add(bot.editMessageText(edit).getMessageId());
+				} else {
+					bot.editMessageText(edit).getMessageId();
+				}
 			} catch (TelegramApiException e) {
 				e.printStackTrace();
 			}
 		}
 		else {
+			deleteLastMessages(chatID);
 			SendMessage msg = new SendMessage();
 			msg.setChatId(chatID);
 			msg.enableMarkdown(true);
@@ -90,7 +97,11 @@ public class IOController {
 				msg.setReplyMarkup(assembleKeyboard(keyboard));
 			}
 			try {
-				AccountManager.getInstance().getAccount(Integer.parseInt(chatID)).lastSentMsgs.add(bot.sendMessage(msg).getMessageId());
+				if(deletable) {
+					AccountManager.getInstance().getAccount(Integer.parseInt(chatID)).lastSentMsgs.add(bot.sendMessage(msg).getMessageId());
+				} else {
+					bot.sendMessage(msg).getMessageId();
+				}
 			} catch (TelegramApiException e) {
 				e.printStackTrace();
 			}

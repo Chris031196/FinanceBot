@@ -35,7 +35,7 @@ public class ItemDetailsMenu extends Menu {
 		buttons[1] = "buy";
 		buttons[2] = "🔙";
 		buttons[3] = "cancel";
-		IOController.sendMessage(item.print(), buttons, userID.toString(), false);
+		IOController.sendMessage(item.print(), buttons, userID.toString(), true);
 	}
 	
 	public void cancel(Integer userID){

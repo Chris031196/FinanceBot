@@ -27,39 +27,49 @@ public class AccountManager {
 	private AccountManager(){
 		loggedInAccounts = new HashMap<Integer, Account>();
 	}
+	
+	public void init() {
+		loadAccounts();
+	}
+	
+	private void loadAccounts(){
+		Properties accountList = new Properties();
+		try {
+			accountList.load(new FileInputStream(accountsFile));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		for(String key: accountList.stringPropertyNames()){
+			loggedInAccounts.put(Integer.parseInt(key), Account.loadAccount(Integer.parseInt(key)));
+		}
+	}
 
 	public Account addAccount(User user) {
 		loggedInAccounts.put(user.getId(), new Account(user.getId(), user.getFirstName()));
-		IOController.sendMessage("Willkommen "+user.getFirstName() +"!\nEin neuer Account mit 10.000$ Startkapital wurde für Sie angelegt!", null, user.getId().toString(), true);
+		IOController.sendMessage("Willkommen "+user.getFirstName() +"!\nEin neuer Account mit 10.000$ Startkapital wurde für Sie angelegt!", null, user.getId().toString(), false);
 		return loggedInAccounts.get(user.getId());
 	}
 
 	public Account getAccount(Integer userID){
 		Account acc = loggedInAccounts.get(userID);
-//		if(acc == null) {
-//			acc = Account.loadAccount(userID);
-//		}
 		return acc;
 	}
 
 	public void login(int userID) {
-		Account acc = Account.loadAccount(userID);
-		loggedInAccounts.put(acc.getID(), acc);
-		
 		MainMenu menu = new MainMenu();
-		acc.setListener(menu);
+		getAccount(userID).setListener(menu);
 		menu.show(userID);
 	}
 
 	public void logout(Integer userID) {
 		getAccount(userID).save();
-		loggedInAccounts.remove(getAccount(userID));
 	}
 	
 	public boolean transferMoney(Integer originID, Integer targetID, double money) {
 		Inventory origin = getAccount(originID).getInventory();
 		Inventory target = getAccount(targetID).getInventory();
-		if(money <= 0){
+		if(money <= 0) {
 			return false;
 		}
 		if(origin.getMoney() >= money){
@@ -83,16 +93,8 @@ public class AccountManager {
 	
 	public ArrayList<Account> getAllAccounts(){
 		ArrayList<Account> accounts = new  ArrayList<Account>();
-		Properties accs = new Properties();
 
-		try {
-			accs.load(new FileInputStream(accountsFile));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		for (String key : accs.stringPropertyNames()) {
-			Account acc = Account.loadAccount(Integer.parseInt(key));
+		for (Account acc: loggedInAccounts.values()) {
 			accounts.add(acc);
 		}
 		

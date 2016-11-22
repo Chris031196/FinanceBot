@@ -1,27 +1,69 @@
 package functions.stock;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Properties;
+
 import controller.FinanceController;
 import persistence.Stringable;
 
 public class Company implements Stringable{
-
+	
+	private static final String holdersFile = "save/functions/stocks/holders.mgs";
+	
 	private String name;
 	private double value;
 	private double lastChange;
+	private ArrayList<Integer> shareholders;
 
 	public Company(String name, double value, double lastChange){
 		this.name = name;
 		this.value = value;
 		this.lastChange = lastChange;
+		this.shareholders = new ArrayList<Integer>();
 	}
+	
+	public void loadHolders(){
+		Properties holders = new Properties();
 
+		try {
+			holders.load(new FileInputStream(holdersFile));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		String[] holdersString = holders.getProperty(name).split(NEXT);
+		for(int i=0;i<holdersString.length;i++){
+			shareholders.add(Integer.parseInt(holdersString[i]));
+		}
+	}
+	
+	public void saveHolders(){
+		Properties holders = new Properties();
+
+		String holdersString = "";
+		for(Integer id: shareholders){
+			holdersString += id +NEXT;
+		}
+		
+		holders.put(name, holdersString);
+		
+		try {
+			holders.store(new FileOutputStream(holdersFile), null);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public void startCircleOfLife(){
 		Company company = this;
 		Thread life = new Thread(new Runnable() {
 
 			@Override
 			public void run() {
-				
+
 				while(FinanceController.getInstance().isRunning()){
 					double change=0, min=0, max=20, random;
 
@@ -37,12 +79,12 @@ public class Company implements Stringable{
 					change = random-10;
 					lastChange = change;
 					value = value+value*(change/100);
-					
+
 					StockmarketController.getInstance().stockChanged(company);
-					
-//					save();
-					
-//					long waitTime = (long) (Math.random()*16200000+1800000);
+
+					//					save();
+
+					//					long waitTime = (long) (Math.random()*16200000+1800000);
 					long waitTime = (long) (Math.random()*60000);
 					try {
 						Thread.sleep(waitTime);
@@ -58,21 +100,30 @@ public class Company implements Stringable{
 	public String getName() {
 		return name;
 	}
-	
-//	public void save(){
-//		Properties properties = new Properties();
-//
-//		try {
-//			properties.load(new FileInputStream(FinanceController.logFile));
-//			String values = properties.getProperty(name) != null ? properties.getProperty(name) +";" +value : "" +value;
-//			properties.put(name, values);
-//		} catch (IOException e) {}
-//		try {
-//			properties.store(new FileOutputStream(FinanceController.logFile), null);
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-//	}
+
+	//	public void save(){
+	//		Properties properties = new Properties();
+	//
+	//		try {
+	//			properties.load(new FileInputStream(FinanceController.logFile));
+	//			String values = properties.getProperty(name) != null ? properties.getProperty(name) +";" +value : "" +value;
+	//			properties.put(name, values);
+	//		} catch (IOException e) {}
+	//		try {
+	//			properties.store(new FileOutputStream(FinanceController.logFile), null);
+	//		} catch (IOException e) {
+	//			e.printStackTrace();
+	//		}
+	//	}
+
+	public void addHolder(Integer userID) {
+		if(!shareholders.contains(userID))
+			shareholders.add(userID);
+	}
+
+	public ArrayList<Integer> getHolders() {
+		return shareholders;
+	}
 
 	public double getValue() {
 		return value;
