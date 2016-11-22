@@ -19,6 +19,7 @@ public class FinanceSystemBot extends TelegramLongPollingBot{
 
 	@Override
 	public void onUpdateReceived(Update update) {
+		System.out.println("PETAAAAAAA!");
 		try{
 			if(update.hasCallbackQuery() && update.getCallbackQuery() != null){
 				IOController.callbackReceived(update.getCallbackQuery());
