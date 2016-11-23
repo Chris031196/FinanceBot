@@ -44,11 +44,6 @@ public class IOController {
 		}
 	}
 
-	public static void logout(Integer userID){
-		AccountManager.getInstance().logout(userID);
-		IOController.sendMessage("Erfolgreich ausgeloggt!", null, userID.toString(), false);
-	}
-
 	public static void sendData(String path, String chatID){
 		SendDocument doc = new SendDocument();
 		doc.setNewDocument(new File(path));

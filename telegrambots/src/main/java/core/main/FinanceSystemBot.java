@@ -57,8 +57,8 @@ public class FinanceSystemBot extends TelegramLongPollingBot{
 
 	@Override
 	public String getBotToken() {
-//		return "274593850:AAG3Wc3vKK6X_dtC9nI1PRhwkJabPgeypnw"; // DEBUG
-		return "264511117:AAE1MlMYUe0UliHd_O0R_D8UbRtpm_5VMw8"; // REAL
+		return "274593850:AAG3Wc3vKK6X_dtC9nI1PRhwkJabPgeypnw"; // DEBUG
+//		return "264511117:AAE1MlMYUe0UliHd_O0R_D8UbRtpm_5VMw8"; // REAL
 	}
 
 	public void initialize() {

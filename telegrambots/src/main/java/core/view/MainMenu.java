@@ -30,7 +30,6 @@ public class MainMenu extends Menu {
 			
 		case "logout":
 			AccountManager.getInstance().logout(userID);
-			IOController.sendMessage("Erfolgreich ausgeloggt und gespeichert!", null, userID.toString(), false);
 			break;
 		}
 		
