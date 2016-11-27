@@ -62,7 +62,6 @@ public class AccountManager {
 	}
 
 	public void logout(Integer userID) {
-		IOController.sendMessage("Erfolgreich ausgeloggt!", null, userID.toString(), false);
 		getAccount(userID).save();
 		getAccount(userID).lastSentMsg = null;
 	}
