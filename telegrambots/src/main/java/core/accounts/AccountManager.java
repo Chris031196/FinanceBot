@@ -30,6 +30,12 @@ public class AccountManager {
 	public void init() {
 		loadAccounts();
 	}
+	
+	public void saveAll(){
+		for(Account acc: loggedInAccounts.values()){
+			logout(acc.getID());
+		}
+	}
 
 	private void loadAccounts(){
 		Properties accountList = new Properties();

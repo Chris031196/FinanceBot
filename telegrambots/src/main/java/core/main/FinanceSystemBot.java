@@ -26,9 +26,12 @@ public class FinanceSystemBot extends TelegramLongPollingBot{
 			if(update.hasCallbackQuery() && update.getCallbackQuery() != null){
 				IOController.callbackReceived(update.getCallbackQuery());
 			}
-			else if(update.hasMessage() && update.getMessage() != null){
+			else if(update.hasMessage() && update.getMessage() != null) {
 				if(update.getMessage().getText() != null && update.getMessage().getText().startsWith("/all") && update.getMessage().getFrom().getId().equals(205364667)){
 					FinanceController.getInstance().messageToAllUsers(update.getMessage().getText().replace("/all", ""));
+				}
+				if(update.getMessage().getText() != null && update.getMessage().getText().startsWith("/save") && update.getMessage().getFrom().getId().equals(205364667)){
+					AccountManager.getInstance().saveAll();
 				}
 				IOController.messageReceived(update.getMessage());
 			}
