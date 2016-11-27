@@ -11,7 +11,6 @@ import org.telegram.telegrambots.api.objects.User;
 import core.main.IOController;
 import core.view.MainMenu;
 import core.view.MessageListener;
-import htmlTest.Test;
 
 public class AccountManager {
 
@@ -63,6 +62,7 @@ public class AccountManager {
 	}
 
 	public void logout(Integer userID) {
+		IOController.sendMessage("Erfolgreich ausgeloggt!", null, userID.toString(), false);
 		getAccount(userID).save();
 		getAccount(userID).lastSentMsg = null;
 	}
