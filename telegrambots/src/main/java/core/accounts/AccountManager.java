@@ -64,6 +64,7 @@ public class AccountManager {
 
 	public void logout(Integer userID) {
 		getAccount(userID).save();
+		getAccount(userID).lastSentMsg = null;
 	}
 
 	public boolean transferMoney(Integer originID, Integer targetID, double money) {

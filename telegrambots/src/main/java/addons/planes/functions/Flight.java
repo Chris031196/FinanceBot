@@ -27,15 +27,16 @@ public class Flight {
 	public void start() {
 		double timeInHours = ((double)(distance/100.0))*0.75;
 		int hours = (int) timeInHours;
-		int minutes =(int) (60.0* (timeInHours-hours));
+		int minutes = (int) (60.0* (timeInHours-hours));
 
 		IOController.sendMessage("Flug gestartet! Der Flug dauert mind. " +hours +"h und " +minutes +"min.", new String[]{"🔙","cancel"}, userID.toString(), false);
-		AccountManager.getInstance().getAccount(userID).getInventory().getItems().remove(plane);
+		plane.setFlying(true);
+		
 		flyNextPart();
 	}
 
 	public void abort() {
-		AccountManager.getInstance().getAccount(userID).getInventory().addItem(plane);
+		plane.setFlying(false);
 	}
 
 	public void flyNextPart(){
@@ -43,7 +44,7 @@ public class Flight {
 		if(leftParts <= 0){
 			Account account = AccountManager.getInstance().getAccount(userID);
 			account.getInventory().addPop(distance/10);
-			account.getInventory().addItem(plane);
+			plane.setFlying(false);
 			SaveMenu menu = new SaveMenu(this, account.getListener());
 			account.setListener(menu);
 			menu.show(userID);
@@ -58,19 +59,19 @@ public class Flight {
 			public void run() {
 
 				try {
-					Thread.sleep(2700000);
-//					Thread.sleep(10000);
+//					Thread.sleep(2700000);
+					//TODO
+					Thread.sleep(10000);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
 				Account account = AccountManager.getInstance().getAccount(userID);
-				double chance = 100;
-				chance -= (distance / 10);
-				chance += plane.getChance();
+				double chance = plane.getChance();
 				if(chance >= 100){
 					chance = 95;
 				}
 				double random = Math.random() * 100;
+				System.out.println(random+ " "+chance);
 				if(random > chance){
 					if(!crashedLast){
 						crashedLast = true;
@@ -79,9 +80,9 @@ public class Flight {
 						menu.show(account.getID());
 					}
 					else {
-						plane.setValue(plane.getValue()/2);
-						account.getInventory().addItem(plane);
-						IOController.sendMessage("Ihre " +plane.getName() +" ist außengelandet! Sie verliert die Hälfte ihres Wertes!", null, account.getID().toString(), true);
+						plane.setValue(plane.getValue()*(9.0/10.0));
+						plane.setFlying(false);
+						IOController.sendMessage("Ihre " +plane.getName() +" ist außengelandet! Sie verliert dadurch an Wert!", null, account.getID().toString(), true);
 					}
 				}
 				else {
@@ -172,7 +173,7 @@ public class Flight {
 
 		@Override
 		public void show(Integer userID) {
-			IOController.sendMessage("Ihre " +flight.getPlane().getName() +" hat eine kritische Höhe erreicht! Was möchten Sie tun?", new String[]{"Weiterfliegen!","fly","Umkehren","return"}, userID.toString(), false);
+			IOController.sendMessage("Ihre " +flight.getPlane().getName() +" ("+flight.getPlane().getValue() +"$) hat eine kritische Höhe erreicht! Was möchten Sie tun?", new String[]{"Weiterfliegen!","fly","Umkehren!","return"}, userID.toString(), false);
 		}
 
 		@Override

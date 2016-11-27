@@ -44,11 +44,6 @@ public class IOController {
 		}
 	}
 
-	public static void logout(Integer userID){
-		AccountManager.getInstance().logout(userID);
-		IOController.sendMessage("Erfolgreich ausgeloggt!", null, userID.toString(), false);
-	}
-
 	public static void sendData(String path, String chatID){
 		SendDocument doc = new SendDocument();
 		doc.setNewDocument(new File(path));
@@ -62,7 +57,7 @@ public class IOController {
 
 	public static void sendMessage(String message, String[] keyboard, String chatID, boolean note){
 		MessageModel lastSend = AccountManager.getInstance().getAccount(Integer.parseInt(chatID)).lastSentMsg;
-		if(!newMessage && lastSend != null){
+		if(!newMessage && lastSend != null) {
 			EditMessageText edit = new EditMessageText();
 			edit.setChatId(chatID);
 			edit.enableMarkdown(true);
@@ -79,7 +74,7 @@ public class IOController {
 					model.setKeyboard(keyboard);
 					AccountManager.getInstance().getAccount(Integer.parseInt(chatID)).lastSentMsg = model;
 				} else {
-					bot.editMessageText(edit).getMessageId();
+					bot.editMessageText(edit);
 					SendMessage msg = new SendMessage();
 					msg.setChatId(lastSend.getChatID());
 					msg.enableMarkdown(true);
@@ -89,13 +84,9 @@ public class IOController {
 					if(lastSend.getKeyboard() != null){
 						msg.setReplyMarkup(assembleKeyboard(lastSend.getKeyboard()));
 					}
-					try {
-						MessageModel model = new MessageModel(bot.sendMessage(msg));
-						model.setKeyboard(keyboard);
-						AccountManager.getInstance().getAccount(Integer.parseInt(chatID)).lastSentMsg = model;
-					} catch (TelegramApiException e) {
-						e.printStackTrace();
-					}
+					MessageModel model = new MessageModel(bot.sendMessage(msg));
+					model.setKeyboard(lastSend.getKeyboard());
+					AccountManager.getInstance().getAccount(Integer.parseInt(chatID)).lastSentMsg = model;
 				}
 			} catch (TelegramApiException e) {
 				e.printStackTrace();

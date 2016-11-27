@@ -83,8 +83,9 @@ public class Company implements Stringable{
 					StockmarketController.getInstance().stockChanged(company);
 
 					//					save();
-					long waitTime = (long) (Math.random()*16200000+1800000);
-//					long waitTime = (long) (Math.random()*60000);
+//					long waitTime = (long) (Math.random()*16200000+1800000);
+					//TODO
+					long waitTime = (long) (Math.random()*60000);
 					try {
 						Thread.sleep(waitTime);
 					} catch (InterruptedException e) {

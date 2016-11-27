@@ -29,8 +29,8 @@ public class MainMenu extends Menu {
 			break;
 			
 		case "logout":
-			AccountManager.getInstance().logout(userID);
 			IOController.sendMessage("Erfolgreich ausgeloggt und gespeichert!", null, userID.toString(), false);
+			AccountManager.getInstance().logout(userID);
 			break;
 		}
 		

@@ -1,14 +1,14 @@
 package addons.planes.items;
 
-
 import addons.TYPE;
 import addons.planes.functions.PlaneFunction;
 import core.FinanceController;
 import core.market.items.Item;
 
 public class Plane extends Item {
-	
+
 	private int chance;
+	private boolean flying;
 
 	public Plane(String name, double value, String description, int chance) {
 		this.name = name;
@@ -16,6 +16,7 @@ public class Plane extends Item {
 		this.value = value;
 		this.description = description;
 		this.chance = chance;
+		this.flying = false;
 		this.function = new PlaneFunction(this);
 	}
 
@@ -33,10 +34,15 @@ public class Plane extends Item {
 	public int getChance() {
 		return chance;
 	}
-	
+
 	@Override
 	public String print() {
-		return getName() + ":\nWert: "+FinanceController.round(getValue()) +"$\nÜberlandchance: " +getChance() +"%\n" +getDescription() + "\n\n";
+		if(!flying){
+			return getName() + ":\nWert: "+FinanceController.round(getValue()) +"$\nÜberlandchance: " +getChance() +"%\n" +getDescription() + "\n\n";
+		}
+		else {
+			return getName() + ":\nWert: "+FinanceController.round(getValue()) +"$\nÜberlandchance: " +getChance() +"%\n" +getDescription() + "\n\nAuf einem Überlandflug!";
+		}
 	}
 
 	@Override
@@ -67,8 +73,20 @@ public class Plane extends Item {
 		this.chance = Integer.parseInt(data[3]);
 	}
 
+	public boolean isFlying() {
+		return flying;
+	}
+
+	public void setFlying(boolean flying) {
+		this.flying = flying;
+	}
+
 	@Override
 	public String getShort() {
+		if(!flying) {
 		return name +": " +chance +"%";
+		} else {
+			return name +" (fliegt)";
+		}
 	}
 }
