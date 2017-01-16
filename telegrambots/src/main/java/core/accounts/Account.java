@@ -67,6 +67,10 @@ public class Account {
 	public Inventory getInventory() {
 		return inventory;
 	}
+	
+	public void setInventory(Inventory inv){
+		this.inventory = inv;
+	}
 
 	public String getName() {
 		return name;

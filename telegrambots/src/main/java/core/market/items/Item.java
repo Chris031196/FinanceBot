@@ -28,29 +28,23 @@ public abstract class Item implements Stringable {
 //		}
 //	}
 //
-	public static Item stringToItem(String saveString){
-		String[] stringArray = saveString.split(NEXT);
-		String type = stringArray[1];
+	public static Item getItem(String name, String type, double value, String description, String additionalData){
 		Item item = null;
 		switch(type){
 		case "Plane":
-			item = new Plane("", 0, "", 0);
-			item.stringToObject(saveString);
+			item = new Plane(name, value, description, additionalData);
 			break;
 
 		case "Upgrade":
-			item = new Upgrade("", 0, "", 0);
-			item.stringToObject(saveString);
+			item = new Upgrade(name, value, description, additionalData);
 			break;
 
 		case "Stock":
-			item = new Stock("", 0, 0, 0);
-			item.stringToObject(saveString);
+			item = new Stock(name, value, description, additionalData);
 			break;
 			
 		case "Certificate":
-			item = new Certificate();
-			item.stringToObject(saveString);
+			item = new Certificate(name, value, description, additionalData);
 			break;
 		}
 		
@@ -92,6 +86,8 @@ public abstract class Item implements Stringable {
 	public abstract String[] getOptionMessages();
 	
 	public abstract Item copy();
+	
+	public abstract String getAdditionalData();
 	
 	public abstract String print();
 //	{

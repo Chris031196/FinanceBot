@@ -9,11 +9,11 @@ public class Stock extends Item {
 	int number;
 	double lastChange;
 
-	public Stock(String name, int number, double value, double lastChange) {
+	public Stock(String name, double value, String description, String additionalData) {
 		this.name = name;
-		this.number = number;
+		this.number = Integer.parseInt(additionalData.split(NEXT)[0]);
 		this.value = value;
-		this.lastChange = lastChange;
+		this.lastChange = Integer.parseInt(additionalData.split(NEXT)[1]);
 		this.type = TYPE.Stock;
 	}
 
@@ -57,7 +57,7 @@ public class Stock extends Item {
 
 	@Override
 	public Item copy() {
-		return new Stock(name, number, value, lastChange);
+		return new Stock(name, value, description, getAdditionalData());
 	}
 
 	@Override
@@ -76,19 +76,6 @@ public class Stock extends Item {
 		return options;
 	}
 
-	@Override
-	public String toSaveString() {
-		return name +NEXT+ type +NEXT+ number +NEXT+ value +NEXT+ lastChange;
-	}
-
-	@Override
-	public void stringToObject(String string) {
-		String[] data = string.split(NEXT);
-		this.name = data[0];
-		this.number = Integer.parseInt(data[2]);
-		this.value = Double.parseDouble(data[3]);
-		this.lastChange = Double.parseDouble(data[4]);
-	}
 
 	@Override
 	public String getShort() {
@@ -99,7 +86,10 @@ public class Stock extends Item {
 			String n = lastChange > 0.0 ? "+" : "";
 			return name + ": " +n+ FinanceController.round(lastChange) +"%";
 		}
-
 	}
 
+	@Override
+	public String getAdditionalData() {
+		return number+NEXT+lastChange;
+	}
 }

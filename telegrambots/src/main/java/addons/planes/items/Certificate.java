@@ -12,6 +12,14 @@ public class Certificate extends Item {
 	public Certificate(){
 		this.type = TYPE.Certificate;
 	}
+	
+	public Certificate(String name, double value, String description, String additionalData){
+		this.type = TYPE.Certificate;
+		
+		this.name = name;
+		this.value = value;
+		this.description = description;
+	}
 
 	public Certificate(Flight flight) {
 		Plane plane = flight.getPlane();
@@ -41,18 +49,6 @@ public class Certificate extends Item {
 	}
 
 	@Override
-	public String toSaveString() {
-		return "cert" +NEXT+ type +NEXT+ description;
-	}
-
-	@Override
-	public void stringToObject(String string) {
-		String[] data = string.split(NEXT);
-		this.name = data[0];
-		this.description = data[2];
-	}
-
-	@Override
 	public void setOptions(String[] options) {}
 
 	@Override
@@ -70,5 +66,10 @@ public class Certificate extends Item {
 		String[] parts = description.split("Datum:");
 		parts = parts[1].split("\n");
 		return parts[0];
+	}
+
+	@Override
+	public String getAdditionalData() {
+		return "";
 	}
 }

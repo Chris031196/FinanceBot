@@ -9,12 +9,12 @@ public class Upgrade extends Item{
 
 	private int chance;
 
-	public Upgrade(String name, double value, String description, int chance) {
+	public Upgrade(String name, double value, String description, String additionalData) {
 		this.name = name;
 		this.type = TYPE.Upgrade;
 		this.value = value;
 		this.description = description;
-		this.chance = chance;
+		this.chance = Integer.parseInt(additionalData);
 		this.function = new UpgradeFunction(this);
 	}
 
@@ -27,21 +27,6 @@ public class Upgrade extends Item{
 	}
 
 	@Override
-	public String toSaveString() {
-		String save = name +NEXT+ type +NEXT+ value +NEXT+ chance +NEXT+ description;
-		return save;
-	}
-
-	@Override
-	public void stringToObject(String string) {
-		String[] data = string.split(NEXT);
-		this.name = data[0];
-		this.value = Double.parseDouble(data[2]);
-		this.chance = Integer.parseInt(data[3]);
-		this.description = data[4];
-	}
-
-	@Override
 	public void setOptions(String[] options) {}
 
 	@Override
@@ -51,11 +36,16 @@ public class Upgrade extends Item{
 
 	@Override
 	public Item copy() {
-		return new Upgrade(name, value*(9.0/10.0), description, chance);
+		return new Upgrade(name, value*(9.0/10.0), description, getAdditionalData());
 	}
 	
 	@Override
 	public String getShort() {
 		return name +": " +chance +"%";
+	}
+
+	@Override
+	public String getAdditionalData() {
+		return ""+chance;
 	}
 }

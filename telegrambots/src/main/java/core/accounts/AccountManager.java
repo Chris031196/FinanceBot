@@ -2,6 +2,8 @@ package core.accounts;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Properties;
@@ -9,6 +11,8 @@ import java.util.Properties;
 import org.telegram.telegrambots.api.objects.User;
 
 import core.main.IOController;
+import core.market.items.Item;
+import core.persistence.Database;
 import core.view.MainMenu;
 import core.view.MessageListener;
 
@@ -30,23 +34,47 @@ public class AccountManager {
 	public void init() {
 		loadAccounts();
 	}
-	
+
 	public void saveAll(){
 		for(Account acc: loggedInAccounts.values()){
 			logout(acc.getID());
 		}
 	}
+	
+	public void saveAccount(int iD) {
+		
+	}
 
 	private void loadAccounts(){
-		Properties accountList = new Properties();
+		String sql;
 		try {
-			accountList.load(new FileInputStream(accountsFile));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+			sql = "SELECT AccountID, Name FROM user";
+			ResultSet rsAccounts = Database.executeQuery(sql);
 
-		for(String key: accountList.stringPropertyNames()){
-			loggedInAccounts.put(Integer.parseInt(key), Account.loadAccount(Integer.parseInt(key)));
+			while(rsAccounts.next()){
+				Account account = new Account(rsAccounts.getInt(1), rsAccounts.getString(2));
+
+				sql = "SELECT Pop, Money FROM inventory WHERE inventory.AccountID = " +account.getID();
+				ResultSet rsInventory = Database.executeQuery(sql);
+
+				rsInventory.next();
+				Inventory inv = new Inventory();
+				inv.addPop(rsInventory.getInt(1));
+				inv.addMoney(rsInventory.getDouble(1));
+				
+				sql = "SELECT * FROM inventory_item WHERE AccountID = " +account.getID();
+				ResultSet rsItems = Database.executeQuery(sql);
+				
+				while(rsItems.next()){
+					Item item = Item.getItem(rsItems.getString(2), rsItems.getString(3), rsItems.getDouble(4), rsItems.getString(5), rsItems.getString(6));
+					inv.addItem(item);
+				}
+
+				account.setInventory(inv);
+				loggedInAccounts.put(account.getID(), account);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
 	}
 
