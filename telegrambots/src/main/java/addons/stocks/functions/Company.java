@@ -1,17 +1,10 @@
 package addons.stocks.functions;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Properties;
-
 import core.FinanceController;
 import core.Stringable;
 
 public class Company implements Stringable{
-	
-	private static final String holdersFile = "save/functions/stocks/holders.mgs";
 	
 	private String name;
 	private double value;
@@ -23,38 +16,6 @@ public class Company implements Stringable{
 		this.value = value;
 		this.lastChange = lastChange;
 		this.shareholders = new ArrayList<Integer>();
-	}
-	
-	public void loadHolders(){
-		Properties holders = new Properties();
-
-		try {
-			holders.load(new FileInputStream(holdersFile));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		String[] holdersString = holders.getProperty(name).split(NEXT);
-		for(int i=0;i<holdersString.length;i++){
-			shareholders.add(Integer.parseInt(holdersString[i]));
-		}
-	}
-	
-	public void saveHolders(){
-		Properties holders = new Properties();
-
-		String holdersString = "";
-		for(Integer id: shareholders){
-			holdersString += id +NEXT;
-		}
-		
-		holders.put(name, holdersString);
-		
-		try {
-			holders.store(new FileOutputStream(holdersFile), null);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 	
 	public void startCircleOfLife(){
@@ -130,18 +91,5 @@ public class Company implements Stringable{
 
 	public double getLastChange() {
 		return lastChange;
-	}
-
-	@Override
-	public String toSaveString() {
-		return name +NEXT +value +NEXT +lastChange;
-	}
-
-	@Override
-	public void stringToObject(String string) {
-		String[] parts = string.split(NEXT);
-		this.name = parts[0];
-		this.value = Double.parseDouble(parts[1]);
-		this.lastChange = Double.parseDouble(parts[2]);
 	}
 }

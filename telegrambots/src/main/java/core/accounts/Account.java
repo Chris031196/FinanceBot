@@ -1,16 +1,9 @@
 package core.accounts;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.Properties;
-
 import core.main.MessageModel;
 import core.view.MessageListener;
 
 public class Account {
-	
-	private static String accountsPath = "save/accounts/";
 
 	private String name;
 	private Integer iD;
@@ -23,45 +16,6 @@ public class Account {
 		this.iD = iD;
 		this.name = name;
 		this.inventory = new Inventory();
-	}
-	
-	public static Account loadAccount(int iD){
-		return new Account(iD);
-	}
-
-	private Account(int iD){
-		this.load(iD);
-	}
-
-	public void save(){
-		Properties save = new Properties();
-		save.put("name",""+name);
-		save.put("inv", inventory.toSaveString());
-
-		try {
-			save.store(new FileOutputStream(getSaveFile()), null);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	private void load(int iD){
-		this.iD = iD;
-
-		Properties save = new Properties();
-		try {
-			save.load(new FileInputStream(getSaveFile()));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		this.name = save.getProperty("name");
-		this.inventory = new Inventory();
-		this.inventory.stringToObject(save.getProperty("inv"));
-	}
-
-	public String getSaveFile(){
-		return Account.accountsPath +iD +".mgs";
 	}
 
 	public Inventory getInventory() {

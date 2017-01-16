@@ -1,8 +1,9 @@
 package core.market;
 
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Properties;
 
@@ -10,10 +11,10 @@ import addons.TYPE;
 import core.accounts.AccountManager;
 import core.accounts.Inventory;
 import core.market.items.Item;
+import core.persistence.Database;
 
 public class MarketManager {
 
-	private static final String marketFile = "save/market.mgs";		
 	ArrayList<Item> marketItems;
 
 	private static MarketManager instance;
@@ -52,20 +53,15 @@ public class MarketManager {
 	}
 	
 	private void loadMarket(){
-		Properties marketSave = new Properties();
-
+		String sql = "SELECT * FROM item WHERE AccountID = 0";
+		ResultSet rs = Database.executeQuery(sql);
+		
 		try {
-			marketSave.load(new FileInputStream(marketFile));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		for (String key : marketSave.stringPropertyNames()) {
-			String itemDesc = marketSave.getProperty(key);
-			Item item = Item.stringToItem(itemDesc);
-			synchronized (marketItems){
-				marketItems.add(item);
+			while(rs.next()){
+				
 			}
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
 	}
 

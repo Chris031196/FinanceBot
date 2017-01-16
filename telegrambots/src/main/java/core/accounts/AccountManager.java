@@ -1,12 +1,9 @@
 package core.accounts;
 
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Properties;
 
 import org.telegram.telegrambots.api.objects.User;
 
@@ -17,8 +14,6 @@ import core.view.MainMenu;
 import core.view.MessageListener;
 
 public class AccountManager {
-
-	private static final String accountsFile = "save/accounts.mgs";
 
 	private static AccountManager instance;
 	private HashMap<Integer, Account> loggedInAccounts;
@@ -41,7 +36,25 @@ public class AccountManager {
 		}
 	}
 	
-	public void saveAccount(int iD) {
+	public void saveAccount(int userID) {
+		Inventory inv = loggedInAccounts.get(userID).getInventory();
+		
+		String sql = "UPDATE inventory "
+					+"SET Money = " +inv.getMoney()
+					+", Pop = " +inv.getPop()
+					+"WHERE AccountID = " +userID;
+		Database.executeUpdate(sql);
+		
+		sql = "DELETE FROM item WHERE AccountID = " +userID;
+		Database.executeUpdate(sql);
+		
+		sql = "INSERT INTO item VALUES ";
+		for(Item item: inv.getItems()){
+			sql += "('" + item.getName() +"', " +item.getValue() +", '" +item.getDescription() +"', '" + item.getAdditionalData() +"'), ";
+		}
+		sql = sql.substring(0, sql.length()-1);
+		sql += ";";
+		Database.executeUpdate(sql);
 		
 	}
 
@@ -62,7 +75,7 @@ public class AccountManager {
 				inv.addPop(rsInventory.getInt(1));
 				inv.addMoney(rsInventory.getDouble(1));
 				
-				sql = "SELECT * FROM inventory_item WHERE AccountID = " +account.getID();
+				sql = "SELECT * FROM item WHERE AccountID = " +account.getID();
 				ResultSet rsItems = Database.executeQuery(sql);
 				
 				while(rsItems.next()){
@@ -96,7 +109,7 @@ public class AccountManager {
 	}
 
 	public void logout(Integer userID) {
-		getAccount(userID).save();
+		saveAccount(userID);
 		getAccount(userID).lastSentMsg = null;
 	}
 
