@@ -9,8 +9,8 @@ public class Database {
 //	private static final String USERNAME = "root";
 //	private static final String PASSWORD = "sammy";
 	
-	private static final String URL = "jdbc:mysql://192.168.1.190:3306/venenumbonus?autoReconnect=true&useSSL=false";
-	private static final String USERNAME = "chris";
+	private static final String URL = "jdbc:mysql://localhost:3306/FinancialSystem?autoReconnect=true&useSSL=false";
+	private static final String USERNAME = "root";
 	private static final String PASSWORD = "sammy";
 
 	private static Connector con = new Connector(URL, USERNAME, PASSWORD);
@@ -18,14 +18,15 @@ public class Database {
 	private Database(){}
 	
 	public static ResultSet executeQuery(String sql) {
-		con.connect();
+		if(!con.isConnected()){
+			con.connect();
+		}
 		ResultSet result = null;
 		try {
 			result = con.getCon().createStatement().executeQuery(sql);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		con.disconnect();
 		return result;
 	}
 	
@@ -38,7 +39,6 @@ public class Database {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		con.disconnect();
 	}
 	
 }

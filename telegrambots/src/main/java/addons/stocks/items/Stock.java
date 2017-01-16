@@ -13,7 +13,7 @@ public class Stock extends Item {
 		this.name = name;
 		this.number = Integer.parseInt(additionalData.split(NEXT)[0]);
 		this.value = value;
-		this.lastChange = Integer.parseInt(additionalData.split(NEXT)[1]);
+		this.lastChange = Double.parseDouble(additionalData.split(NEXT)[1]);
 		this.type = TYPE.Stock;
 	}
 

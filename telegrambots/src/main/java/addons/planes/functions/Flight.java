@@ -137,14 +137,14 @@ public class Flight {
 			switch(msg){
 			case "save":
 				account.getInventory().addItem(new Certificate(flight));
-				account.save();
+				AccountManager.getInstance().saveAccount(userID);
 				account.setListener(last);
 				if(last instanceof Menu){
 					((Menu) last).show(userID);
 				}
 				break;
 			case "not":
-				account.save();
+				AccountManager.getInstance().saveAccount(userID);
 				account.setListener(last);
 				if(last instanceof Menu){
 					((Menu) last).show(userID);

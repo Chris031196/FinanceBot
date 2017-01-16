@@ -1,11 +1,8 @@
 package core.market;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Properties;
 
 import addons.TYPE;
 import core.accounts.AccountManager;
@@ -58,7 +55,7 @@ public class MarketManager {
 		
 		try {
 			while(rs.next()){
-				
+				marketItems.add(Item.getItem(rs.getString(3), rs.getString(4), rs.getDouble(5), rs.getString(6), rs.getString(7)));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -74,17 +71,17 @@ public class MarketManager {
 	}
 
 	public void saveMarket() {
-		Properties marketSave = new Properties();
-
-		synchronized (marketItems){
-			for(Item item: marketItems){
-				marketSave.put(item.getName(), item.toSaveString());
-			}
-		}
-		try {
-			marketSave.store(new FileOutputStream(marketFile), null);
-		} catch (IOException e) {
-			e.printStackTrace();
+		String sql = "";
+		
+		for(Item item: marketItems) {
+			sql = "UPDATE item SET"
+				+ " Type = " +item.getType()
+				+ ", Value =  " +item.getValue()
+				+ ", AdditionalData = " +item.getAdditionalData()
+				+ " WHERE Name = " +item.getName()
+				+ " AND AccountID = 0";
+			
+			Database.executeUpdate(sql);
 		}
 	}
 

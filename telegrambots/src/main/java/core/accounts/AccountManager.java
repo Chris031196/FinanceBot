@@ -42,19 +42,22 @@ public class AccountManager {
 		String sql = "UPDATE inventory "
 					+"SET Money = " +inv.getMoney()
 					+", Pop = " +inv.getPop()
-					+"WHERE AccountID = " +userID;
+					+" WHERE AccountID = " +userID;
 		Database.executeUpdate(sql);
 		
 		sql = "DELETE FROM item WHERE AccountID = " +userID;
 		Database.executeUpdate(sql);
 		
-		sql = "INSERT INTO item VALUES ";
-		for(Item item: inv.getItems()){
-			sql += "('" + item.getName() +"', " +item.getValue() +", '" +item.getDescription() +"', '" + item.getAdditionalData() +"'), ";
+		if(inv.getItems().size() > 0){
+			sql = "INSERT INTO item (AccountID, Name, Type, Value, Description, AdditionalData) VALUES ";
+			for(Item item: inv.getItems()){
+				sql += "(" +userID +", '" + item.getName() +"', '" + item.getType() +"', "+item.getValue() +", '" + item.getDescription() +"', '" + item.getAdditionalData() +"'), ";
+			}
+			sql = sql.substring(0, sql.length()-2);
+			sql += ";";
+			System.out.println(sql);
+			Database.executeUpdate(sql);
 		}
-		sql = sql.substring(0, sql.length()-1);
-		sql += ";";
-		Database.executeUpdate(sql);
 		
 	}
 
@@ -73,13 +76,13 @@ public class AccountManager {
 				rsInventory.next();
 				Inventory inv = new Inventory();
 				inv.addPop(rsInventory.getInt(1));
-				inv.addMoney(rsInventory.getDouble(1));
+				inv.addMoney(rsInventory.getDouble(2));
 				
 				sql = "SELECT * FROM item WHERE AccountID = " +account.getID();
 				ResultSet rsItems = Database.executeQuery(sql);
 				
 				while(rsItems.next()){
-					Item item = Item.getItem(rsItems.getString(2), rsItems.getString(3), rsItems.getDouble(4), rsItems.getString(5), rsItems.getString(6));
+					Item item = Item.getItem(rsItems.getString(3), rsItems.getString(4), rsItems.getDouble(5), rsItems.getString(6), rsItems.getString(7));
 					inv.addItem(item);
 				}
 
