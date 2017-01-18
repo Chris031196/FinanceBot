@@ -29,15 +29,62 @@ public class Translator implements Stringable{
 			Account acc = loadAccount(Integer.parseInt(key));
 			saveAccount(acc);
 		}
+
+		Properties market = new Properties();
+
+		try {
+			market.load(new FileInputStream("save/market.mgs"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		for (String key : market.stringPropertyNames()) {
+			String itemDesc = market.getProperty(key);
+
+			String[] stringArray = itemDesc.split(NEXT);
+			String type = stringArray[1];
+			Item item = null;
+			String[] dat = null;
+			switch(type){
+			case "Plane":
+				dat = itemDesc.split(NEXT);
+				item = new Plane(dat[0], Double.parseDouble(dat[2]), dat[4], dat[3]);
+				break;
+
+			case "Upgrade":
+				dat = itemDesc.split(NEXT);
+				item = new Upgrade(dat[0], Double.parseDouble(dat[2]), dat[4], dat[3]);
+				break;
+
+			case "Stock":
+				dat = itemDesc.split(NEXT);
+				item = new Stock(dat[0], Double.parseDouble(dat[2]), dat[4], dat[2] +NEXT +dat[4]);
+				break;
+
+			case "Certificate":
+				dat = itemDesc.split(NEXT);
+				item = new Certificate(dat[0], 0, dat[2], "");
+				break;
+			}
+			
+			String sql = "INSERT INTO item (AccountID, Name, Type, Value, Description, AdditionalData) VALUES ";
+			sql += "(0, '" + item.getName() +"', '" + item.getType() +"', "+item.getValue() +", '" + item.getDescription() +"', '" + item.getAdditionalData() +"');";
+			System.out.println(sql);
+			Database.executeUpdate(sql);
+		}
 	}
 
 	public static void saveAccount(Account acc) {
 		Inventory inv = acc.getInventory();
 
-		String sql = "UPDATE inventory "
-				+"SET Money = " +inv.getMoney()
-				+", Pop = " +inv.getPop()
-				+" WHERE AccountID = " +acc.getID();
+		String sql = "INSERT INTO inventory VALUES ("
+				+"'" +acc.getID() +"', "
+				+ inv.getPop() +", "
+				+ inv.getMoney() +")";
+		Database.executeUpdate(sql);
+		
+		sql = "INSERT INTO user VALUES ("
+				+acc.getID() +", '" + acc.getName() +"')";
 		Database.executeUpdate(sql);
 
 		sql = "DELETE FROM item WHERE AccountID = " +acc.getID();

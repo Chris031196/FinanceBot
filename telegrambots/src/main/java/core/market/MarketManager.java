@@ -75,10 +75,10 @@ public class MarketManager {
 		
 		for(Item item: marketItems) {
 			sql = "UPDATE item SET"
-				+ " Type = " +item.getType()
+				+ " Type = '" +item.getType() +"'"
 				+ ", Value =  " +item.getValue()
-				+ ", AdditionalData = " +item.getAdditionalData()
-				+ " WHERE Name = " +item.getName()
+				+ ", AdditionalData = '" +item.getAdditionalData() +"'"
+				+ " WHERE Name = '" +item.getName() +"'"
 				+ " AND AccountID = 0";
 			
 			Database.executeUpdate(sql);

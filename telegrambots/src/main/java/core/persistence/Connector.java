@@ -31,6 +31,7 @@ public class Connector {
 		} else {
 			//otherwise try to connect
 			try {
+				System.out.println("Connecting to " +url +"\nusing Username " +username +"\nUsing Passwor " +password);
 				con = DriverManager.getConnection(url, username, password);
 			} catch (SQLException e) {
 				System.err.println("SQLException thrown while trying to connect!");
